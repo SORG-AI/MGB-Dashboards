@@ -395,7 +395,33 @@ eight_row_content = html.Div([
                                     ])
                             ])
 
+##Ninth row in the layout
+#ninth row variables
+df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
 
+proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", width=(1000),
+                             height = (500), color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+
+
+knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
+df_knee_related_CPTs = df[knee_related_CPTs]
+df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
+
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', width=(1000), height = (500), title = 'Distribution of Knee Procedures', 
+                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},
+                        orientation = 'v', color_discrete_sequence=('darkblue','darkblue'))
+
+
+#ninth row content
+ninth_row_content = html.Div([
+                             html.Div([
+                                    dcc.Graph(figure = proc_distr_pie)
+                                    ], style={'width': '50%','display': 'inline-block'}),
+                             html.Div([
+                                    dcc.Graph(figure = knee_distr_bar)
+                                    ], style={'width': '50%','display': 'inline-block'})
+                            ])
 
 page_1_layout = html.Div([
             html.Div([
@@ -416,6 +442,7 @@ page_1_layout = html.Div([
         sixth_row_content,
         seventh_row_content,
         eight_row_content,
+        ninth_row_content,
         html.Br(),
         dcc.Link('Go back to home', href='/')
 ])
