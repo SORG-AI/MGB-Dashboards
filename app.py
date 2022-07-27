@@ -137,104 +137,21 @@ index_page = html.Div([
 ])
 
 
-
-
-#### AAOS Dashboard Page
 PATHS = {
     'data_aaos' : os.path.join('data','aaos_database')
+   
+   
     }
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
-#df = pd.read_csv('dataset.csv', dtype={'ID':str})
-#print(df)
-surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+#print(df.head(10))
+
+# dropdown gets populated with this list
+#surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 
 ##First row in the layout
-#variables in the first row
-#headers = df[0, :]
-
 first_row_content = html.Div([
-                            html.H4(children ='AJRR Data At A Glance', style={'text-align': 'center'}),
-                            html.Div([
-                                dbc.Card([
-                                        dbc.CardBody([
-                                                html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
-                                                        style ={'textAlign': 'center','color': '#0074D9'}),
-                                                html.P('-', className = 'card-content',
-                                                       style = {'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                            ])
-                                    ], style={'width':'150px', 'height':'100px', 'display': 'inline-block'})
-                                ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Institution', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Average patient age', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Gender Ratio', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}), 
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Average patient BMI', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Most common ICD', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}), 
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Average hospitalization duration', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Percent patients with comorbidities', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'})
+                            
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 ##Second row in the layout
@@ -251,8 +168,9 @@ female_ratio = (100 - males_ratio)
 avg_length_of_stay = round(df["Length of Stay"].mean())
 
 
+
 second_row_content =  html.Div([
-                            html.H4(children ='Your Patients At A Glance', style={'text-align': 'center'}),
+                            html.H4(children =' Your Patient Information At A Glance', style={'text-align': 'center'}),
                             html.Div([
                                 dbc.Card([
                                         dbc.CardBody([
@@ -266,9 +184,9 @@ second_row_content =  html.Div([
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Institution', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
+                                                            html.H4('Institution', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P('-', className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
                                             ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
@@ -276,9 +194,9 @@ second_row_content =  html.Div([
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Average patient age', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
+                                                            html.H4('Average patient age', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P('-', className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
                                             ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
@@ -286,19 +204,19 @@ second_row_content =  html.Div([
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Gender Ratio', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P(str(males_ratio) + '% males and ' + str(female_ratio) + '% females', className='card-content', 
+                                                            html.H4('Sex Ratio', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P(str(males_ratio) + '% males and ' + str(female_ratio) + '% females', className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}), 
+                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
+                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Average patient BMI', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('-', className='card-content', 
+                                                            html.H4('Average patient BMI', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P('-', className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
                                             ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
@@ -306,19 +224,9 @@ second_row_content =  html.Div([
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Most common ICD', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('ICD10', className='card-content', 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-                                                        ])
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}), 
-                            html.Div([
-                                    dbc.Card([
-                                            dbc.CardBody([
-                                                            html.H4('Average hospitalization duration', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P(avg_length_of_stay, className='card-content', 
+                                                            html.H4('Average hospitalization duration', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P(avg_length_of_stay, className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
@@ -326,9 +234,9 @@ second_row_content =  html.Div([
                             html.Div([
                                     dbc.Card([
                                             dbc.CardBody([
-                                                            html.H4('Percent patients with comorbidities', className= 'card-title', 
-                                                            style={'textAlign': 'center','color': '#0074D9'}), 
-                                                            html.P('65%', className='card-content', 
+                                                            html.H4('Percent patients with comorbidities', className= 'card-title',
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            html.P('100%', className='card-content',
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
                                                         ])
                                             ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
@@ -341,8 +249,8 @@ usmap = px.choropleth(df, locations= 'LocationID', locationmode='USA-states', co
                         scope= 'usa', labels={ 'color' :'number of patients'},
                         color_continuous_scale=('Viridis'), title = ('Total Number of Procedures by State'))
 
-financial_pie = px.pie(values = df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial class:'))
-# timelineDic = {'Mon': ['Meeting with Dr. Weber', 'Clinic'], 'Tue': ['Surgery', 'Clinic'], 'Wed': 'NA', 
+financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'))
+# timelineDic = {'Mon': ['Meeting with Dr. Weber', 'Clinic'], 'Tue': ['Surgery', 'Clinic'], 'Wed': 'NA',
 #                'Thr': ['Clinic', 'Lecture'], 'Fri':['Surgery', 'EOW Meeting']}
 # your_timelines = px.timeline(data_frame = timelineDic, x_start = "Mon", x_end= "Fri", )
 
@@ -352,7 +260,7 @@ third_row_content = html.Div([
                             html.Div([
                                     dcc.Graph(figure= usmap),
                                     ], style={'width': '50%','display': 'inline-block'}
-                                    ), 
+                                    ),
                             html.Div([
                                     html.Div([
                                             dcc.Graph(figure= financial_pie)
@@ -364,14 +272,9 @@ third_row_content = html.Div([
 fourth_row_content = html.Div([
                               html.Div([
                                       html.H2([
-                                          "MGB Patients"
+                                          "Patient Data"
                                               ])
-                                      ], style={'width': '50%', 'display': 'inline-block'}), 
-                              html.Div([
-                                      html.H2([
-                                      "National Data"
-                                              ])
-                                      ], style={'width': '50%', 'display': 'inline-block'})
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block', 'padding': '10px 10px', 'width':'100%'})
 
 ##Fifth row in the layout
@@ -382,23 +285,29 @@ df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_cou
 
 provider_specialty_bar = px.bar(df_provider, y = 'value_counts', width=(1000), height = (500), title = "Provider Specialties Based Distribution")
 
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", width=(1000), height = (500))
+
 
 fifth_row_content = html.Div([
                             html.Div([
                                     dcc.Graph(figure = provider_specialty_bar)
+                                    ], style={'width': '50%','display': 'inline-block'}),
+                             html.Div([
+                                    dcc.Graph(figure = discharge_distr_pie)
                                     ], style={'width': '50%','display': 'inline-block'})
                             ])
 
+
 ##Sixth row in the layout
 
-df_discharge_distr = df['DischargeDispositionDSC'].value_counts().to_frame(name='counts')
-
-discharge_distr_pie = px.pie(df_discharge_distr, names = 'counts', values = 'counts', title = "Discharge Disposition Distribution", width=(1000), height = (500))
+#df_discharge_distr = df['DischargeDispositionDSC'].value_counts().to_frame(name='counts')
+# print(df_discharge_distr)
+# print(type(df_discharge_distr))
 
 sixth_row_content = html.Div([
-                            html.Div([
-                                    dcc.Graph(figure = discharge_distr_pie)
-                                    ], style={'width': '50%','display': 'inline-block'})
+                            # html.Div([
+                            #         dcc.Graph(figure = discharge_distr_pie)
+                            #         ], style={'width': '50%','display': 'inline-block'})
                             ])
 
 ##Seventh row in the layout
@@ -444,7 +353,7 @@ print(df_ICD)
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = ICD10_bar = px.bar(df_ICD, width=(2000), height = (2000) ,title = 'ICD10 Common Comorbidities',labels={'index': 'Types of Comorbidities', 'value':'Frequency'})
+ICD10_bar = ICD10_bar = px.bar(df_ICD, width=(2000), height = (2000) ,title = 'ICD10 Common Comorbidities', labels={'index': 'Types of Comorbidities', 'value':'Frequency'})
 
 
 seventh_row_content = html.Div([
@@ -465,42 +374,18 @@ page_1_layout = html.Div([
 # # dropdown callback reads this
 # dropdown_id = 0
 # df_viz = df_surgeon[df_surgeon['Primary Surgeon'] == surgeon_dropdown_names[dropdown_id]]
-# print(df_viz['Primary Surgeon'].head(10))
-        html.Div([html.P("Choose options to filter data based on:"),
-                ], style={'padding': '0px 20px', 'font-size': '20px'}),
-                
-        html.Div(
-            [
-                html.Div(dcc.Dropdown(id='a_dropdown', placeholder='year',
-                                      options=[{'label': '2021', 'value': 'optA'},
-                                              {'label': '2020', 'value': 'optB'}]),
-                        style={'width': '25%','display': 'inline-block', 'padding': '10px 20px'}
-                        ),                
-                html.Div(dcc.Dropdown(id='b_dropdown', placeholder='state',
-                                      options=[{'label': 'MA', 'value': 'optA'},
-                                              {'label': 'GA', 'value': 'optB'}]),
-                        style={'width': '25%','display': 'inline-block', 'padding': '10px 50px'}
-                        ),
-                html.Div(dcc.Dropdown(id='c_dropdown', placeholder='ICD',
-                                      options=[{'label': 'ICD10', 'value': 'optA'},
-                                              {'label': 'ICD9', 'value': 'optB'}]),
-                        style={'width': '25%','display': 'inline-block', 'padding': '10px 50px'}
-                        ),
-                html.Div([
-                        ##image or mgh logo
-                        ])
-            ]
-        ),
-        first_row_content, 
+# print(df_viz['Primary Surgeon'].head(10)
+        first_row_content,
         second_row_content,
         third_row_content,
         fourth_row_content,
         fifth_row_content,
         sixth_row_content,
-        seventh_row_content, 
+        seventh_row_content,
         html.Br(),
         dcc.Link('Go back to home', href='/')
 ])
+
 
 
 
