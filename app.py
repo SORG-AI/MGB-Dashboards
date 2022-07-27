@@ -367,7 +367,7 @@ df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
+ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
 
@@ -387,12 +387,21 @@ seventh_row_content = html.Div([
 
 ##Eight row in the layout
 #eight row variables
+hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
+df_hip_related_CPTs = df[hip_related_CPTs]
+cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
+                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['plum']),
+                 width=(1000), height = (800) ,title = 'Hip Related CPT codes')
+
 
 #eight row content
 eight_row_content = html.Div([
                             html.Div([
-                                
-                                    ])
+                                    dcc.Graph(figure = cpt_bar)
+                                    ], style={'width': '50%', 'display': 'inline-block'}),
+                            html.Div([
+                                    dcc.Graph(figure = cpt_bar)
+                                    ], style={'width': '50%', 'display': 'inline-block'})
                             ])
 
 
