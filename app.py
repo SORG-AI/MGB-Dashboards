@@ -418,8 +418,7 @@ df_knee_related_CPTs = df[knee_related_CPTs]
 df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
 
 knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', width=(1000), height = (500), title = 'Distribution of Knee Procedures', 
-                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},
-                        orientation = 'v', color_discrete_sequence=('darkblue','darkblue'))
+                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
 
 
 #ninth row content
