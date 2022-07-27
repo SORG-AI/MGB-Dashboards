@@ -294,7 +294,7 @@ fourth_row_content = html.Div([
 # df_new = df['DischargeDispositionDSC'].value_counts().to_frame(name='value_counts')
 df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
 
-provider_specialty_bar = px.bar(df_provider, y = 'value_counts', width=(1000), height = (500), title = "Provider Specialties Based Distribution")
+provider_specialty_bar = px.bar(df_provider, y = 'value_counts', width=(1000), height = (500), title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
 
 discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", width=(1000),
                              height = (500), color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
@@ -311,7 +311,6 @@ fifth_row_content = html.Div([
 
 
 ##Sixth row in the layout
-
 #df_discharge_distr = df['DischargeDispositionDSC'].value_counts().to_frame(name='counts')
 # print(df_discharge_distr)
 # print(type(df_discharge_distr))
@@ -371,7 +370,7 @@ ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = Fa
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
 
-financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'),  width=(1000), height = (600),
+financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  width=(1000), height = (600),
                        color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                 'skyblue', 'steelblue'))
 
@@ -390,17 +389,19 @@ seventh_row_content = html.Div([
 hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
 df_hip_related_CPTs = df[hip_related_CPTs]
 cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
-                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['plum']),
+                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
                  width=(1000), height = (800) ,title = 'Hip Related CPT codes')
 
-
+revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), width = (1000), height = (600),
+                              color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
+                                                'maroon'))
 #eight row content
 eight_row_content = html.Div([
                             html.Div([
                                     dcc.Graph(figure = cpt_bar)
                                     ], style={'width': '50%', 'display': 'inline-block'}),
                             html.Div([
-                                    dcc.Graph(figure = cpt_bar)
+                                    dcc.Graph(figure = revenue_location_pie)
                                     ], style={'width': '50%', 'display': 'inline-block'})
                             ])
 
