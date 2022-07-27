@@ -246,10 +246,6 @@ second_row_content =  html.Div([
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 ##Third row in the layout
-#creating the figure to show in this second row
-usmap = px.choropleth(df, locations= 'LocationID', locationmode='USA-states', color= (df['LocationID']), ####FIX THE RANGE THING IS WRONG
-                        scope= 'usa', labels={ 'color' :'number of patients'},
-                        color_continuous_scale=('Viridis'), title = ('Total Number of Procedures by State'))
 
 financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'))
 # timelineDic = {'Mon': ['Meeting with Dr. Weber', 'Clinic'], 'Tue': ['Surgery', 'Clinic'], 'Wed': 'NA',
@@ -260,7 +256,7 @@ financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinanc
 third_row_content = html.Div([
                             ###the div below contains the row with the US map and pie chart
                             html.Div([
-                                    dcc.Graph(figure= usmap),
+                                    #dcc.Graph(figure= usmap),
                                     ], style={'width': '50%','display': 'inline-block'}
                                     ),
                             html.Div([
@@ -287,7 +283,8 @@ df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_cou
 
 provider_specialty_bar = px.bar(df_provider, y = 'value_counts', width=(1000), height = (500), title = "Provider Specialties Based Distribution")
 
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", width=(1000), height = (500))
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", width=(1000),
+                             height = (500), color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
 
 
 fifth_row_content = html.Div([
@@ -350,12 +347,15 @@ ICD_data = {'Acute_MI_ICD10': [sum(df['Acute_MI_ICD10'].value_counts())],
 # print(ICD_data.values())
 
 df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
+#print(df_ICD.head(10).sort_values(by = 'Comorbidity', ascending = False))
+
 #print(df_ICD)
 # ICD_data_indeces = list(ICD_data.keys())
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = ICD10_bar = px.bar(df_ICD, width=(2000), height = (2000) ,title = 'ICD10 Common Comorbidities', labels={'index': 'Types of Comorbidities', 'value':'Frequency'})
+ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
+                               labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
 
 seventh_row_content = html.Div([
