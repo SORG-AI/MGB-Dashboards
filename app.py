@@ -100,6 +100,7 @@ def login_button_click(n_clicks, username, password):
         "karina": "",
         "guest": "thisissocool",
         "kelsey": " ",
+        "vivek" : "bestsurgeonever",
     }
     
     # we need this to account for empty pass code
