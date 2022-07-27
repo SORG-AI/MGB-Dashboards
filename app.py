@@ -294,10 +294,10 @@ fourth_row_content = html.Div([
 # df_new = df['DischargeDispositionDSC'].value_counts().to_frame(name='value_counts')
 df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
 
-provider_specialty_bar = px.bar(df_provider, y = 'value_counts', width=(1000), height = (500), title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
+provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
 
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", width=(1000),
-                             height = (500), color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", 
+                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
 
 
 fifth_row_content = html.Div([
@@ -366,11 +366,11 @@ df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
+ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
 
-financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  width=(1000), height = (600),
+financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
                        color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                 'skyblue', 'steelblue'))
 
@@ -390,9 +390,9 @@ hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
 df_hip_related_CPTs = df[hip_related_CPTs]
 cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
                  labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
-                 width=(1000), height = (800) ,title = 'Hip Related CPT codes')
+                 title = 'Hip Related CPT codes')
 
-revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), width = (1000), height = (600),
+revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), 
                               color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
                                                 'maroon'))
 #eight row content
@@ -409,8 +409,7 @@ eight_row_content = html.Div([
 #ninth row variables
 df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
 
-proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", width=(1000),
-                             height = (500), color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                 'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
 
 
@@ -418,8 +417,10 @@ knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
 df_knee_related_CPTs = df[knee_related_CPTs]
 df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
 
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', width=(1000), height = (500), title = 'Distribution of Knee Procedures', 
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures', 
                         labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
+
+
 
 
 #ninth row content
