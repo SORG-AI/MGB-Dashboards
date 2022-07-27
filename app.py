@@ -88,7 +88,8 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
 
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
-
+# global username_global
+# username_global = ''
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
@@ -106,6 +107,8 @@ def login_button_click(n_clicks, username, password):
     # we need this to account for empty pass code
     password = '' if password == None else password
     
+    global username_global
+    username_global = username
     # Check the pass and go to the next page
     if n_clicks > 0:
         try:
@@ -149,7 +152,19 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 #print(df.head(10))
 
 # dropdown gets populated with this list
-#surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+# #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+# USER_TO_NAME = {
+#     'vivek': 'Vivek M Shah',
+#     'andreea': 'Antonia F Chen'
+#     }
+
+# TODO: how to acces the username globally (the person who has logged in)
+# current_user_name = username_global #
+# # TODO: this is bad, we need to make this approch better
+# try:
+#     df = df[df['Primary Surgeon'] == USER_TO_NAME[current_user_name]]
+# except:
+#     df = df.copy(deep=True)
 
 ##First row in the layout
 first_row_content = html.Div([
@@ -352,11 +367,11 @@ df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (1000) ,title = 'Top 10 Most Common ICD10 Comorbidities',
+ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
 
-financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'),  width=(1000), height = (800),
+financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'),  width=(1000), height = (600),
                        color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                 'skyblue', 'steelblue'))
 
@@ -368,6 +383,17 @@ seventh_row_content = html.Div([
                                     dcc.Graph(figure= financial_pie)
                                     ], style={'width': '50%', 'display': 'inline-block'})
                                 ])
+
+
+##Eight row in the layout
+#eight row variables
+
+#eight row content
+eight_row_content = html.Div([
+                            html.Div([
+                                
+                                    ])
+                            ])
 
 
 
@@ -389,6 +415,7 @@ page_1_layout = html.Div([
         fifth_row_content,
         sixth_row_content,
         seventh_row_content,
+        eight_row_content,
         html.Br(),
         dcc.Link('Go back to home', href='/')
 ])
