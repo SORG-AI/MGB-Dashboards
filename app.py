@@ -245,9 +245,7 @@ second_row_content =  html.Div([
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'})
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
-##Third row in the layout
-
-financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'))
+##Third row in the layout IS CURRENLTY EMPTY
 # timelineDic = {'Mon': ['Meeting with Dr. Weber', 'Clinic'], 'Tue': ['Surgery', 'Clinic'], 'Wed': 'NA',
 #                'Thr': ['Clinic', 'Lecture'], 'Fri':['Surgery', 'EOW Meeting']}
 # your_timelines = px.timeline(data_frame = timelineDic, x_start = "Mon", x_end= "Fri", )
@@ -261,7 +259,7 @@ third_row_content = html.Div([
                                     ),
                             html.Div([
                                     html.Div([
-                                            dcc.Graph(figure= financial_pie)
+                                            #dcc.Graph(figure= financial_pie)
                                             ])
                                     ], style={'width': '50%', 'display': 'inline-block'})
                             ])
@@ -354,15 +352,22 @@ df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
-ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (800) ,title = 'Top 10 Most Common ICD10 Comorbidities',
+ICD10_bar = ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), width=(1000), height = (1000) ,title = 'Top 10 Most Common ICD10 Comorbidities',
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
 
+
+financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution:'),  width=(1000), height = (800),
+                       color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+                                                'skyblue', 'steelblue'))
 
 seventh_row_content = html.Div([
                             html.Div([
                                     dcc.Graph(figure = ICD10_bar)
-                                    ], style={'width': '50%','display': 'inline-block'})
-                            ])
+                                    ], style={'width': '50%','display': 'inline-block'}),
+                            html.Div([
+                                    dcc.Graph(figure= financial_pie)
+                                    ], style={'width': '50%', 'display': 'inline-block'})
+                                ])
 
 
 
