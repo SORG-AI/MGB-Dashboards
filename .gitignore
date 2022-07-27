@@ -1,0 +1,7 @@
+*.bak
+*.pyc
+*.ini
+*.h5
+_archive/
+pages/__pycache__/
+pages/
