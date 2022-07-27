@@ -98,7 +98,8 @@ def login_button_click(n_clicks, username, password):
         "bardiya": "",
         "andreea": "",
         "karina": "",
-        "guest": "thisissocool"
+        "guest": "thisissocool",
+        "kelsey": " ",
     }
     
     # we need this to account for empty pass code
@@ -348,7 +349,7 @@ ICD_data = {'Acute_MI_ICD10': [sum(df['Acute_MI_ICD10'].value_counts())],
 # print(ICD_data.values())
 
 df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
-print(df_ICD)
+#print(df_ICD)
 # ICD_data_indeces = list(ICD_data.keys())
 
 # ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
@@ -396,27 +397,88 @@ def page_1_dropdown(value):
     return 'You have selected "{}"'.format(value)
 
 
+
+
+
+########################## START: PAGE 2
+# page_2_layout = html.Div([
+    # html.H1('Page 2'),
+    # dcc.RadioItems(
+        # id='page-2-radios',
+        # options=[{'label': i, 'value': i} for i in ['Orange', 'Blue', 'Red']],
+        # value='Orange'
+    # ),
+    # html.Div(id='page-2-content'),
+    # html.Br(),
+    # dcc.Link('Go to Page 1', href='/page-1'),
+    # html.Br(),
+    # dcc.Link('Go back to home', href='/')
+# ])
+
+
 page_2_layout = html.Div([
-    html.H1('Page 2'),
-    dcc.RadioItems(
-        id='page-2-radios',
-        options=[{'label': i, 'value': i} for i in ['Orange', 'Blue', 'Red']],
-        value='Orange'
-    ),
-    html.Div(id='page-2-content'),
-    html.Br(),
-    dcc.Link('Go to Page 1', href='/page-1'),
-    html.Br(),
-    dcc.Link('Go back to home', href='/')
-])
+                    html.Div(className='container',
+                      children=[
+                                dbc.Row(html.H1("Hip Fracture Detection"), style={'textAlign': 'center'}),
+                                dbc.Row(html.H1(" ")),
+                                dbc.Row(
+                                    html.Div([
+                                            dcc.Upload(
+                                                id='upload-image',
+                                                children=html.Div([
+                                                    'Drag and Drop or ',
+                                                    html.A('Select Hip Radiographs')
+                                                ]),
+                                                style={
+                                                    'width': '100%',
+                                                    'height': '60px',
+                                                    'font-size': '22px',
+                                                    'lineHeight': '60px',
+                                                    'borderWidth': '1px',
+                                                    'borderStyle': 'dashed',
+                                                    'borderRadius': '5px',
+                                                    },
+                                                # Allow multiple files to be uploaded
+                                                multiple=True),
+                                            html.Div(id='output-image-upload', style={'textAlign': 'center'})
+                                            ])
+                                            
+                                        , style={'textAlign': 'center'}),
+                                ]
+                        ),
+                    html.Br(),
+                    dcc.Link('Go to Page 1', href='/page-1'),
+                    html.Br(),
+                    dcc.Link('Go back to home', href='/')
+                    ])
 
 
-@app.callback(Output('page-2-content', 'children'),
-              [Input('page-2-radios', 'value')])
-def page_2_radios(value):
-    return 'You have selected "{}"'.format(value)
 
 
+
+#@app.callback(Output('page-2-content', 'children'),
+#              [Input('page-2-radios', 'value')])
+#def page_2_radios(value):
+#    return 'You have selected "{}"'.format(value)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################## END: PAGE 2
+
+############################## USER STATUS
 @app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
     ''' callback to display login/logout link in the header '''
@@ -473,6 +535,12 @@ def display_page(pathname):
         view = index_page
     # You could also return a 404 "URL not found" page here
     return view, url
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
