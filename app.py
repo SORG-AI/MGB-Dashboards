@@ -13,6 +13,15 @@ import pandas as pd
 import plotly.express as px
 
 
+## Models Libraries
+import datetime
+import numpy as np
+from codes.util_images import im_preprocess
+import cv2
+import base64
+
+
+#### FIXUS BEGINS
 
 # CREDIT: This code is copied from Dash official documentation:
 # https://dash.plotly.com/urls
@@ -471,20 +480,6 @@ def page_1_dropdown(value):
 
 
 ########################## START: PAGE 2
-# page_2_layout = html.Div([
-    # html.H1('Page 2'),
-    # dcc.RadioItems(
-        # id='page-2-radios',
-        # options=[{'label': i, 'value': i} for i in ['Orange', 'Blue', 'Red']],
-        # value='Orange'
-    # ),
-    # html.Div(id='page-2-content'),
-    # html.Br(),
-    # dcc.Link('Go to Page 1', href='/page-1'),
-    # html.Br(),
-    # dcc.Link('Go back to home', href='/')
-# ])
-
 
 page_2_layout = html.Div([
                     html.Div(className='container',
@@ -526,18 +521,86 @@ page_2_layout = html.Div([
 
 
 
-#@app.callback(Output('page-2-content', 'children'),
-#              [Input('page-2-radios', 'value')])
-#def page_2_radios(value):
-#    return 'You have selected "{}"'.format(value)
+@app.callback(Output('output-image-upload', 'children'),
+              Input('upload-image', 'contents'),
+              State('upload-image', 'filename'),
+              State('upload-image', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+
+        return children
+
+
+### IMAGE LOADERS
+def parse_contents(contents, filename, date):
+
+    ### READ IMAGE AND RESIZE
+    im_bytes = base64.b64decode(contents.split("base64,")[-1])
+    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+    # Preprocessing
+    img_new = im_preprocess(img, im_newsize = (1062, 1062))
+    
+    # Encoding Back
+    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+    encoding =  base64.b64encode(im_arr)
+    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+
+    # Get the Prediction
+    prediction  = read_image_and_classify(img_new)
+
+
+    output_view = html.Div([
+                            html.H5(filename),
+                            html.H6(datetime.datetime.fromtimestamp(date)),
+
+                            # HTML images accept base64 encoded strings in the same format
+                            # that is supplied by the upload
+                            html.Div('Pre-processed Image'),        
+                            html.Img(src=image, style={'height': '256px'}),
+                            # html.Div('Actual Image'),
+                            # html.Img(src=contents, style={'height': '500px'}),
+                            html.Hr(),
+                            html.Div('Prediction: {}'.format(prediction)),
+                            html.Pre(contents[0:200] + '...', style={
+                                'whiteSpace': 'pre-wrap',
+                                'wordBreak': 'break-all'
+                            })
+                        ], style={'textAlign': 'center'})
+
+    return output_view
 
 
 
+### ML HELPERS
+def read_image_and_classify(image_in):
+
+    image_width  = 1062 #384
+    image_height = 1062 #384
+    max_im_size = image_width
+    n_channel = 3
+    class_names = ['Control','Fracture']
+
+    # # 3) Making the predictions
+    student_images = np.zeros((1, image_width, image_height, n_channel))
+
+    ## Preprocessing
+    for channel in range(n_channel):
+        student_images[0, :, :, channel] = image_in
 
 
+    # Use the Model to Predict the Image
+    student_images = student_images.astype(np.uint8)
 
-
-
+    prediction_prob = [0.66, 0.34]
+    predicted_class = prediction_prob[0]
+    # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
+    
+    return predicted_class
 
 
 
