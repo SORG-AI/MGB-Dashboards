@@ -522,7 +522,7 @@ def model_image_view_html(title_name="Default Model", select_button_name="Select
 
 ########################## START: PAGE 2
 
-page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection", select_button_name = "Select Hip Radiographs")
+page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
 
 @app.callback(Output('output-image-upload', 'children'),
               Input('upload-image', 'contents'),
