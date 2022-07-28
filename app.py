@@ -478,13 +478,12 @@ def page_1_dropdown(value):
 
 
 
-
-########################## START: PAGE 2
-
-page_2_layout = html.Div([
+########### MODEL DEPLOYMENT LAYOUT DEFINITION
+def model_image_view_html(title_name="Default Model", select_button_name="Select Images"):
+    layout = html.Div([
                     html.Div(className='container',
                       children=[
-                                dbc.Row(html.H1("Hip Fracture Detection"), style={'textAlign': 'center'}),
+                                dbc.Row(html.H1(title_name), style={'textAlign': 'center'}),
                                 dbc.Row(html.H1(" ")),
                                 dbc.Row(
                                     html.Div([
@@ -492,7 +491,7 @@ page_2_layout = html.Div([
                                                 id='upload-image',
                                                 children=html.Div([
                                                     'Drag and Drop or ',
-                                                    html.A('Select Hip Radiographs')
+                                                    html.A(select_button_name)
                                                 ]),
                                                 style={
                                                     'width': '100%',
@@ -516,10 +515,14 @@ page_2_layout = html.Div([
                     html.Br(),
                     dcc.Link('Go back to home', href='/')
                     ])
+                    
+    return layout
+    
 
 
+########################## START: PAGE 2
 
-
+page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection", select_button_name = "Select Hip Radiographs")
 
 @app.callback(Output('output-image-upload', 'children'),
               Input('upload-image', 'contents'),
@@ -528,14 +531,13 @@ page_2_layout = html.Div([
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
-            parse_contents(c, n, d) for c, n, d in
+            parse_contents_hip_fracture(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
 
-        return children
-
-
+        return children    
+    
 ### IMAGE LOADERS
-def parse_contents(contents, filename, date):
+def parse_contents_hip_fracture(contents, filename, date):
 
     ### READ IMAGE AND RESIZE
     im_bytes = base64.b64decode(contents.split("base64,")[-1])
@@ -575,8 +577,7 @@ def parse_contents(contents, filename, date):
     return output_view
 
 
-
-### ML HELPERS
+### ML Preprocessor
 def read_image_and_classify(image_in):
 
     image_width  = 1062 #384
@@ -604,12 +605,10 @@ def read_image_and_classify(image_in):
 
 
 
-
-
-
-
-
 ########################## END: PAGE 2
+
+
+
 
 ############################## USER STATUS
 @app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
