@@ -67,20 +67,29 @@ def load_user(username):
 #### User status management views
 # Login screen
 login = html.Div([dcc.Location(id='url_login', refresh=True),
-                  html.H2('''Please log in to continue:''', id='h1'),
+                  html.H2('''Welcome to FIXUS!''', id='h1'),
+                  html.H2('''Please log in to continue:''', id='h2'),
                   dcc.Input(placeholder='Enter your username',
                             type='text', id='uname-box'),
+                  html.Br(),                  
+                  html.Br(),
                   dcc.Input(placeholder='Enter your password',
                             type='password', id='pwd-box'),
-                  html.Button(children='Login', n_clicks=0,
+                  html.Br(),
+                  html.Br(),
+                  html.Br(),
+                  html.Button(children='LOGIN', n_clicks=0, style={ 'content': ' \27B2','backgroundColor': '#00BFFF', 'border-color': '#F5FFFA', 'color' : '#F5FFFA', 'font-size': '20px', 'padding': '10px 25px'},
                               type='submit', id='login-button'),
                   html.Div(children='', id='output-state'),
-                  html.Br(),dcc.Link('Home', href='/')])
+                  html.Br(),
+                  dcc.Link('Home', href='/')], 
+                  style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})
 # Successful login screen
 success = html.Div([html.Div([html.H2('Login successful.'),
                               html.Br(),
-                              dcc.Link('Home', href='/')])  # end div
-                    ])  # end div
+                              dcc.Link('Home', href='/')], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
+                    ], 
+                   style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})  # end div
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              html.Br(),
@@ -92,7 +101,7 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
 logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
                    html.Br(),
                    dcc.Link('Home', href='/')
-                   ])  # end div
+                   ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
 ####
 
 
@@ -131,6 +140,7 @@ def login_button_click(n_clicks, username, password):
     else:
         return '/login', ''
 
+
 # Main Layout
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -147,12 +157,12 @@ app.layout = html.Div([
 
 
 index_page = html.Div([
-    dcc.Link('MGB Dashboard', href='/page-1'),
+    dcc.Link('MGB Dashboard', href='/page-1', style={}),
     html.Br(),
     dcc.Link('Models Page', href='/page-2'),
     html.Br(),
     dcc.Link('Soomin Models Page', href='/page-3')    
-])
+], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
 
 PATHS = {
