@@ -148,6 +148,8 @@ index_page = html.Div([
     dcc.Link('MGB Dashboard', href='/page-1'),
     html.Br(),
     dcc.Link('Models Page', href='/page-2'),
+    html.Br(),
+    dcc.Link('Soomin Models Page', href='/page-3')    
 ])
 
 
@@ -479,7 +481,7 @@ def page_1_dropdown(value):
 
 
 ########### MODEL DEPLOYMENT LAYOUT DEFINITION
-def model_image_view_html(title_name="Default Model", select_button_name="Select Images"):
+def model_image_view_html(id_upload, id_output_img, title_name="Default Model", select_button_name="Select Images"):
     layout = html.Div([
                     html.Div(className='container',
                       children=[
@@ -488,7 +490,7 @@ def model_image_view_html(title_name="Default Model", select_button_name="Select
                                 dbc.Row(
                                     html.Div([
                                             dcc.Upload(
-                                                id='upload-image',
+                                                id=id_upload,
                                                 children=html.Div([
                                                     'Drag and Drop or ',
                                                     html.A(select_button_name)
@@ -504,7 +506,7 @@ def model_image_view_html(title_name="Default Model", select_button_name="Select
                                                     },
                                                 # Allow multiple files to be uploaded
                                                 multiple=True),
-                                            html.Div(id='output-image-upload', style={'textAlign': 'center'})
+                                            html.Div(id=id_output_img, style={'textAlign': 'center'})
                                             ])
                                             
                                         , style={'textAlign': 'center'}),
@@ -522,7 +524,8 @@ def model_image_view_html(title_name="Default Model", select_button_name="Select
 
 ########################## START: PAGE 2
 
-page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
+page_2_layout = model_image_view_html(id_upload= 'upload-image', id_output_img= 'output-image-upload',
+                                      title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
 
 @app.callback(Output('output-image-upload', 'children'),
               Input('upload-image', 'contents'),
@@ -609,6 +612,77 @@ def read_image_and_classify(image_in):
 
 
 
+########################## START: PAGE 3
+
+page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_output_img= 'output-image-upload-soomin',
+                                      title_name= "Hello Soomin!", select_button_name = "Select Radiographs")
+
+@app.callback(Output('output-image-upload-soomin', 'children'),
+              Input('upload-image-soomin', 'contents'),
+              State('upload-image-soomin', 'filename'),
+              State('upload-image-soomin', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents_hip_fracture(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+
+        return children    
+    
+### IMAGE LOADERS
+def parse_contents_soomin(contents, filename, date):
+
+    ### READ IMAGE AND RESIZE
+    im_bytes = base64.b64decode(contents.split("base64,")[-1])
+    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+    # Preprocessing
+    # TODO: Soomin adds her preprocessing stuff here
+    img_new = img_new
+    
+    # Encoding Back
+    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+    encoding =  base64.b64encode(im_arr)
+    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+
+    # Get the Prediction
+    # TODO: Soomin adds her preprocessing stuff here
+    prediction  = 0.5000000
+
+    output_view = html.Div([
+                            html.H5(filename),
+                            html.H6(datetime.datetime.fromtimestamp(date)),
+
+                            # HTML images accept base64 encoded strings in the same format
+                            # that is supplied by the upload
+                            html.Div('Pre-processed Image'),        
+                            html.Img(src=image, style={'height': '256px'}),
+                            # html.Div('Actual Image'),
+                            # html.Img(src=contents, style={'height': '500px'}),
+                            html.Hr(),
+                            html.Div('Prediction: {}'.format(prediction)),
+                            html.Pre(contents[0:200] + '...', style={
+                                'whiteSpace': 'pre-wrap',
+                                'wordBreak': 'break-all'
+                            })
+                        ], style={'textAlign': 'center'})
+
+    return output_view
+
+
+### ML Preprocessor
+def read_image_and_classify_soomin(image_in):
+
+    pass
+
+
+
+########################## END: PAGE 2
+
+
+
+
 
 ############################## USER STATUS
 @app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
@@ -663,6 +737,12 @@ def display_page(pathname):
         else:
             view = 'Redirecting to login...'
             url = '/login'
+    elif pathname == '/page-3':
+        if current_user.is_authenticated:
+            view = page_3_layout
+        else:
+            view = 'Redirecting to login...'
+            url = '/login'            
     else:
         view = index_page
     # You could also return a 404 "URL not found" page here
