@@ -78,7 +78,7 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Br(),
                   html.Br(),
                   html.Br(),
-                  html.Button(children='LOGIN', n_clicks=0, style={ 'content': ' \27B2','backgroundColor': '#00BFFF', 'border-color': '#F5FFFA', 'color' : '#F5FFFA', 'font-size': '20px', 'padding': '10px 25px'},
+                  html.Button(children='LOGIN', n_clicks=0, style={'backgroundColor': '#00BFFF', 'border-color': '#F5FFFA', 'color' : '#F5FFFA', 'font-size': '20px', 'padding': '10px 25px'},
                               type='submit', id='login-button'),
                   html.Div(children='', id='output-state'),
                   html.Br(),
@@ -155,18 +155,20 @@ app.layout = html.Div([
 
 
 index_page = html.Div([
-    dcc.Link('MGB Dashboard', href='/page-1', style={}),
+    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold'}),
     html.Br(),
-    dcc.Link('Models Page', href='/page-2'),
+    dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'color': 'dark blue'}),
     html.Br(),
-    dcc.Link('Soomin Models Page', href='/page-3')    
+    html.Br(),
+    dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold'}),
+    html.Br(),
+    html.Br(),
+    dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold'})    
 ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
 
 PATHS = {
     'data_aaos' : os.path.join('data','aaos_database')
-   
-   
     }
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
