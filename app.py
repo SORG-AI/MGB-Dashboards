@@ -106,8 +106,6 @@ logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
 
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
-# global username_global
-# username_global = ''
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
@@ -125,8 +123,6 @@ def login_button_click(n_clicks, username, password):
     # we need this to account for empty pass code
     password = '' if password == None else password
     
-    #global username_global
-    username_global = username
     # Check the pass and go to the next page
     if n_clicks > 0:
         try:
@@ -185,13 +181,11 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 
 # #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 
-# USER_TO_NAME = {
+USER_TO_NAME = {
+    'vivek': 'Vivek M Shah',
+    'andreea': 'Antonia F Chen'
+    }
 
-#     'vivek': 'Vivek M Shah',
-
-#     'andreea': 'Antonia F Chen'
-
-#     }
 
 
 
@@ -203,7 +197,7 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 
 # try:
 
-#     df = df[df['Primary Surgeon'] == USER_TO_NAME[current_user_name]]
+#     df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[current_user_name]]
 
 # except:
 
@@ -762,6 +756,10 @@ page_1_layout = html.Div([
                 html.H3("Analytics Dashboard"),
 
                 ], style={'textAlign': 'center'}),
+            
+            html.Div([
+                
+                html.H2(id='surgeon_name', children = '')]),
 
         pat_info_at_glance,
 
@@ -1027,13 +1025,19 @@ def login_status(url):
 #Displaying username
 @app.callback(
     Output(component_id='show-output', component_property='children'),
+    Output('surgeon_name','children'),
     [Input('login-status','data')]
 )
 def update_output_div(uname):
     if uname != 'loggedout':
-        return 'Username: {}'.format(uname)
+        try: 
+            name = USER_TO_NAME[uname]
+            #df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[uname]]
+            return 'Username: {}'.format(uname), name
+        except:  
+            return '','No Surgeon Data'
     else:
-        return ''
+        return '', ''
 
 
 # Main router
