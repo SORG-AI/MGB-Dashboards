@@ -22,7 +22,11 @@ import base64
 
 
 #### FIXUS BEGINS
+PATHS = {
+    'images': os.path.join('images'),
 
+    'data_aaos' : os.path.join('data','aaos_database')
+    }
 # CREDIT: This code is copied from Dash official documentation:
 # https://dash.plotly.com/urls
 
@@ -154,24 +158,25 @@ app.layout = html.Div([
 ])
 
 
-
-
+#####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold'}),
-    html.Br(),
-    dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'color': 'dark blue'}),
-    html.Br(),
-    html.Br(),
-    dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold'}),
-    html.Br(),
-    html.Br(),
-    dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold'})    
-], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+    html.Img(src = 'https://th.bing.com/th/id/OIP.y6b85lVMkdcnmZxDYFkCrwAAAA?pid=ImgDet&rs=1', height= '200px', width ='400px'),
+    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'padding': '10px 30px', 'backgroundColor': 'rgb(220, 248, 285)'}),
+    html.Div([
+        dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        html.Br(),
+        html.Br(),
+        dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        html.Br(),
+        html.Br(),
+        dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        html.Br()
+        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid'}),
+    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='800px')
+], style={ 'width':'100%'})
 
 
-PATHS = {
-    'data_aaos' : os.path.join('data','aaos_database')
-    }
+
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 
