@@ -16,7 +16,7 @@ import plotly.express as px
 ## Models Libraries
 import datetime
 import numpy as np
-from codes.util_images import im_preprocess
+#from codes.util_images import im_preprocess
 import cv2
 import base64
 
@@ -116,7 +116,7 @@ def login_button_click(n_clicks, username, password):
     # we need this to account for empty pass code
     password = '' if password == None else password
     
-    global username_global
+    #global username_global
     username_global = username
     # Check the pass and go to the next page
     if n_clicks > 0:
@@ -137,11 +137,13 @@ app.layout = html.Div([
     dcc.Location(id='redirect', refresh=True),
     dcc.Store(id='login-status', storage_type='session'),
     html.Div(id='user-status-div'),
-    html.Br(),
+    html.Div(id='show-output', children='', style ={'textAlign': 'right'}),
     html.Hr(),
     html.Br(),
     html.Div(id='page-content'),
 ])
+
+
 
 
 index_page = html.Div([
@@ -1008,6 +1010,19 @@ def login_status(url):
         return dcc.Link('logout', href='/logout'), current_user.get_id()
     else:
         return dcc.Link('login', href='/login'), 'loggedout'
+
+
+#Displaying username
+@app.callback(
+    Output(component_id='show-output', component_property='children'),
+    [Input('login-status','data')]
+)
+def update_output_div(uname):
+    if uname != 'loggedout':
+        return 'Username: {}'.format(uname)
+    else:
+        return ''
+
 
 # Main router
 
