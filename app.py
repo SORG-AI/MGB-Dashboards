@@ -160,6 +160,7 @@ PATHS = {
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 #print(df.head(10))
 
+#TODO: work on the surgeon specific stuff
 # dropdown gets populated with this list
 # #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 # USER_TO_NAME = {
@@ -175,12 +176,8 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 # except:
 #     df = df.copy(deep=True)
 
-##First row in the layout
-first_row_content = html.Div([
-                            
-                            ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
-##Second row in the layout
+##Info at a lance  row in the layout
 #setup the variables for the AAOS data
 # THESE ARE THE GENDER RATIO VARIABLES
 AJRRPat_total = len(list(df['Sex'])) # int of total patients on the spreadsheet
@@ -195,7 +192,7 @@ avg_length_of_stay = round(df["Length of Stay"].mean())
 
 
 
-second_row_content =  html.Div([
+pat_info_at_glance =  html.Div([
                             html.H4(children =' Your Patient Information At A Glance', style={'text-align': 'center'}),
                             html.Div([
                                 dbc.Card([
@@ -269,68 +266,82 @@ second_row_content =  html.Div([
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'})
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
-##Third row in the layout IS CURRENLTY EMPTY
-# timelineDic = {'Mon': ['Meeting with Dr. Weber', 'Clinic'], 'Tue': ['Surgery', 'Clinic'], 'Wed': 'NA',
-#                'Thr': ['Clinic', 'Lecture'], 'Fri':['Surgery', 'EOW Meeting']}
-# your_timelines = px.timeline(data_frame = timelineDic, x_start = "Mon", x_end= "Fri", )
 
-
-third_row_content = html.Div([
-                            ###the div below contains the row with the US map and pie chart
-                            html.Div([
-                                    #dcc.Graph(figure= usmap),
-                                    ], style={'width': '50%','display': 'inline-block'}
-                                    ),
-                            html.Div([
-                                    html.Div([
-                                            #dcc.Graph(figure= financial_pie)
-                                            ])
-                                    ], style={'width': '50%', 'display': 'inline-block'})
-                            ])
-
-##Fourth row in the layout
-fourth_row_content = html.Div([
+##The main header that is titled "Patient Data" row in the layout
+main_header = html.Div([
                               html.Div([
                                       html.H2([
                                           "Patient Data"
                                               ])
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
-                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block', 'padding': '10px 10px', 'width':'100%'})
-
-##Fifth row in the layout
-#making the bar graphs for the two columns in the fifth row
-# provider_specialty_bar = px.bar(df, x= 'ProviderSpecialtyDSC', y = df['ProviderSpecialtyDSC'].value_counts().values, width=(600), height = (500))
-# df_new = df['DischargeDispositionDSC'].value_counts().to_frame(name='value_counts')
-df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
-
-provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
-
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", 
-                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
+                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
 
-fifth_row_content = html.Div([
-                            html.Div([
-                                    dcc.Graph(figure = provider_specialty_bar)
-                                    ], style={'width': '50%','display': 'inline-block'}),
-                             html.Div([
-                                    dcc.Graph(figure = discharge_distr_pie)
-                                    ], style={'width': '50%','display': 'inline-block'})
-                            ])
+##The main row categories
+pat_demo_info = html.Div([
+                        html.Div([
+                                html.H5([
+                                        "Demographics Based Information"
+                                        ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+###so far nothing in it due to lack of data
 
 
-##Sixth row in the layout
-#df_discharge_distr = df['DischargeDispositionDSC'].value_counts().to_frame(name='counts')
-# print(df_discharge_distr)
-# print(type(df_discharge_distr))
 
-sixth_row_content = html.Div([
-                            # html.Div([
-                            #         dcc.Graph(figure = discharge_distr_pie)
-                            #         ], style={'width': '50%','display': 'inline-block'})
-                            ])
+proc_info = html.Div([
+                        html.Div([
+                                html.H5([
+                                        "Procedures and condition related information"
+                                        ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-##Seventh row in the layout
+#row figures and variables for procedures category
+df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
+
+proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+
+
+knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
+df_knee_related_CPTs = df[knee_related_CPTs]
+df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
+
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures', 
+                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
+
+
+#ninth row content
+proc_totalAndKnee = html.Div([
+                 html.Div([
+                          dcc.Graph(figure = proc_distr_pie)
+                          ], style={'width': '50%','display': 'inline-block'}),
+                 html.Div([
+                          dcc.Graph(figure = knee_distr_bar)
+                          ], style={'width': '50%','display': 'inline-block'})
+                ])
+
+hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
+df_hip_related_CPTs = df[hip_related_CPTs]
+cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
+                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
+                 title = 'Hip Related CPT codes')
+
+proc_hip = html.Div([
+                html.Div([
+                        dcc.Graph(figure = cpt_bar)
+                        ], style={'width': '50%', 'display': 'inline-block'})
+                ])
+
+comorb_info  = html.Div([
+                        html.Div([
+                                html.H5([
+                                        "Comorbidities and complications"
+                                        ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
 ICD_data = {'Acute_MI_ICD10': [sum(df['Acute_MI_ICD10'].value_counts())],
                'CHF_ICD10' : [sum(df['CHF_ICD10'].value_counts())],
                'Peripheral_vascular_disease_ICD10': [sum(df['Peripheral_vascular_disease_ICD10'].value_counts())],
@@ -363,82 +374,81 @@ ICD_data = {'Acute_MI_ICD10': [sum(df['Acute_MI_ICD10'].value_counts())],
                'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(df['PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10'].value_counts())],
                'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(df['PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10'].value_counts())],
                'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(df['UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10'].value_counts())]}
-#print(ICD_data)
-# print(ICD_data.keys())
-# print(ICD_data.values())
+
 
 df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
-#print(df_ICD.head(10).sort_values(by = 'Comorbidity', ascending = False))
 
-#print(df_ICD)
-# ICD_data_indeces = list(ICD_data.keys())
-
-# ICD_dataFrame = pd.DataFrame(data = ICD_data, index=ICD_data_indeces)
 # #find the top 10 highest numbers
 ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
                                labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
+
+comorb_ICD10Top10 = html.Div([
+                html.Div([
+                        dcc.Graph(figure = ICD10_bar)
+                        ], style={'width': '100%','display': 'inline-block'})
+                ])
+
+
+prom_info = html.Div([
+                    html.Div([
+                             html.H5([
+                                 "Patient Related Outcomes"
+                                      ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                    ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", 
+                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
+
+
+prom_discharge = html.Div([
+                            html.Div([
+                                    dcc.Graph(figure = discharge_distr_pie)
+                                    ])
+                          ])
+
+fin_info = html.Div([
+                        html.Div([
+                                html.H5([
+                                        "Financial Information"
+                                        ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
 financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
                        color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                 'skyblue', 'steelblue'))
 
-seventh_row_content = html.Div([
-                            html.Div([
-                                    dcc.Graph(figure = ICD10_bar)
-                                    ], style={'width': '50%','display': 'inline-block'}),
-                            html.Div([
-                                    dcc.Graph(figure= financial_pie)
-                                    ], style={'width': '50%', 'display': 'inline-block'})
-                                ])
-
-
-##Eight row in the layout
-#eight row variables
-hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
-df_hip_related_CPTs = df[hip_related_CPTs]
-cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
-                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
-                 title = 'Hip Related CPT codes')
-
 revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), 
                               color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
                                                 'maroon'))
-#eight row content
-eight_row_content = html.Div([
+
+fin_patAndRev = html.Div([
+                html.Div([
+                        dcc.Graph(figure = financial_pie)
+                        ], style={'width': '50%','display': 'inline-block'}),
+                html.Div([
+                        dcc.Graph(figure = revenue_location_pie)
+                        ], style={'width': '50%','display': 'inline-block'})
+                ])
+
+inst_info = html.Div([
+                        html.Div([
+                                html.H5([
+                                        "Institution Information"
+                                        ])
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
+
+provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
+
+inst_prov = html.Div([
                             html.Div([
-                                    dcc.Graph(figure = cpt_bar)
-                                    ], style={'width': '50%', 'display': 'inline-block'}),
-                            html.Div([
-                                    dcc.Graph(figure = revenue_location_pie)
-                                    ], style={'width': '50%', 'display': 'inline-block'})
-                            ])
-
-##Ninth row in the layout
-#ninth row variables
-df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-
-
-knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
-df_knee_related_CPTs = df[knee_related_CPTs]
-df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures', 
-                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
-
-
-
-
-#ninth row content
-ninth_row_content = html.Div([
-                             html.Div([
-                                    dcc.Graph(figure = proc_distr_pie)
-                                    ], style={'width': '50%','display': 'inline-block'}),
-                             html.Div([
-                                    dcc.Graph(figure = knee_distr_bar)
+                                    dcc.Graph(figure = provider_specialty_bar)
                                     ], style={'width': '50%','display': 'inline-block'})
                             ])
 
@@ -453,15 +463,20 @@ page_1_layout = html.Div([
 # dropdown_id = 0
 # df_viz = df_surgeon[df_surgeon['Primary Surgeon'] == surgeon_dropdown_names[dropdown_id]]
 # print(df_viz['Primary Surgeon'].head(10)
-        first_row_content,
-        second_row_content,
-        third_row_content,
-        fourth_row_content,
-        fifth_row_content,
-        sixth_row_content,
-        seventh_row_content,
-        eight_row_content,
-        ninth_row_content,
+        pat_info_at_glance,
+        main_header,
+        pat_demo_info,
+        proc_info, 
+        proc_totalAndKnee,
+        proc_hip,
+        comorb_info,
+        comorb_ICD10Top10,
+        prom_info,
+        prom_discharge,
+        fin_info, 
+        fin_patAndRev, 
+        inst_info,
+        inst_prov,
         html.Br(),
         dcc.Link('Go back to home', href='/')
 ])
@@ -519,7 +534,6 @@ def model_image_view_html(title_name="Default Model", select_button_name="Select
     return layout
     
 
-
 ########################## START: PAGE 2
 
 page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
@@ -556,6 +570,39 @@ def parse_contents_hip_fracture(contents, filename, date):
     prediction  = read_image_and_classify(img_new)
 
 
+########################## START: PAGE 2
+
+page_2_layout = model_image_view_html(title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
+
+@app.callback(Output('output-image-upload', 'children'),
+              Input('upload-image', 'contents'),
+              State('upload-image', 'filename'),
+              State('upload-image', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents_hip_fracture(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+
+        return children    
+    
+### IMAGE LOADERS
+def parse_contents_hip_fracture(contents, filename, date):
+
+    ### READ IMAGE AND RESIZE
+    im_bytes = base64.b64decode(contents.split("base64,")[-1])
+    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+>>>>>>> aoviz
+
+    # Preprocessing
+    img_new = im_preprocess(img, im_newsize = (1062, 1062))
+    
+    # Encoding Back
+    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+    encoding =  base64.b64encode(im_arr)
+    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+
     output_view = html.Div([
                             html.H5(filename),
                             html.H6(datetime.datetime.fromtimestamp(date)),
@@ -573,6 +620,7 @@ def parse_contents_hip_fracture(contents, filename, date):
                                 'wordBreak': 'break-all'
                             })
                         ], style={'textAlign': 'center'})
+
 
     return output_view
 
@@ -593,16 +641,18 @@ def read_image_and_classify(image_in):
     for channel in range(n_channel):
         student_images[0, :, :, channel] = image_in
 
+    # # 3) Making the predictions
+    student_images = np.zeros((1, image_width, image_height, n_channel))
 
     # Use the Model to Predict the Image
     student_images = student_images.astype(np.uint8)
+
 
     prediction_prob = [0.66, 0.34]
     predicted_class = prediction_prob[0]
     # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
     
     return predicted_class
-
 
 
 ########################## END: PAGE 2
