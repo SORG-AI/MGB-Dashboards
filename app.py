@@ -102,7 +102,7 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              ])  # end div
                    ])  # end div
 # Logout screen
-logout = html.Div([html.Div(html.H2('You have been logged out - Please login')),
+logout = html.Div([html.Div(html.H2('You are securely logged out - Please login to access your data!')),
                    html.Br(),
                    dcc.Link('Home', href='/')
                    ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
@@ -159,16 +159,16 @@ index_page = html.Div([
     html.Img(src = 'https://th.bing.com/th/id/OIP.y6b85lVMkdcnmZxDYFkCrwAAAA?pid=ImgDet&rs=1', height= '200px', width ='400px'),
     html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'padding': '10px 30px', 'backgroundColor': 'rgb(220, 248, 285)'}),
     html.Div([
-        dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
         html.Br(),
-        dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
         html.Br(),
-        dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px'}),
+        dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid'}),
-    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='800px')
+    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='600px')
 ], style={ 'width':'100%'})
 
 
@@ -1040,7 +1040,7 @@ def update_output_div(uname):
             #df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[uname]]
             return 'Username: {}'.format(uname), name
         except:  
-            return '','No Surgeon Data'
+            return '','No Surgeon Specific Data'
     else:
         return '', ''
 
