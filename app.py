@@ -624,7 +624,7 @@ page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_outpu
 def update_output(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         children = [
-            parse_contents_hip_fracture(c, n, d) for c, n, d in
+            parse_contents_soomin(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
 
         return children    
@@ -639,16 +639,19 @@ def parse_contents_soomin(contents, filename, date):
 
     # Preprocessing
     # TODO: Soomin adds her preprocessing stuff here
-    img_new = img_new
+    img_new = img
+    
+    # Get the Prediction
+    # TODO: Soomin adds her preprocessing stuff here
+    prediction  = read_image_and_classify_soomin(img_new)
+    
     
     # Encoding Back
     _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
     encoding =  base64.b64encode(im_arr)
     image    = 'data:image/png;base64,{}'.format(encoding.decode())
 
-    # Get the Prediction
-    # TODO: Soomin adds her preprocessing stuff here
-    prediction  = 0.5000000
+
 
     output_view = html.Div([
                             html.H5(filename),
@@ -674,7 +677,13 @@ def parse_contents_soomin(contents, filename, date):
 ### ML Preprocessor
 def read_image_and_classify_soomin(image_in):
 
-    pass
+    # Preprocess the image
+    # Load Model
+    # Predict
+    # Output the prediction
+    prediction = 0.77777
+    
+    return prediction
 
 
 
