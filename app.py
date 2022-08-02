@@ -178,14 +178,24 @@ index_page = html.Div([
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 
-#print(df.head(10))
-
-
-
 #TODO: work on the surgeon specific stuff
 #TODO: work on dropdown: other surgeons can see other surgeons
 
-# #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+##surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+
+
+# pull out the primary surgeon column from the dataframe
+list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+sorted_surg = list_surgeons.sort()
+
+#create username for each primary surgeon using a loop
+USER_TO_NAME = {}
+
+# for x in sorted_surg:
+#     last_n_c = []
+#     for i in 
+#     given_username = x[0] + last_n_c
+
 
 USER_TO_NAME = {
     'vivek': 'Vivek M Shah',
@@ -273,13 +283,13 @@ pat_info_at_glance =  html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P('All MGB', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
                                                         ])
 
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -299,7 +309,7 @@ pat_info_at_glance =  html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -616,6 +626,7 @@ comorb_ICD10Top10 = html.Div([
                 html.Div([
 
                         dcc.Graph(figure = ICD10_bar)
+                        
 
                         ], style={'width': '100%','display': 'inline-block'})
 
