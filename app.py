@@ -156,8 +156,10 @@ app.layout = html.Div([
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.Img(src = 'https://th.bing.com/th/id/OIP.y6b85lVMkdcnmZxDYFkCrwAAAA?pid=ImgDet&rs=1', height= '200px', width ='400px'),
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'padding': '10px 30px', 'backgroundColor': 'rgb(220, 248, 285)'}),
+    html.H1('Fixus', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
+                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
+    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
+                                'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
@@ -167,8 +169,8 @@ index_page = html.Div([
         html.Br(),
         dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
-        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid'}),
-    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='600px')
+        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
+    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
 ], style={ 'width':'100%'})
 
 
@@ -181,8 +183,7 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 
 
 #TODO: work on the surgeon specific stuff
-
-# dropdown gets populated with this list
+#TODO: work on dropdown: other surgeons can see other surgeons
 
 # #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 
@@ -236,15 +237,11 @@ female_ratio = (100 - males_ratio)
 
 avg_length_of_stay = round(df["Length of Stay"].mean())
 
-
-
-
-
 # the whole blue row on the dashboard that gives 
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children =' Your Patient Information At A Glance', style={'text-align': 'center'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
 
                             html.Div([
 
@@ -798,17 +795,6 @@ page_1_layout = html.Div([
             html.Br()
 
 ])
-
-
-
-@app.callback(Output('page-1-content', 'children'),
-
-              [Input('page-1-dropdown', 'value')])
-
-def page_1_dropdown(value):
-
-    return 'You have selected "{}"'.format(value)
-
 
 
 ########### MODEL DEPLOYMENT LAYOUT DEFINITION
