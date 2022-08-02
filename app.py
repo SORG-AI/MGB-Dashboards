@@ -156,7 +156,7 @@ app.layout = html.Div([
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.Img(src = './images/fixuslogo.png', height= '200px', width ='400px'),
+    html.Img(src = 'https://th.bing.com/th/id/OIP.y6b85lVMkdcnmZxDYFkCrwAAAA?pid=ImgDet&rs=1', height= '200px', width ='400px'),
     html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'padding': '10px 30px', 'backgroundColor': 'rgb(220, 248, 285)'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
