@@ -765,38 +765,41 @@ page_1_layout = html.Div([
             html.Div([
                 
                 html.H2(id='surgeon_name', children = '')]),
+            dcc.Tabs([
+                    dcc.Tab(label = 'MGB Patients', children = [
+                                                              pat_info_at_glance,
 
-        pat_info_at_glance,
+                                                              main_header,
 
-        main_header,
+                                                              pat_demo_info,
 
-        pat_demo_info,
+                                                              proc_info, 
 
-        proc_info, 
+                                                              proc_totalAndKnee,
 
-        proc_totalAndKnee,
+                                                              proc_hip,
 
-        proc_hip,
+                                                              comorb_info,
 
-        comorb_info,
+                                                              comorb_ICD10Top10,
 
-        comorb_ICD10Top10,
+                                                              prom_info,
 
-        prom_info,
+                                                              prom_discharge,
 
-        prom_discharge,
+                                                              fin_info, 
 
-        fin_info, 
+                                                              fin_patAndRev, 
 
-        fin_patAndRev, 
+                                                              inst_info,
 
-        inst_info,
-
-        inst_prov,
-
-        html.Br(),
-
-        dcc.Link('Go back to home', href='/')
+                                                              inst_prov  
+                                                            ]),
+                    dcc.Tab(label= 'Your patients', children = '')
+                    ]),
+            
+            html.Br(),
+            dcc.Link('Go back to home', href='/')
 
 ])
 
