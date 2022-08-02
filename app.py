@@ -156,8 +156,10 @@ app.layout = html.Div([
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.Img(src = 'https://th.bing.com/th/id/OIP.y6b85lVMkdcnmZxDYFkCrwAAAA?pid=ImgDet&rs=1', height= '200px', width ='400px'),
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'padding': '10px 30px', 'backgroundColor': 'rgb(220, 248, 285)'}),
+    html.H1('Fixus', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
+                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
+    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
+                                'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
@@ -167,8 +169,8 @@ index_page = html.Div([
         html.Br(),
         dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
-        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid'}),
-    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='600px')
+        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
+    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
 ], style={ 'width':'100%'})
 
 
@@ -176,15 +178,24 @@ index_page = html.Div([
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 
-#print(df.head(10))
-
-
-
 #TODO: work on the surgeon specific stuff
+#TODO: work on dropdown: other surgeons can see other surgeons
 
-# dropdown gets populated with this list
+##surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 
-# #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+
+# pull out the primary surgeon column from the dataframe
+list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+sorted_surg = list_surgeons.sort()
+
+#create username for each primary surgeon using a loop
+USER_TO_NAME = {}
+
+# for x in sorted_surg:
+#     last_n_c = []
+#     for i in
+#     given_username = x[0] + last_n_c
+
 
 USER_TO_NAME = {
     'vivek': 'Vivek M Shah',
@@ -236,15 +247,11 @@ female_ratio = (100 - males_ratio)
 
 avg_length_of_stay = round(df["Length of Stay"].mean())
 
-
-
-
-
-# the whole blue row on the dashboard that gives 
+# the whole blue row on the dashboard that gives
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children =' Your Patient Information At A Glance', style={'text-align': 'center'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
 
                             html.Div([
 
@@ -276,13 +283,13 @@ pat_info_at_glance =  html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P('All MGB', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
                                                         ])
 
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -302,7 +309,7 @@ pat_info_at_glance =  html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -468,7 +475,7 @@ df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name
 
 
 
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures', 
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
 
                         labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
 
@@ -619,6 +626,7 @@ comorb_ICD10Top10 = html.Div([
                 html.Div([
 
                         dcc.Graph(figure = ICD10_bar)
+                       
 
                         ], style={'width': '100%','display': 'inline-block'})
 
@@ -646,7 +654,7 @@ prom_info = html.Div([
 
 
 
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", 
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
 
                              color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
 
@@ -692,7 +700,7 @@ financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinanc
 
 
 
-revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), 
+revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'),
 
                               color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
 
@@ -756,47 +764,46 @@ inst_prov = html.Div([
 
 page_1_layout = html.Div([
 
+            dcc.Link('Go back to home', href='/'),
             html.Div([
 
-                html.H3("Analytics Dashboard"),
+                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
+           
+            html.Div(html.H2(id='surgeon_name', children = '')),
+            dcc.Tabs([
+                    dcc.Tab(label = 'MGB Patients', children = [
+                                                              pat_info_at_glance,
 
-                ], style={'textAlign': 'center'}),
-            
-            html.Div([
-                
-                html.H2(id='surgeon_name', children = '')]),
+                                                              main_header,
 
-        pat_info_at_glance,
+                                                              pat_demo_info,
 
-        main_header,
+                                                              proc_info,
 
-        pat_demo_info,
+                                                              proc_totalAndKnee,
 
-        proc_info, 
+                                                              proc_hip,
 
-        proc_totalAndKnee,
+                                                              comorb_info,
 
-        proc_hip,
+                                                              comorb_ICD10Top10,
 
-        comorb_info,
+                                                              prom_info,
 
-        comorb_ICD10Top10,
+                                                              prom_discharge,
 
-        prom_info,
+                                                              fin_info,
 
-        prom_discharge,
+                                                              fin_patAndRev,
 
-        fin_info, 
+                                                              inst_info,
 
-        fin_patAndRev, 
-
-        inst_info,
-
-        inst_prov,
-
-        html.Br(),
-
-        dcc.Link('Go back to home', href='/')
+                                                              inst_prov  
+                                                            ]),
+                    dcc.Tab(label= 'Your patients', children = '')
+                    ]),
+           
+            html.Br()
 
 ])
 
