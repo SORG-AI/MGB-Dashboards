@@ -178,14 +178,24 @@ index_page = html.Div([
 
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 
-#print(df.head(10))
-
-
-
 #TODO: work on the surgeon specific stuff
 #TODO: work on dropdown: other surgeons can see other surgeons
 
-# #surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+##surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
+
+
+# pull out the primary surgeon column from the dataframe
+list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+sorted_surg = list_surgeons.sort()
+
+#create username for each primary surgeon using a loop
+USER_TO_NAME = {}
+
+# for x in sorted_surg:
+#     last_n_c = []
+#     for i in
+#     given_username = x[0] + last_n_c
+
 
 USER_TO_NAME = {
     'vivek': 'Vivek M Shah',
@@ -237,7 +247,7 @@ female_ratio = (100 - males_ratio)
 
 avg_length_of_stay = round(df["Length of Stay"].mean())
 
-# the whole blue row on the dashboard that gives 
+# the whole blue row on the dashboard that gives
 
 pat_info_at_glance =  html.Div([
 
@@ -273,13 +283,13 @@ pat_info_at_glance =  html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P('All MGB', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
                                                         ])
 
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -299,7 +309,7 @@ pat_info_at_glance =  html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -465,7 +475,7 @@ df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name
 
 
 
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures', 
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
 
                         labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
 
@@ -616,6 +626,7 @@ comorb_ICD10Top10 = html.Div([
                 html.Div([
 
                         dcc.Graph(figure = ICD10_bar)
+                       
 
                         ], style={'width': '100%','display': 'inline-block'})
 
@@ -643,7 +654,7 @@ prom_info = html.Div([
 
 
 
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution", 
+discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
 
                              color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
 
@@ -689,7 +700,7 @@ financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinanc
 
 
 
-revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'), 
+revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'),
 
                               color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
 
@@ -757,7 +768,7 @@ page_1_layout = html.Div([
             html.Div([
 
                 html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
-            
+           
             html.Div(html.H2(id='surgeon_name', children = '')),
             
             dcc.Tabs([
@@ -768,7 +779,7 @@ page_1_layout = html.Div([
 
                                                               pat_demo_info,
 
-                                                              proc_info, 
+                                                              proc_info,
 
                                                               proc_totalAndKnee,
 
@@ -782,9 +793,9 @@ page_1_layout = html.Div([
 
                                                               prom_discharge,
 
-                                                              fin_info, 
+                                                              fin_info,
 
-                                                              fin_patAndRev, 
+                                                              fin_patAndRev,
 
                                                               inst_info,
 
@@ -937,13 +948,24 @@ page_1_layout = html.Div([
 
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'}))
                     ]),
-            
+           
             html.Br()
 
 ])
 
     
 
+
+
+
+
+@app.callback(Output('page-1-content', 'children'),
+
+              [Input('page-1-dropdown', 'value')])
+
+def page_1_dropdown(value):
+
+    return 'You have selected "{}"'.format(value)
 
 
 
