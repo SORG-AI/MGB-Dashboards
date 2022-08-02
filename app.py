@@ -756,15 +756,12 @@ inst_prov = html.Div([
 
 page_1_layout = html.Div([
 
+            dcc.Link('Go back to home', href='/'),
             html.Div([
 
-                html.H3("Analytics Dashboard"),
-
-                ], style={'textAlign': 'center'}),
+                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
             
-            html.Div([
-                
-                html.H2(id='surgeon_name', children = '')]),
+            html.Div(html.H2(id='surgeon_name', children = '')),
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
                                                               pat_info_at_glance,
@@ -798,8 +795,7 @@ page_1_layout = html.Div([
                     dcc.Tab(label= 'Your patients', children = '')
                     ]),
             
-            html.Br(),
-            dcc.Link('Go back to home', href='/')
+            html.Br()
 
 ])
 
