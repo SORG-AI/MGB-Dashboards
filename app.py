@@ -929,6 +929,8 @@ page_1_layout = html.Div([
                     dcc.Tab(label = 'MGB Patients', children = [
                                                               pat_info_at_glance,
                                                               
+                                                              html.Br(),
+                                                              
                                                               pat_info_header,
                                                               
                                                               comorb_info,
