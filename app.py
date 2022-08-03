@@ -29,7 +29,10 @@ PATHS = {
     'data_aaos' : os.path.join('data','aaos_database')
     }
 
+### Loading Data for MGB Dashboard
+df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
+
 
 # CREDIT: This code is copied from Dash official documentation:
 # https://dash.plotly.com/urls
@@ -129,9 +132,11 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
 
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
+
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
+    global df
     #### Creating a dict with all surgeon names and usernames
     list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
 #create username for each primary surgeon using a loop
@@ -143,10 +148,14 @@ def login_button_click(n_clicks, username, password):
     #print(x)
         for i in range (len(list_surgeons)):
             un =x[0] + x.rsplit(' ', 1)[1]
-            USER_TO_NAME.update({x : str(un)})
+            USER_TO_NAME.update({str(un): x})
             USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
     
-    print(USER_LIST['VShah'])
+    #print(USER_LIST['VShah'])
+    #print(USER_TO_NAME['VShah'])
+    
+    df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+    
     # we need this to account for empty pass code
     password = '' if password == None else password
     
