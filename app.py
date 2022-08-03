@@ -470,7 +470,7 @@ proc_info = html.Div([
 df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
 
 
-# This is the pi plot
+# This is the pie plot
 proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
 
                                                 'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
@@ -478,34 +478,11 @@ proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distrib
 
 
 
-
-knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
-
-df_knee_related_CPTs = df[knee_related_CPTs]
-
-df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-
-
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
-
-                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
-
-
-
-
-
-proc_totalAndKnee = html.Div([
+proc_total = html.Div([
 
                  html.Div([
 
                           dcc.Graph(figure = proc_distr_pie)
-
-                          ], style={'width': '50%','display': 'inline-block'}),
-
-                 html.Div([
-
-                          dcc.Graph(figure = knee_distr_bar)
 
                           ], style={'width': '50%','display': 'inline-block'})
 
@@ -525,14 +502,32 @@ cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_
 
 
 
-proc_hip = html.Div([
+knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
+
+df_knee_related_CPTs = df[knee_related_CPTs]
+
+df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
+
+
+
+knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
+
+                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
+
+
+proc_hip_and_knee = html.Div([
 
                 html.Div([
 
                         dcc.Graph(figure = cpt_bar)
 
-                        ], style={'width': '50%', 'display': 'inline-block'})
+                        ], style={'width': '50%', 'display': 'inline-block'}), 
+                
+                html.Div([
 
+                        dcc.Graph(figure = knee_distr_bar)
+
+                        ], style={'width': '50%', 'display': 'inline-block'})
                 ])
 
 ## Comorbidities and complications category
@@ -953,9 +948,9 @@ page_1_layout = html.Div([
 
                                                               proc_info,
 
-                                                              proc_totalAndKnee,
+                                                              proc_total,
 
-                                                              proc_hip,
+                                                              proc_hip_and_knee,
 
                                                               inst_info_header,
                                                               
