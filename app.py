@@ -407,13 +407,13 @@ pat_info_at_glance =  html.Div([
 
 ##The main header that is titled "Patient Data" row in the layout
 
-main_header = html.Div([
+pat_info_header = html.Div([
 
                               html.Div([
 
                                       html.H2([
 
-                                          "Patient Data"
+                                          "Patient Related Data"
 
                                               ])
 
@@ -421,23 +421,19 @@ main_header = html.Div([
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
+surg_info_header = html.Div([
 
+                              html.Div([
 
-##Demographics category
+                                      html.H2([
 
-pat_demo_info = html.Div([
+                                          "Surgeon Related Data"
 
-                        html.Div([
+                                              ])
 
-                                html.H5([
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                                        "Demographics Based Information"
-
-                                        ])
-
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
-
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
 
 
@@ -464,7 +460,7 @@ proc_info = html.Div([
 df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
 
 
-
+# This is the pi plot
 proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
 
                                                 'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
@@ -640,22 +636,6 @@ comorb_ICD10Top10 = html.Div([
 
 
 
-## Patient related outcomes category
-
-prom_info = html.Div([
-
-                    html.Div([
-
-                             html.H5([
-
-                                 "Patient Related Outcomes"
-
-                                      ])
-
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
-
-                    ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
-
 
 
 
@@ -679,6 +659,21 @@ prom_discharge = html.Div([
                           ])
 
 ## Financial information category
+
+inst_info_header = html.Div([
+
+                              html.Div([
+
+                                      html.H2([
+
+                                          "Institution Related Data"
+
+                                              ])
+
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+
 
 fin_info = html.Div([
 
@@ -766,6 +761,41 @@ inst_prov = html.Div([
 
                             ])
 
+<<<<<<< Updated upstream
+=======
+#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
+
+page_1_layout = html.Div([
+
+            dcc.Link('Go back to home', href='/'),
+            html.Div([
+
+                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
+           
+            html.Div(html.H2(id='surgeon_name', children = '')),
+            
+            dcc.Tabs([
+                    dcc.Tab(label = 'MGB Patients', children = [
+                                                              pat_info_at_glance,
+
+                                                              pat_info_header,
+                                                              
+                                                              comorb_info,
+
+                                                              comorb_ICD10Top10,
+
+                                                              prom_discharge,
+                                                              
+                                                              surg_info_header,
+
+                                                              proc_info,
+
+                                                              proc_totalAndKnee,
+
+                                                              proc_hip,
+                                                              
+                                                              inst_info_header,
+>>>>>>> Stashed changes
 
 
 ## For your patient tab
