@@ -114,24 +114,24 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
                    ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
 
 
-# #### Creating a dict with all surgeon names and usernames: copy of this block is in the callback pls leave for a bit
-# list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
-# #create username for each primary surgeon using a loop
-# USER_TO_NAME = {}
-# USER_LIST= {}
-# #print(list_surgeon)
-# for x in list_surgeons:
-#     username = []
-#     #print(x)
-#     for i in range (len(list_surgeons)):
-#         username =[x[0] + x.rsplit(' ', 1)[1]]
-#     USER_TO_NAME.update({x : str(username)})
-#     USER_LIST.update({str(username) : str(x[0: 2] + x[0:2])}) 
-## the username is the first letter of their first name and their last name
-## their password is the first two letters of their first names twice: ex: Vivek's password is ViVi
-
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
+    #### Creating a dict with all surgeon names and usernames
+list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+#create username for each primary surgeon using a loop
+USER_TO_NAME = {}
+USER_LIST= {}
+    
+#print(list_surgeons)
+for x in list_surgeons:
+    un = []
+    #print(x)
+    for i in range (len(list_surgeons)):
+            un =x[0] + x.rsplit(' ', 1)[1]
+            USER_TO_NAME.update({str(un): x})
+            USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
+    
+print(USER_LIST)
 
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
@@ -142,6 +142,7 @@ def login_button_click(n_clicks, username, password):
 #create username for each primary surgeon using a loop
     USER_TO_NAME = {}
     USER_LIST= {}
+    
 #print(list_surgeons)
     for x in list_surgeons:
         un = []
@@ -151,10 +152,7 @@ def login_button_click(n_clicks, username, password):
             USER_TO_NAME.update({str(un): x})
             USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
     
-    #print(USER_LIST['VShah'])
-    #print(USER_TO_NAME['VShah'])
-    
-    df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+    #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
     password = '' if password == None else password
@@ -179,7 +177,8 @@ app.layout = html.Div([
     dcc.Location(id='redirect', refresh=True),
     dcc.Store(id='login-status', storage_type='session'),
     html.Div(id='user-status-div'),
-    html.Div(id='show-output', children='usernmae', style ={'textAlign': 'right'}),
+    html.Div(id='show-output', children='username', style ={'textAlign': 'right'}),
+    html.P(id = 'surgeon-name', children = 'name', style ={'textAlign': 'right'}),
     html.Hr(),
     html.Br(),
     html.Div(id='page-content'),
@@ -241,6 +240,9 @@ index_page = html.Div([
 ##Info at a lance  row in the layout
 
 #setup the variables for the AAOS data
+
+
+
 
 # THESE ARE THE GENDER RATIO VARIABLES
 
@@ -414,7 +416,6 @@ pat_info_at_glance =  html.Div([
 
 
 
-##The main header that is titled "Patient Data" row in the layout
 
 pat_info_header = html.Div([
 
@@ -965,19 +966,12 @@ page_1_layout = html.Div([
 
                         dcc.Tab(label= 'Your patients', children = [
                                                                     pat_tab_glance
+                                                                    
                                                                     ])
                         ])
 ])
 
 
-
-@app.callback(Output('page-1-content', 'children'),
-
-              [Input('page-1-dropdown', 'value')])
-
-def page_1_dropdown(value):
-
-    return 'You have selected "{}"'.format(value)
 
 
 
@@ -1199,41 +1193,37 @@ def login_status(url):
 #Displaying username
 @app.callback(
     Output(component_id='show-output', component_property='children'),
-    Output(component_id='surgeon_name',component_property='children'),
-    Output('num_patients','children'),
-    Output('sex_ratio','children'),
-    Output('avg_stay', 'children'),
+    Output(component_id = 'surgeon-name', component_property='children'),
+    #Output('num_patients','children'),
+    #Output('sex_ratio','children'),
+    #Output('avg_stay', 'children'),
     [Input('login-status','data')])
-def update_output_div(uname):
-    if uname != 'loggedout':
+def update_output_div(username):
+    global USER_TO_NAME
+    if username in USER_TO_NAME.keys():
         try: 
-            name = USER_TO_NAME[uname]
+            name = USER_TO_NAME[username]
+            #df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+            # AJRRPat_total = len(list(df_surgeon['Sex']))
+            # AJRRPat_total_output = '{}'.format(AJRRPat_total)
             
+            # males_patients = list(df_surgeon['Sex'] == 'M')
+            # males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
+            # males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
+            # female_ratio = (100 - males_ratio)
+            # sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
             
+            # avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
+            # avg_stay_output = '{}'.format(avg_length_of_stay)
             
-            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[uname]]
-            AJRRPat_total = len(list(df_surgeon['Sex']))
-            AJRRPat_total_output = '{}'.format(AJRRPat_total)
-            
-            males_patients = list(df_surgeon['Sex'] == 'M')
-            males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
-            males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-            female_ratio = (100 - males_ratio)
-            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
-            
-            avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
-            avg_stay_output = '{}'.format(avg_length_of_stay)
-            
-            return ('Username: {}'.format(uname), 'Name: {}'.format(name), AJRRPat_total_output, sex_ratio_output, avg_stay_output)
+            return ('Username: {}'.format(username), 'Name: {}'.format(name)) #AJRRPat_total_output, sex_ratio_output, avg_stay_output
         except:  
-            return ('','No Surgeon Specific Data','', '', '')
+            return ('','No Surgeon Specific Data')
     else:
-        return ('', '', '', '', '')
+        return ('', '')
 
 
 # Main router
-
-
 @app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
               [Input('url', 'pathname')])
 def display_page(pathname):
