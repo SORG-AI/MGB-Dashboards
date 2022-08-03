@@ -21,6 +21,7 @@ import cv2
 import base64
 
 
+
 #### FIXUS BEGINS
 PATHS = {
     'images': os.path.join('images'),
@@ -169,7 +170,7 @@ app.layout = html.Div([
     dcc.Location(id='redirect', refresh=True),
     dcc.Store(id='login-status', storage_type='session'),
     html.Div(id='user-status-div'),
-    html.Div(id='show-output', children='', style ={'textAlign': 'right'}),
+    html.Div(id='show-output', children='usernmae', style ={'textAlign': 'right'}),
     html.Hr(),
     html.Br(),
     html.Div(id='page-content'),
@@ -766,7 +767,156 @@ inst_prov = html.Div([
                             ])
 
 
-#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
+
+## For your patient tab
+pat_tab_glance = html.Div([
+
+                                html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
+
+                                                        style ={'textAlign': 'center','color': '#0074D9'}),
+
+                                                html.P(id='num_patients', className = 'card-content',
+
+                                                       style = {'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                    ])
+
+                                            ], style={'width':'150px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Institution', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P('-', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average patient age', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P('-', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+
+                                            ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Sex Ratio', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='sex_ratio', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average patient BMI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P('-', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average hospitalization duration', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='avg_stay', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Percent patients with comorbidities', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P('100%', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block', 'padding': '10px 10px'})
+
+                                ], style={'backgroundColor': 'rgb(220, 248, 285)'})
+
+
+#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
 
@@ -776,6 +926,7 @@ page_1_layout = html.Div([
                 html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
            
             html.Div(html.H2(id='surgeon_name', children = '')),
+            
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
                                                               pat_info_at_glance,
@@ -806,13 +957,13 @@ page_1_layout = html.Div([
 
                                                               inst_prov  
                                                             ]),
-                    dcc.Tab(label= 'Your patients', children = '')
-                        
-                    ]),
-           
-            html.Br()
 
+                        dcc.Tab(label= 'Your patients', children = [
+                            pat_tab_glance
+                                                                    ])
+                        ])
 ])
+
 
 
 
@@ -1044,19 +1195,36 @@ def login_status(url):
 #Displaying username
 @app.callback(
     Output(component_id='show-output', component_property='children'),
-    Output('surgeon_name','children'),
-    [Input('login-status','data')]
-)
+    Output(component_id='surgeon_name',component_property='children'),
+    Output('num_patients','children'),
+    Output('sex_ratio','children'),
+    Output('avg_stay', 'children'),
+    [Input('login-status','data')])
 def update_output_div(uname):
     if uname != 'loggedout':
         try: 
             name = USER_TO_NAME[uname]
-            #df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[uname]]
-            return 'Username: {}'.format(uname), name
+            
+            
+            
+            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[uname]]
+            AJRRPat_total = len(list(df_surgeon['Sex']))
+            AJRRPat_total_output = '{}'.format(AJRRPat_total)
+            
+            males_patients = list(df_surgeon['Sex'] == 'M')
+            males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
+            males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
+            female_ratio = (100 - males_ratio)
+            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
+            
+            avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
+            avg_stay_output = '{}'.format(avg_length_of_stay)
+            
+            return ('Username: {}'.format(uname), 'Name: {}'.format(name), AJRRPat_total_output, sex_ratio_output, avg_stay_output)
         except:  
-            return '','No Surgeon Specific Data'
+            return ('','No Surgeon Specific Data','', '', '')
     else:
-        return '', ''
+        return ('', '', '', '', '')
 
 
 # Main router
@@ -1121,4 +1289,4 @@ def display_page(pathname):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
