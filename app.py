@@ -11,7 +11,7 @@ from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-
+import random
 
 ## Models Libraries
 import datetime
@@ -27,6 +27,9 @@ PATHS = {
 
     'data_aaos' : os.path.join('data','aaos_database')
     }
+
+df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
+
 # CREDIT: This code is copied from Dash official documentation:
 # https://dash.plotly.com/urls
 
@@ -53,7 +56,6 @@ login_manager.init_app(server)
 login_manager.login_view = '/login'
 
 # User data model. It has to have at least self.id as a minimum
-
 class User(UserMixin):
     def __init__(self, username):
         self.id = username
@@ -106,31 +108,51 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
                    html.Br(),
                    dcc.Link('Home', href='/')
                    ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
-####
+
+
+# #### Creating a dict with all surgeon names and usernames: copy of this block is in the callback pls leave for a bit
+# list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+# #create username for each primary surgeon using a loop
+# USER_TO_NAME = {}
+# USER_LIST= {}
+# #print(list_surgeon)
+# for x in list_surgeons:
+#     username = []
+#     #print(x)
+#     for i in range (len(list_surgeons)):
+#         username =[x[0] + x.rsplit(' ', 1)[1]]
+#     USER_TO_NAME.update({x : str(username)})
+#     USER_LIST.update({str(username) : str(x[0: 2] + x[0:2])}) 
+## the username is the first letter of their first name and their last name
+## their password is the first two letters of their first names twice: ex: Vivek's password is ViVi
 
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
-    USER_LIST = {
-        "orthobros": "orthogals",
-        "god": "",
-        "bardiya": "",
-        "andreea": "",
-        "karina": "",
-        "guest": "thisissocool",
-        "kelsey": " ",
-        "vivek" : "bestsurgeonever",
-    }
+    #### Creating a dict with all surgeon names and usernames
+    list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+#create username for each primary surgeon using a loop
+    USER_TO_NAME = {}
+    USER_LIST= {}
+#print(list_surgeons)
+    for x in list_surgeons:
+        un = []
+    #print(x)
+        for i in range (len(list_surgeons)):
+            un =x[0] + x.rsplit(' ', 1)[1]
+            USER_TO_NAME.update({x : str(un)})
+            USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
     
+    print(USER_LIST['VShah'])
     # we need this to account for empty pass code
     password = '' if password == None else password
     
     # Check the pass and go to the next page
     if n_clicks > 0:
         try:
-            if USER_LIST[username] == password:
+            if username in USER_LIST.keys() and password == USER_LIST[username]:
                 user = User(username)
                 login_user(user)
                 return '/success', ''
@@ -176,7 +198,6 @@ index_page = html.Div([
 
 
 
-df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 
 #TODO: work on the surgeon specific stuff
 #TODO: work on dropdown: other surgeons can see other surgeons
@@ -184,23 +205,11 @@ df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_Gene
 ##surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
 
 
-# pull out the primary surgeon column from the dataframe
-list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
-sorted_surg = list_surgeons.sort()
-
-#create username for each primary surgeon using a loop
-USER_TO_NAME = {}
-
-# for x in sorted_surg:
-#     last_n_c = []
-#     for i in
-#     given_username = x[0] + last_n_c
-
-
-USER_TO_NAME = {
-    'vivek': 'Vivek M Shah',
-    'andreea': 'Antonia F Chen'
-    }
+###LEAVE : OLD USER_TO_NAME
+# USER_TO_NAME = {
+#     'vivek': 'Vivek M Shah',
+#     'andreea': 'Antonia F Chen'
+#     }
 
 
 
@@ -218,10 +227,6 @@ USER_TO_NAME = {
 # except:
 
 #     df = df.copy(deep=True)
-
-
-
-
 
 ##Info at a lance  row in the layout
 
@@ -760,6 +765,7 @@ inst_prov = html.Div([
 
                             ])
 
+
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
 
 page_1_layout = html.Div([
@@ -801,6 +807,7 @@ page_1_layout = html.Div([
                                                               inst_prov  
                                                             ]),
                     dcc.Tab(label= 'Your patients', children = '')
+                        
                     ]),
            
             html.Br()
