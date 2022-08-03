@@ -761,44 +761,8 @@ inst_prov = html.Div([
 
                             ])
 
-<<<<<<< Updated upstream
-=======
-#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
+#Surgeon related info tab
 
-page_1_layout = html.Div([
-
-            dcc.Link('Go back to home', href='/'),
-            html.Div([
-
-                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
-           
-            html.Div(html.H2(id='surgeon_name', children = '')),
-            
-            dcc.Tabs([
-                    dcc.Tab(label = 'MGB Patients', children = [
-                                                              pat_info_at_glance,
-
-                                                              pat_info_header,
-                                                              
-                                                              comorb_info,
-
-                                                              comorb_ICD10Top10,
-
-                                                              prom_discharge,
-                                                              
-                                                              surg_info_header,
-
-                                                              proc_info,
-
-                                                              proc_totalAndKnee,
-
-                                                              proc_hip,
-                                                              
-                                                              inst_info_header,
->>>>>>> Stashed changes
-
-
-## For your patient tab
 pat_tab_glance = html.Div([
 
                                 html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
@@ -946,6 +910,10 @@ pat_tab_glance = html.Div([
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 
+
+
+
+
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
@@ -960,10 +928,16 @@ page_1_layout = html.Div([
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
                                                               pat_info_at_glance,
+                                                              
+                                                              pat_info_header,
+                                                              
+                                                              comorb_info,
 
-                                                              main_header,
-
-                                                              pat_demo_info,
+                                                              comorb_ICD10Top10,
+                                                              
+                                                              prom_discharge,
+                                                              
+                                                              surg_info_header,
 
                                                               proc_info,
 
@@ -971,25 +945,15 @@ page_1_layout = html.Div([
 
                                                               proc_hip,
 
-                                                              comorb_info,
-
-                                                              comorb_ICD10Top10,
-
-                                                              prom_info,
-
-                                                              prom_discharge,
-
-                                                              fin_info,
-
+                                                              inst_info_header,
+                                                              
                                                               fin_patAndRev,
-
-                                                              inst_info,
 
                                                               inst_prov  
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
-                            pat_tab_glance
+                                                                    pat_tab_glance
                                                                     ])
                         ])
 ])
