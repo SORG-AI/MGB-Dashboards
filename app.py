@@ -16,7 +16,7 @@ import random
 ## Models Libraries
 import datetime
 import numpy as np
-#from codes.util_images import im_preprocess
+from codes.util_images import im_preprocess
 import cv2
 import base64
 
@@ -993,7 +993,6 @@ page_1_layout = html.Div([
                                                                     ])
                         ])
 ])
-
 
 
 
