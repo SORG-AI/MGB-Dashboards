@@ -21,6 +21,7 @@ import cv2
 import base64
 
 
+
 #### FIXUS BEGINS
 PATHS = {
     'images': os.path.join('images'),
