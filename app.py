@@ -16,7 +16,7 @@ import random
 ## Models Libraries
 import datetime
 import numpy as np
-from codes.util_images import im_preprocess
+#from codes.util_images import im_preprocess
 import cv2
 import base64
 
@@ -919,6 +919,68 @@ pat_tab_glance = html.Div([
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 
+proc_total_tab = html.Div([
+
+                 html.Div([
+
+                          dcc.Graph(id = 'proc_distr_pie')
+
+                          ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
+proc_hip_and_knee_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'cpt_bar')
+
+                        ], style={'width': '50%', 'display': 'inline-block'}), 
+                
+                html.Div([
+
+                        dcc.Graph(id = 'knee_distr_bar')
+
+                        ], style={'width': '50%', 'display': 'inline-block'})
+                ])
+
+
+comorb_ICD10Top10_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'ICD10_bar')
+                       
+
+                        ], style={'width': '100%','display': 'inline-block'})
+
+                ])
+
+prom_discharge_tab = html.Div([
+
+                            html.Div([
+
+                                    dcc.Graph(id = 'discharge_distr_pie')
+
+                                    ])
+
+                          ])
+
+fin_patAndRev_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'financial_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'}),
+
+                html.Div([
+
+                        dcc.Graph(id = 'revenue_location_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'})
+                ])
+                                  
 
 
 
@@ -963,7 +1025,27 @@ page_1_layout = html.Div([
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
-                                                                pat_tab_glance
+                                                                pat_tab_glance,
+                                                                
+                                                                html.Br(),
+                                                              
+                                                                pat_info_header,
+                                                                
+                                                                comorb_info,
+                                                                
+                                                                comorb_ICD10Top10_tab,
+                                                                
+                                                                prom_discharge_tab,
+                                                                
+                                                                surg_info_header,
+
+                                                                proc_total_tab,
+                                                                
+                                                                proc_hip_and_knee_tab,
+                                                                
+                                                                inst_info_header,
+                                                                
+                                                                fin_patAndRev_tab
                                                                 
                                                                 ])
                         ])
@@ -1205,13 +1287,13 @@ def update_output_div(username):
         return ('', '')
     
 
-#Displaying username
+#Surgeon specific patient info at a glance
 @app.callback(
     Output('num_patients','children'),
     Output('sex_ratio','children'),
     Output('avg_stay', 'children'),
     [Input('login-status','data')])
-def update_sur_spec_info(username):
+def update_pat_info(username):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
@@ -1233,6 +1315,84 @@ def update_sur_spec_info(username):
             return ('', '','')
     else:
         return ('','','')
+
+
+#Surgeon specific graphs
+@app.callback(
+    Output('proc_distr_pie','figure'),
+    Output('cpt_bar', 'figure'),
+    Output('knee_distr_bar','figure'),
+    Output('ICD10_bar','figure'),
+    Output('discharge_distr_pie','figure'),
+    Output('financial_pie','figure'),
+    Output('revenue_location_pie','figure'),
+    [Input('login-status','data')])
+def update_sur_spec_info(username):
+    global USER_TO_NAME
+    if username in USER_TO_NAME.keys():
+        try: 
+            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+
+            # This is the pie plot
+            proc_distr_pie = px.pie(df_surgeon['ShortDSC'], names = df_surgeon['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+
+                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+            
+            hip_related_CPTs = df_surgeon['ShortDSC'].str.contains('HIP')
+
+            df_hip_related_CPTs = df_surgeon[hip_related_CPTs]
+
+            cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
+
+                             labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
+
+                             title = 'Hip Related CPT codes')
+
+
+
+            knee_related_CPTs = df_surgeon['ShortDSC'].str.contains('KNEE')
+
+            df_knee_related_CPTs = df_surgeon[knee_related_CPTs]
+
+            df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
+
+
+
+            knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
+
+                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
+
+            #find the top 10 highest numbers
+
+            ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
+
+                               labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
+
+            discharge_distr_pie = px.pie(df_surgeon['DischargeDispositionDSC'], names = df_surgeon['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
+
+                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
+
+            financial_pie = px.pie(df_surgeon['OriginalFinancialClassDSC'], names=df_surgeon['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
+            
+                                   color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+            
+                                                            'skyblue', 'steelblue'))
+            
+            
+            
+            revenue_location_pie = px.pie(df_surgeon['RevenueLocationNM'], names = df_surgeon["RevenueLocationNM"], title = ('Revenue Based on Locations'),
+            
+                                          color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
+            
+                                                            'maroon'))
+
+            
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie)
+        except:  
+            return ('','','','')
+    else:
+        return ('','','','')
+    
 
 
 # Main router
