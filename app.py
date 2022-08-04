@@ -65,7 +65,7 @@ class User(UserMixin):
         self.id = username
 
 
-@ login_manager.user_loader
+@login_manager.user_loader
 def load_user(username):
     ''' This function loads the user by user id. Typically this looks up the user from a user database.
         We won't be registering or looking up users in this example, since we'll just login using LDAP server.
@@ -172,7 +172,7 @@ def login_button_click(n_clicks, username, password):
 
 
 # Main Layout
-app.layout = html.Div([
+post_login_content = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Location(id='redirect', refresh=True),
     dcc.Store(id='login-status', storage_type='session'),
@@ -183,6 +183,8 @@ app.layout = html.Div([
     html.Br(),
     html.Div(id='page-content'),
 ])
+
+app.layout = post_login_content
 
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
@@ -203,6 +205,8 @@ index_page = html.Div([
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
     html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
 ], style={ 'width':'100%'})
+
+
 
 
 
@@ -927,8 +931,7 @@ page_1_layout = html.Div([
             html.Div([
 
                 html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
-           
-            html.Div(html.H2(id='surgeon_name', children = '')),
+          
             
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
@@ -960,9 +963,9 @@ page_1_layout = html.Div([
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
-                                                                    pat_tab_glance
-                                                                    
-                                                                    ])
+                                                                pat_tab_glance
+                                                                
+                                                                ])
                         ])
 ])
 
@@ -1189,33 +1192,47 @@ def login_status(url):
 @app.callback(
     Output(component_id='show-output', component_property='children'),
     Output(component_id = 'surgeon-name', component_property='children'),
-    #Output('num_patients','children'),
-    #Output('sex_ratio','children'),
-    #Output('avg_stay', 'children'),
     [Input('login-status','data')])
 def update_output_div(username):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
-            name = USER_TO_NAME[username]
-            #df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
-            # AJRRPat_total = len(list(df_surgeon['Sex']))
-            # AJRRPat_total_output = '{}'.format(AJRRPat_total)
-            
-            # males_patients = list(df_surgeon['Sex'] == 'M')
-            # males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
-            # males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-            # female_ratio = (100 - males_ratio)
-            # sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
-            
-            # avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
-            # avg_stay_output = '{}'.format(avg_length_of_stay)
-            
-            return ('Username: {}'.format(username), 'Name: {}'.format(name)) #AJRRPat_total_output, sex_ratio_output, avg_stay_output
+            name = USER_TO_NAME[username]            
+            return ('Username: {}'.format(username), 'Name: {}'.format(name))
         except:  
             return ('','No Surgeon Specific Data')
     else:
         return ('', '')
+    
+
+#Displaying username
+@app.callback(
+    Output('num_patients','children'),
+    Output('sex_ratio','children'),
+    Output('avg_stay', 'children'),
+    [Input('login-status','data')])
+def update_sur_spec_info(username):
+    global USER_TO_NAME
+    if username in USER_TO_NAME.keys():
+        try: 
+            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+            AJRRPat_total = len(list(df_surgeon['Sex']))
+            AJRRPat_total_output = '{}'.format(AJRRPat_total)
+            
+            males_patients = list(df_surgeon['Sex'] == 'M')
+            males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
+            males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
+            female_ratio = (100 - males_ratio)
+            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
+            
+            avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
+            avg_stay_output = '{}'.format(avg_length_of_stay)
+            
+            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output)
+        except:  
+            return ('', '','')
+    else:
+        return ('','','')
 
 
 # Main router
@@ -1273,7 +1290,17 @@ def display_page(pathname):
 
 
 
-
+# "complete" layout
+app.validation_layout = html.Div([
+    login,
+    success,
+    failed,
+    logout,
+    post_login_content,
+    page_1_layout,
+    page_2_layout,
+    page_3_layout
+])
 
 
 
