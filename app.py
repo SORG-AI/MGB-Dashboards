@@ -1,5 +1,10 @@
 # Read Required Libraries
 import os
+import sys
+
+# Need this for Kelsey's code to work - not sure why but please keep
+file_dir = os.path.dirname('create_graphs.py')
+sys.path.append(file_dir)
 
 from flask import Flask
 from flask_login import login_user, LoginManager, UserMixin, logout_user, current_user
@@ -12,14 +17,17 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 import random
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 ## Models Libraries
 import datetime
 import numpy as np
-#from codes.util_images import im_preprocess
+from codes.util_images import im_preprocess
 import cv2
 import base64
 
+from codes.create_graphs import create_current_graphs, pat_glance_info
 
 
 #### FIXUS BEGINS
@@ -226,49 +234,14 @@ index_page = html.Div([
 
 
 
+### MGB Information Collection and Formatting ###
 
-# TODO: how to acces the username globally (the person who has logged in)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay) = pat_glance_info(df)
 
-# current_user_name = username_global #
-
-# # TODO: this is bad, we need to make this approch better
-
-# try:
-
-#     df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[current_user_name]]
-
-# except:
-
-#     df = df.copy(deep=True)
-
-##Info at a lance  row in the layout
-
-#setup the variables for the AAOS data
+(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df)
 
 
-
-
-# THESE ARE THE GENDER RATIO VARIABLES
-
-AJRRPat_total = len(list(df['Sex'])) # int of total patients on the spreadsheet
-
-males_patients = list(df['Sex'] == 'M')
-
-#find the indeces  of the males in the data column
-
-males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
-
-males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-
-female_ratio = (100 - males_ratio)
-
-
-
-#avergae length of stay, aka the average of the column named Lenght of Stay
-
-avg_length_of_stay = round(df["Length of Stay"].mean())
-
-# the whole blue row on the dashboard that gives
+# the whole blue row on the dashboard that gives patient info at a glance
 
 pat_info_at_glance =  html.Div([
 
@@ -469,18 +442,6 @@ proc_info = html.Div([
 
 
 
-#row figures and variables for procedures category
-
-df_shortDSC = df['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-
-# This is the pie plot
-proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-
-                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-
-
-
 
 proc_total = html.Div([
 
@@ -491,33 +452,6 @@ proc_total = html.Div([
                           ], style={'width': '50%','display': 'inline-block'})
 
                 ])
-
-
-
-hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
-
-df_hip_related_CPTs = df[hip_related_CPTs]
-
-cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
-
-                 labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
-
-                 title = 'Hip Related CPT codes')
-
-
-
-knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
-
-df_knee_related_CPTs = df[knee_related_CPTs]
-
-df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-
-
-knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
-
-                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
-
 
 proc_hip_and_knee = html.Div([
 
@@ -551,87 +485,6 @@ comorb_info  = html.Div([
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
-
-ICD_data = {'Acute_MI_ICD10': [sum(df['Acute_MI_ICD10'].value_counts())],
-
-               'CHF_ICD10' : [sum(df['CHF_ICD10'].value_counts())],
-
-               'Peripheral_vascular_disease_ICD10': [sum(df['Peripheral_vascular_disease_ICD10'].value_counts())],
-
-               'CVA_ICD10' : [sum(df['CVA_ICD10'].value_counts())],
-
-               'Dementia_ICD10' :[sum(df['Dementia_ICD10'].value_counts())],
-
-               'Pulmonary_disease_ICD10' :[ sum(df['Pulmonary_disease_ICD10'].value_counts())],
-
-               'Connective_tissue_disorder_ICD10' :[ sum(df['Connective_tissue_disorder_ICD10'].value_counts())],
-
-               'Peptic_ulcer_ICD10' : [sum(df['Peptic_ulcer_ICD10'].value_counts())],
-
-               'Liver_disease_ICD10' : [sum(df['Liver_disease_ICD10'].value_counts())],
-
-               'Diabetes_ICD10' : [sum(df['Diabetes_ICD10'].value_counts())],
-
-               'Diabetes_complications_ICD10' : [sum(df['Diabetes_complications_ICD10'].value_counts())],
-
-               'Paraplegia_ICD10' : [sum(df['Paraplegia_ICD10'].value_counts())],
-
-               'Renal_disease_ICD10':[ sum(df['Renal_disease_ICD10'].value_counts())],
-
-               'Cancer_ICD10' : [sum(df['Cancer_ICD10'].value_counts())],
-
-               'Metastatic_cancer_ICD10' : [sum(df['Metastatic_cancer_ICD10'].value_counts())],
-
-               'Severe_liver_disease_ICD10' : [sum(df['Severe_liver_disease_ICD10'].value_counts())],
-
-               'HIV_ICD10' : [sum(df['HIV_ICD10'].value_counts())],
-
-               'ALL_ICD10' : [sum(df['ALL_ICD10'].value_counts())],
-
-               'Osteoporosis_ICD10' : [sum(df['Osteoporosis_ICD10'].value_counts())],
-
-               'Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10' : [sum(df['Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10'].value_counts())],
-
-               'Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10' : [sum(df['Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10'].value_counts())],
-
-               'Mood_affective_disorders_ICD10' :[ sum(df['Mood_affective_disorders_ICD10'].value_counts())],
-
-               'Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10' : [sum(df['Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10'].value_counts())],
-
-               'PULMONARY_EMBOLISM_ACUTE_ICD10' : [sum(df['PULMONARY_EMBOLISM_ACUTE_ICD10'].value_counts())],
-
-               'PULMONARY_EMBOLISM_CHRONIC_ICD10' : [sum(df['PULMONARY_EMBOLISM_CHRONIC_ICD10'].value_counts())],
-
-               'ACUTE_DVT_LOWER_EXTREMITY_ICD10' :[ sum(df['ACUTE_DVT_LOWER_EXTREMITY_ICD10'].value_counts())],
-
-               'CHRONIC_DVT_LOWER_EXTREMITY_ICD10' :[ sum(df['CHRONIC_DVT_LOWER_EXTREMITY_ICD10'].value_counts())],
-
-               'ACUTE_DVT_UPPER_EXTREMITY_ICD10' :[ sum(df['ACUTE_DVT_UPPER_EXTREMITY_ICD10'].value_counts())],
-
-               'CHRONIC_DVT_UPPER_EXTREMITY_ICD10' : [sum(df['CHRONIC_DVT_UPPER_EXTREMITY_ICD10'].value_counts())],
-
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(df['PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10'].value_counts())],
-
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(df['PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10'].value_counts())],
-
-               'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(df['UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10'].value_counts())]}
-
-
-
-
-
-df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
-
-
-
-#find the top 10 highest numbers
-
-ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
-
-                               labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
-
-
-
 comorb_ICD10Top10 = html.Div([
 
                 html.Div([
@@ -642,18 +495,6 @@ comorb_ICD10Top10 = html.Div([
                         ], style={'width': '100%','display': 'inline-block'})
 
                 ])
-
-
-
-
-
-
-
-discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
-
-                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
-
-
 
 
 
@@ -701,23 +542,6 @@ fin_info = html.Div([
 
 
 
-
-financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
-
-                       color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-
-                                                'skyblue', 'steelblue'))
-
-
-
-revenue_location_pie = px.pie(df['RevenueLocationNM'], names = df["RevenueLocationNM"], title = ('Revenue Based on Locations'),
-
-                              color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
-
-                                                'maroon'))
-
-
-
 fin_patAndRev = html.Div([
 
                 html.Div([
@@ -752,11 +576,6 @@ inst_info = html.Div([
 
 
 
-df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
-
-
-
-provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
 
 
 
@@ -770,7 +589,8 @@ inst_prov = html.Div([
 
                             ])
 
-#Surgeon related info tab
+
+### Surgeon related info tab ###
 
 pat_tab_glance = html.Div([
 
@@ -1298,16 +1118,11 @@ def update_pat_info(username):
     if username in USER_TO_NAME.keys():
         try: 
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
-            AJRRPat_total = len(list(df_surgeon['Sex']))
+            
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay) = pat_glance_info(df_surgeon)
+
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
-            
-            males_patients = list(df_surgeon['Sex'] == 'M')
-            males = list(filter(lambda i: males_patients[i], range(len(males_patients))))
-            males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-            female_ratio = (100 - males_ratio)
-            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)
-            
-            avg_length_of_stay = round(df_surgeon["Length of Stay"].mean())
+            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)           
             avg_stay_output = '{}'.format(avg_length_of_stay)
             
             return (AJRRPat_total_output, sex_ratio_output, avg_stay_output)
@@ -1331,67 +1146,17 @@ def update_sur_spec_info(username):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
+            
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            # This is the pie plot
-            proc_distr_pie = px.pie(df_surgeon['ShortDSC'], names = df_surgeon['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-
-                                                'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-            
-            hip_related_CPTs = df_surgeon['ShortDSC'].str.contains('HIP')
-
-            df_hip_related_CPTs = df_surgeon[hip_related_CPTs]
-
-            cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
-
-                             labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
-
-                             title = 'Hip Related CPT codes')
-
-
-
-            knee_related_CPTs = df_surgeon['ShortDSC'].str.contains('KNEE')
-
-            df_knee_related_CPTs = df_surgeon[knee_related_CPTs]
-
-            df_knee_shortDSC = df_knee_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
-
-
-
-            knee_distr_bar = px.bar(df_knee_shortDSC, y = 'value_counts', title = 'Distribution of Knee Procedures',
-
-                        labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
-
-            #find the top 10 highest numbers
-
-            ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
-
-                               labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
-
-            discharge_distr_pie = px.pie(df_surgeon['DischargeDispositionDSC'], names = df_surgeon['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
-
-                             color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
-
-            financial_pie = px.pie(df_surgeon['OriginalFinancialClassDSC'], names=df_surgeon['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
-            
-                                   color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-            
-                                                            'skyblue', 'steelblue'))
-            
-            
-            
-            revenue_location_pie = px.pie(df_surgeon['RevenueLocationNM'], names = df_surgeon["RevenueLocationNM"], title = ('Revenue Based on Locations'),
-            
-                                          color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
-            
-                                                            'maroon'))
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df_surgeon)
 
             
             return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie)
         except:  
-            return ('','','','')
+            return ('','','','','','','')
     else:
-        return ('','','','')
+        return ('','','','','','','')
     
 
 
