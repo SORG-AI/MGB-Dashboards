@@ -39,10 +39,16 @@ def pat_glance_info(df):
 
 def create_current_graphs(df):
 
-    df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='Patients')
+    df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='PatientsRace')
     
-    pat_race = px.bar(df_race, y = 'Patients', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
+    pat_race = px.bar(df_race, y = 'PatientsRace', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
                       color_discrete_sequence=(['darkblue']))
+    
+    df_eth =df['EthnicGroupDSC'].value_counts().to_frame(name = 'PatientsEth')
+    
+    pat_eth = px.bar(df_eth, y = 'PatientsEth', title = 'Ethnical Distribution of Patients', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
+                     color_discrete_sequence=(['darkturquoise']))
+                        
     
     # This is the pie plot
     proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
@@ -170,7 +176,7 @@ def create_current_graphs(df):
     provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
 
     
-    return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race)
+    return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth)
 
 
 

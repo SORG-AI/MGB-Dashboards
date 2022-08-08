@@ -238,7 +238,7 @@ index_page = html.Div([
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI) = pat_glance_info(df)
 
-(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race) = create_current_graphs(df)
+(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df)
 
 
 # the whole blue row on the dashboard that gives patient info at a glance
@@ -407,6 +407,12 @@ pat_race_bargraph = html.Div([
 
                             ])
 
+
+pat_eth_bargraph = html.Div([
+                        html.Div([
+                                dcc.Graph(figure = pat_eth)
+                                ], style={'width': '50%','display': 'inline-block'})
+                            ])
 
 surg_info_header = html.Div([
 
@@ -816,7 +822,15 @@ pat_race_bargraph_tab = html.Div([
 
                             ])
 
+pat_eth_bargraph_tab = html.Div([
 
+                         html.Div([
+
+                             dcc.Graph(id = 'pat_eth')
+
+                              ], style={'width': '50%','display': 'inline-block'})
+
+                            ])
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
@@ -837,6 +851,8 @@ page_1_layout = html.Div([
                                                               pat_info_header,
                                                               
                                                               pat_race_bargraph,
+                                                              
+                                                              pat_eth_bargraph,
                                                               
                                                               comorb_info,
 
@@ -869,6 +885,8 @@ page_1_layout = html.Div([
                                                                 pat_info_header,
                                                                 
                                                                 pat_race_bargraph_tab,
+                                                                
+                                                                pat_eth_bargraph_tab,
                                                                 
                                                                 comorb_info,
                                                                 
@@ -1166,6 +1184,7 @@ def update_pat_info(username):
     Output('financial_pie','figure'),
     Output('revenue_location_pie','figure'),
     Output('pat_race', 'figure'),
+    Output('pat_eth', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
     global USER_TO_NAME
@@ -1174,14 +1193,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race)
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth)
         except:  
-            return ('','','','','','','', '')
+            return ('','','','','','','', '', '')
     else:
-        return ('','','','','','','')
+        return ('','','','','','','', '')
     
 
 
