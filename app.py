@@ -397,22 +397,17 @@ pat_info_header = html.Div([
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
-pat_race_bargraph = html.Div([
 
-                         html.Div([
+pat_race_and_eth = html.Div([
+                                html.Div([
 
-                             dcc.Graph(figure = pat_race)
+                                    dcc.Graph(figure = pat_race)
 
-                              ], style={'width': '50%','display': 'inline-block'})
-
-                            ])
-
-
-pat_eth_bargraph = html.Div([
-                        html.Div([
-                                dcc.Graph(figure = pat_eth)
-                                ], style={'width': '50%','display': 'inline-block'})
-                            ])
+                                     ], style={'width': '50%','display': 'inline-block'}),              
+                                html.Div([
+                                        dcc.Graph(figure = pat_eth)
+                                        ], style={'width': '50%','display': 'inline-block'})
+                            ], style={'width': '100%', 'display': 'inline-block'})
 
 surg_info_header = html.Div([
 
@@ -812,25 +807,16 @@ fin_patAndRev_tab = html.Div([
                         ], style={'width': '50%','display': 'inline-block'})
                 ])
                                   
-pat_race_bargraph_tab = html.Div([
+pat_race_and_eth_tab = html.Div([
+                                html.Div([
 
-                         html.Div([
+                                    dcc.Graph(figure = pat_race)
 
-                             dcc.Graph(id = 'pat_race')
-
-                              ], style={'width': '50%','display': 'inline-block'})
-
-                            ])
-
-pat_eth_bargraph_tab = html.Div([
-
-                         html.Div([
-
-                             dcc.Graph(id = 'pat_eth')
-
-                              ], style={'width': '50%','display': 'inline-block'})
-
-                            ])
+                                     ], style={'width': '50%','display': 'inline-block'}),              
+                                html.Div([
+                                        dcc.Graph(figure = pat_eth)
+                                        ], style={'width': '50%','display': 'inline-block'})
+                            ], style={'width': '100%', 'display': 'inline-block'})
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
@@ -850,9 +836,7 @@ page_1_layout = html.Div([
                                                               
                                                               pat_info_header,
                                                               
-                                                              pat_race_bargraph,
-                                                              
-                                                              pat_eth_bargraph,
+                                                              pat_race_and_eth,
                                                               
                                                               comorb_info,
 
@@ -884,9 +868,7 @@ page_1_layout = html.Div([
                                                               
                                                                 pat_info_header,
                                                                 
-                                                                pat_race_bargraph_tab,
-                                                                
-                                                                pat_eth_bargraph_tab,
+                                                                pat_race_and_eth_tab,
                                                                 
                                                                 comorb_info,
                                                                 
@@ -1193,14 +1175,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_and_eth) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth)
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_and_eth_tab)
         except:  
-            return ('','','','','','','', '', '')
+            return ('','','','','','','', '')
     else:
-        return ('','','','','','','', '')
+        return ('','','','','','','')
     
 
 
