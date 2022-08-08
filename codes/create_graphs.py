@@ -25,14 +25,14 @@ def pat_glance_info(df):
     males_ratio = round((len(males) / (AJRRPat_total) *100)) #% of men on the spreadsheet
 
     female_ratio = (100 - males_ratio)
-
-
+    
+    BMI_total = round((703 * (df['WeightOz']*0.0625) / (df['HeightIn'])**2).mean())
 
     #avergae length of stay, aka the average of the column named Lenght of Stay
 
     avg_length_of_stay = round(df["Length of Stay"].mean())
     
-    return (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay)
+    return (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, BMI_total)
 
 
 
