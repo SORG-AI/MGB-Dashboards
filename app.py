@@ -1175,14 +1175,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_and_eth) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_and_eth_tab)
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth)
         except:  
-            return ('','','','','','','', '')
+            return ('','','','','','','', '', '')
     else:
-        return ('','','','','','','')
+        return ('','','','','','','', '', '')
     
 
 
