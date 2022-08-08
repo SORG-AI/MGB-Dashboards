@@ -50,21 +50,47 @@ def create_current_graphs(df):
                      color_discrete_sequence=(['darkturquoise']))
                         
     
-    # This is the pie plot
-    proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    #Distribution of Procedures
+    
+    #proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    
+                                        #'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+                                        
+    #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
+    # from the dataset
+    searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
+    df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
+    df_prim_rev = df_clean.copy()
+
+    #Label all revisions as REVISION    
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'REVISION'
+
+
+
+    proc_distr_pie = px.pie(df_prim_rev['ShortDSC'], names = df_prim_rev['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
     
-    hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
+    #Parse only revision data
+    df_rev = df_clean[~df_clean['ShortDSC'].str.contains('TOTAL')]
     
-    df_hip_related_CPTs = df[hip_related_CPTs]
+    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
-    cpt_bar = px.bar(x = df_hip_related_CPTs['CPT'].value_counts(), y= pd.Series(df_hip_related_CPTs['CPT'].unique().tolist(), dtype='str'),
+                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
     
-                     labels={'y': 'Types of CPT Codes', 'x':'Frequency'}, color_discrete_sequence=(['rosybrown']),
     
-                     title = 'Hip Related CPT codes')
     
+    hip_related_CPTs = df_clean['ShortDSC'].str.contains('HIP')
+    
+    df_hip_related_CPTs = df_clean[hip_related_CPTs]
+    
+    df_hip_shortDSC = df_hip_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
+    
+    hip_distr_bar = px.bar(df_hip_shortDSC, y = 'value_counts', title = 'Distribution of Hip Procedures',
+    
+                labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['rosybrown']))
     
     
     knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
@@ -174,9 +200,28 @@ def create_current_graphs(df):
     df_provider = df['ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
 
     provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
+    
+    
+    df_hip_diag = df_hip_related_CPTs['ICD_DSC_1'].value_counts().to_frame(name='value_counts')
+    
+    hip_diag_bar = px.bar(df_hip_diag, y = 'value_counts' ,title = 'Hip Diagnoses', color_discrete_sequence=(['darkblue']))
 
     
-    return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth)
+    #hip_diag_pie = px.pie(df_hip_related_CPTs['ICD_DSC_1'], names = df_hip_related_CPTs['ICD_DSC_1'], title = 'Hip Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    
+     #                                               'skyblue', 'steelblue'))
+    
+    df_knee_diag = df_knee_related_CPTs['ICD_DSC_1'].value_counts().to_frame(name='value_counts')
+    
+    #knee_diag_pie = px.pie(df_knee_related_CPTs['ICD_DSC_1'], names=df_knee_related_CPTs['ICD_DSC_1'],title = 'Knee Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    
+     #                                               'skyblue', 'steelblue'))
+     
+    knee_diag_bar = px.bar(df_knee_diag, y = 'value_counts' ,title = 'Knee Diagnoses', color_discrete_sequence=(['darkblue']))
+
+
+    
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth, hip_diag_bar, knee_diag_bar)
 
 
 

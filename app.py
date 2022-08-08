@@ -238,7 +238,7 @@ index_page = html.Div([
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI) = pat_glance_info(df)
 
-(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df)
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth, hip_diag_bar, knee_diag_bar) = create_current_graphs(df)
 
 
 # the whole blue row on the dashboard that gives patient info at a glance
@@ -450,6 +450,12 @@ proc_total = html.Div([
 
                           dcc.Graph(figure = proc_distr_pie)
 
+                          ], style={'width': '50%','display': 'inline-block'}),
+                 
+                 html.Div([
+
+                          dcc.Graph(figure = proc_revision_pie)
+
                           ], style={'width': '50%','display': 'inline-block'})
 
                 ])
@@ -458,7 +464,7 @@ proc_hip_and_knee = html.Div([
 
                 html.Div([
 
-                        dcc.Graph(figure = cpt_bar)
+                        dcc.Graph(figure = hip_distr_bar)
 
                         ], style={'width': '50%', 'display': 'inline-block'}), 
                 
@@ -602,6 +608,23 @@ inst_prov = html.Div([
                                     ], style={'width': '50%','display': 'inline-block'})
 
                             ])
+
+proc_diag = html.Div([
+    
+                html.Div([
+                    
+                        dcc.Graph(figure = hip_diag_bar)
+                        
+                        ], style={'width': '50%','display': 'inline-block'}),
+                
+                html.Div([
+                    
+                        dcc.Graph(figure = knee_diag_bar)
+                        
+                        ], style={'width': '50%','display': 'inline-block'})
+                
+                ])
+
 
 
 ### Surgeon related info tab ###
@@ -751,6 +774,12 @@ proc_total_tab = html.Div([
 
                           dcc.Graph(id = 'proc_distr_pie')
 
+                          ], style={'width': '50%','display': 'inline-block'}),
+                 
+                 html.Div([
+
+                          dcc.Graph(id = 'proc_revision_pie')
+
                           ], style={'width': '50%','display': 'inline-block'})
 
                 ])
@@ -759,7 +788,7 @@ proc_hip_and_knee_tab = html.Div([
 
                 html.Div([
 
-                        dcc.Graph(id = 'cpt_bar')
+                        dcc.Graph(id = 'hip_distr_bar')
 
                         ], style={'width': '50%', 'display': 'inline-block'}), 
                 
@@ -818,6 +847,22 @@ pat_race_and_eth_tab = html.Div([
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
 
+proc_diag_tab = html.Div([
+    
+                html.Div([
+                    
+                        dcc.Graph(id = 'hip_diag_bar')
+                        
+                        ], style={'width': '50%','display': 'inline-block'}),
+                
+                 html.Div([
+                    
+                        dcc.Graph(id = 'knee_diag_bar')
+                        
+                        ], style={'width': '50%','display': 'inline-block'})
+                
+                ])
+
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
@@ -853,6 +898,8 @@ page_1_layout = html.Div([
                                                               proc_total,
 
                                                               proc_hip_and_knee,
+                                                              
+                                                              proc_diag,
 
                                                               inst_info_header,
                                                               
@@ -883,6 +930,8 @@ page_1_layout = html.Div([
                                                                 proc_total_tab,
                                                                 
                                                                 proc_hip_and_knee_tab,
+                                                                
+                                                                proc_diag_tab,
                                                                 
                                                                 inst_info_header,
                                                                 
@@ -1159,7 +1208,8 @@ def update_pat_info(username):
 #Surgeon specific graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
-    Output('cpt_bar', 'figure'),
+    Output('proc_revision_pie','figure'),
+    Output('hip_distr_bar', 'figure'),
     Output('knee_distr_bar','figure'),
     Output('ICD10_bar','figure'),
     Output('discharge_distr_pie','figure'),
@@ -1167,6 +1217,8 @@ def update_pat_info(username):
     Output('revenue_location_pie','figure'),
     Output('pat_race', 'figure'),
     Output('pat_eth', 'figure'),
+    Output('hip_diag_bar','figure'),
+    Output('knee_diag_bar','figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
     global USER_TO_NAME
@@ -1175,14 +1227,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth, hip_diag_bar, knee_diag_bar) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth)
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth, hip_diag_bar, knee_diag_bar)
         except:  
-            return ('','','','','','','', '')
+            return ('','','','','','','','','','','','','')
     else:
-        return ('','','','','','','')
+        return ('','','','','','','','','','','','')
     
 
 
