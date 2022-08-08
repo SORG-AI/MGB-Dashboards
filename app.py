@@ -238,7 +238,7 @@ index_page = html.Div([
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay) = pat_glance_info(df)
 
-(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df)
+(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race) = create_current_graphs(df)
 
 
 # the whole blue row on the dashboard that gives patient info at a glance
@@ -396,6 +396,17 @@ pat_info_header = html.Div([
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+
+pat_race_bargraph = html.Div([
+
+                         html.Div([
+
+                             dcc.Graph(figure = pat_race)
+
+                              ], style={'width': '50%','display': 'inline-block'})
+
+                            ])
+
 
 surg_info_header = html.Div([
 
@@ -795,7 +806,15 @@ fin_patAndRev_tab = html.Div([
                         ], style={'width': '50%','display': 'inline-block'})
                 ])
                                   
+pat_race_bargraph_tab = html.Div([
 
+                         html.Div([
+
+                             dcc.Graph(id = 'pat_race')
+
+                              ], style={'width': '50%','display': 'inline-block'})
+
+                            ])
 
 
 
@@ -816,6 +835,8 @@ page_1_layout = html.Div([
                                                               html.Br(),
                                                               
                                                               pat_info_header,
+                                                              
+                                                              pat_race_bargraph,
                                                               
                                                               comorb_info,
 
@@ -846,6 +867,8 @@ page_1_layout = html.Div([
                                                                 html.Br(),
                                                               
                                                                 pat_info_header,
+                                                                
+                                                                pat_race_bargraph_tab,
                                                                 
                                                                 comorb_info,
                                                                 
@@ -1107,7 +1130,7 @@ def update_output_div(username):
 
 #Surgeon specific patient info at a glance
 @app.callback(
-    Output('num_patients','children'),
+    Output('num_patients','children'), 
     Output('sex_ratio','children'),
     Output('avg_stay', 'children'),
     [Input('login-status','data')])
@@ -1139,6 +1162,7 @@ def update_pat_info(username):
     Output('discharge_distr_pie','figure'),
     Output('financial_pie','figure'),
     Output('revenue_location_pie','figure'),
+    Output('pat_race', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
     global USER_TO_NAME
@@ -1147,12 +1171,12 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie)
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race)
         except:  
-            return ('','','','','','','')
+            return ('','','','','','','', '')
     else:
         return ('','','','','','','')
     
