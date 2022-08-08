@@ -263,7 +263,7 @@ pat_info_at_glance =  html.Div([
 
                                             ])
 
-                                    ], style={'width':'150px', 'height':'100px', 'display': 'inline-block'})
+                                    ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                 ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
 
@@ -323,7 +323,7 @@ pat_info_at_glance =  html.Div([
 
                                                         ])
 
-                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -343,7 +343,7 @@ pat_info_at_glance =  html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -366,32 +366,21 @@ pat_info_at_glance =  html.Div([
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-
+                            
+                            
                             html.Div([
 
-                                    dbc.Card([
+                                    html.H4('Top 5 most common comorbidities', className= 'card-title',
 
-                                            dbc.CardBody([
+                                                style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.H4('Percent patients with comorbidities', className= 'card-title',
+                                    html.P('---', className='card-content',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                               style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
-                                                            html.P('100%', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'})
+                                              ],  style={'backgroundColor': 'rgb(220, 248, 285)'})
 
                             ], style={'backgroundColor': 'rgb(220, 248, 285)'})
-
-
-
-
 
 
 pat_info_header = html.Div([
@@ -632,7 +621,7 @@ pat_tab_glance = html.Div([
 
                                                     ])
 
-                                            ], style={'width':'150px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                         ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
 
@@ -652,7 +641,7 @@ pat_tab_glance = html.Div([
 
                                                         ])
 
-                                            ], style={'width':'250px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                         ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -672,7 +661,7 @@ pat_tab_glance = html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                             ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -692,7 +681,7 @@ pat_tab_glance = html.Div([
 
                                                         ])
 
-                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                         ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -712,7 +701,7 @@ pat_tab_glance = html.Div([
 
                                                         ])
 
-                                            ], style={'width':'300px', 'height':'100px', 'display': 'inline-block'})
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                         ], style={'display': 'inline-block', 'padding': '10px 10px'}),
 
@@ -738,23 +727,15 @@ pat_tab_glance = html.Div([
 
                                 html.Div([
 
-                                    dbc.Card([
+                                    html.H4('Top 5 most common comorbidities', className= 'card-title',
 
-                                            dbc.CardBody([
+                                                style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.H4('Percent patients with comorbidities', className= 'card-title',
+                                    html.P('---', className='card-content',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                               style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
-                                                            html.P('100%', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'400px', 'height':'100px', 'display': 'inline-block'})
-
-                                        ], style={'display': 'inline-block', 'padding': '10px 10px'})
+                                              ],  style={'backgroundColor': 'rgb(220, 248, 285)'})
 
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
@@ -844,7 +825,7 @@ page_1_layout = html.Div([
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
                                                               pat_info_at_glance,
-                                                              
+                                                                                                                            
                                                               html.Br(),
                                                               
                                                               pat_info_header,
@@ -874,7 +855,7 @@ page_1_layout = html.Div([
 
                         dcc.Tab(label= 'Your patients', children = [
                                                                 pat_tab_glance,
-                                                                
+                                                                                                                                
                                                                 html.Br(),
                                                               
                                                                 pat_info_header,
