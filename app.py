@@ -238,7 +238,7 @@ index_page = html.Div([
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay) = pat_glance_info(df)
 
-(proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df)
+(proc_distr_pie, proc_revision_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df)
 
 
 # the whole blue row on the dashboard that gives patient info at a glance
@@ -449,9 +449,16 @@ proc_total = html.Div([
 
                           dcc.Graph(figure = proc_distr_pie)
 
+                          ], style={'width': '50%','display': 'inline-block'}),
+
+                 html.Div([
+
+                          dcc.Graph(figure = proc_revision_pie)
+
                           ], style={'width': '50%','display': 'inline-block'})
 
                 ])
+
 
 proc_hip_and_knee = html.Div([
 
@@ -757,6 +764,12 @@ proc_total_tab = html.Div([
                  html.Div([
 
                           dcc.Graph(id = 'proc_distr_pie')
+
+                          ], style={'width': '50%','display': 'inline-block'}),
+
+                 html.Div([
+
+                          dcc.Graph(id = 'proc_rev_pie')
 
                           ], style={'width': '50%','display': 'inline-block'})
 
@@ -1152,6 +1165,7 @@ def update_pat_info(username):
 #Surgeon specific graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
+    Output('proc_rev_pie','figure'),
     Output('cpt_bar', 'figure'),
     Output('knee_distr_bar','figure'),
     Output('ICD10_bar','figure'),
@@ -1166,14 +1180,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, proc_revision_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie)
+            return (proc_distr_pie, proc_revision_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie)
         except:  
-            return ('','','','','','','')
+            return ('','','','','','','','')
     else:
-        return ('','','','','','','')
+        return ('','','','','','','','')
     
 
 

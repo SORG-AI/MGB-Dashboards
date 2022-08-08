@@ -41,10 +41,36 @@ def create_current_graphs(df):
 
     
 
-    # This is the pie plot
-    proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    #Distribution of Procedures
+    
+    #proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    
+                                        #'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+                                        
+    #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
+    # from the dataset
+    searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
+    df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
+    df_prim_rev = df_clean.copy()
+
+    #Label all revisions as REVISION    
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'REVISION'
+
+
+
+    proc_distr_pie = px.pie(df_prim_rev['ShortDSC'], names = df_prim_rev['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+    
+    #Parse only revision data
+    df_rev = df_clean[~df_clean['ShortDSC'].str.contains('TOTAL')]
+    
+    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    
+                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+    
     
     hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
     
@@ -169,7 +195,7 @@ def create_current_graphs(df):
     provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
 
     
-    return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar)
+    return (proc_distr_pie, proc_revision_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar)
 
 
 
