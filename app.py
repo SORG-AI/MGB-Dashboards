@@ -838,11 +838,11 @@ fin_patAndRev_tab = html.Div([
 pat_race_and_eth_tab = html.Div([
                                 html.Div([
 
-                                    dcc.Graph(id = 'pat_race')
+                                    dcc.Graph(id = 'pat_race_bar')
 
                                      ], style={'width': '50%','display': 'inline-block'}),              
                                 html.Div([
-                                        dcc.Graph(id = 'pat_eth')
+                                        dcc.Graph(id = 'pat_eth_bar')
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
 
