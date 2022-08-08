@@ -67,9 +67,9 @@ def create_current_graphs(df):
     #Parse only revision data
     df_rev = df_clean[~df_clean['ShortDSC'].str.contains('TOTAL')]
     
-    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
     
-                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+                                                    'maroon'))
     
     
     hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
