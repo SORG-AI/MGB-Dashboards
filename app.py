@@ -700,7 +700,7 @@ pat_tab_glance = html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P(id = 'avgBMI', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -810,11 +810,11 @@ fin_patAndRev_tab = html.Div([
 pat_race_and_eth_tab = html.Div([
                                 html.Div([
 
-                                    dcc.Graph(figure = pat_race)
+                                    dcc.Graph(id = 'pat_race')
 
                                      ], style={'width': '50%','display': 'inline-block'}),              
                                 html.Div([
-                                        dcc.Graph(figure = pat_eth)
+                                        dcc.Graph(id = 'pat_eth')
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
 
@@ -1141,7 +1141,7 @@ def update_pat_info(username):
         try: 
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay) = pat_glance_info(df_surgeon)
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI_output) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)           
@@ -1175,10 +1175,10 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_and_eth) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race, pat_eth) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_and_eth_tab)
+            return (proc_distr_pie, cpt_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race, pat_eth)
         except:  
             return ('','','','','','','', '')
     else:
