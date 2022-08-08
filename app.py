@@ -497,6 +497,19 @@ comorb_ICD10Top10 = html.Div([
                 ])
 
 
+other_info  = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Other patient related information"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 prom_discharge = html.Div([
 
@@ -827,6 +840,8 @@ page_1_layout = html.Div([
 
                                                               comorb_ICD10Top10,
                                                               
+                                                              other_info,
+                                                              
                                                               prom_discharge,
                                                               
                                                               surg_info_header,
@@ -854,6 +869,8 @@ page_1_layout = html.Div([
                                                                 comorb_info,
                                                                 
                                                                 comorb_ICD10Top10_tab,
+                                                                
+                                                                other_info,
                                                                 
                                                                 prom_discharge_tab,
                                                                 
