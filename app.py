@@ -238,7 +238,7 @@ index_page = html.Div([
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
 
-(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar) = create_current_graphs(df)
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -412,6 +412,12 @@ pat_race_and_eth = html.Div([
                                         dcc.Graph(figure = pat_eth_bar)
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
+
+pat_bmi = html.Div([
+                html.Div([
+                            dcc.Graph(figure = bmi_bar)
+                        ])
+                    ])
 
 surg_info_header = html.Div([
 
@@ -772,6 +778,13 @@ pat_tab_glance = html.Div([
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 
+pat_bmi_tab = html.Div([
+                html.Div([
+                            dcc.Graph(id = 'bmi_bar')
+                        ])
+                    ])
+
+
 pat_age_tab = html.Div([
                     html.Div([
                         dcc.Graph(id = 'pat_age_bar')
@@ -895,6 +908,8 @@ page_1_layout = html.Div([
                                                               
                                                               pat_race_and_eth,
                                                               
+                                                              pat_bmi,
+                                                              
                                                               comorb_info,
 
                                                               comorb_ICD10Top10,
@@ -930,6 +945,8 @@ page_1_layout = html.Div([
                                                                 pat_age_tab,
                                                                 
                                                                 pat_race_and_eth_tab,
+                                                                
+                                                                pat_bmi_tab,
                                                                 
                                                                 comorb_info,
                                                                 
@@ -1205,7 +1222,7 @@ def update_pat_info(username):
         try: 
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI) = pat_glance_info(df_surgeon)
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)           
@@ -1235,6 +1252,7 @@ def update_pat_info(username):
     Output('hip_diag_bar','figure'),
     Output('knee_diag_bar','figure'),
     Output('pat_age_bar', 'figure'),
+    Output('bmi_bar', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
     global USER_TO_NAME
@@ -1243,14 +1261,14 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar)
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
         except:  
-            return ('','','','','','','','','','','','','', '')
+            return ('','','','','','','','','','','','','', '', '')
     else:
-        return ('','','','','','','','','','','','', '')
+        return ('','','','','','','','','','','','', '', '')
     
 
 
