@@ -236,7 +236,7 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI) = pat_glance_info(df)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
 
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar) = create_current_graphs(df)
 
@@ -296,7 +296,7 @@ pat_info_at_glance =  html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P(avg_pat_age, className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -687,7 +687,7 @@ pat_tab_glance = html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P(id = 'avgAge', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -1197,6 +1197,7 @@ def update_output_div(username):
     Output('sex_ratio','children'),
     Output('avg_stay', 'children'),
     Output('avgBMI', 'children'),
+    Output('avgAge', 'children'),
     [Input('login-status','data')])
 def update_pat_info(username):
     global USER_TO_NAME
@@ -1210,13 +1211,13 @@ def update_pat_info(username):
             sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)           
             avg_stay_output = '{}'.format(avg_length_of_stay)
             avg_BMI_output = '{}'.format(avg_BMI)
+            avg_age_output = '{}'.format(avg_pat_age)
             
-            
-            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output)
+            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output)
         except:  
-            return ('', '','', '')
+            return ('', '','', '', '')
     else:
-        return ('','','', '')
+        return ('','','', '', '')
 
 
 #Surgeon specific graphs

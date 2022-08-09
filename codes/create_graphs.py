@@ -32,7 +32,9 @@ def pat_glance_info(df):
 
     avg_length_of_stay = round(df["Length of Stay"].mean())
     
-    return (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, BMI_total)
+    avg_pat_age = round(df['Pat_age'].mean())
+    
+    return (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age)
 
 
 
