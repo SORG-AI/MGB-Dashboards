@@ -369,11 +369,11 @@ pat_info_at_glance =  html.Div([
                             
                             html.Div([
 
-                                    html.H4('Top 5 most common comorbidities', className= 'card-title',
+                                    html.H4('', className= 'card-title',
 
                                                 style={'textAlign': 'center','color': '#0074D9'}),
 
-                                    html.P('---', className='card-content',
+                                    html.P('', className='card-content',
 
                                                style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -759,11 +759,11 @@ pat_tab_glance = html.Div([
 
                                 html.Div([
 
-                                    html.H4('Top 5 most common comorbidities', className= 'card-title',
+                                    html.H4('', className= 'card-title',
 
                                                 style={'textAlign': 'center','color': '#0074D9'}),
 
-                                    html.P('---', className='card-content',
+                                    html.P('', className='card-content',
 
                                                style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
