@@ -774,7 +774,7 @@ pat_tab_glance = html.Div([
 
 pat_age_tab = html.Div([
                     html.Div([
-                        dcc.Graph(id = 'pat_age')
+                        dcc.Graph(id = 'pat_age_bar')
                         ])
                     ])
 
