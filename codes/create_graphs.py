@@ -225,8 +225,10 @@ def create_current_graphs(df):
 
     df_BMI= df['BMI'].value_counts().to_frame(name = 'Patients')
     
-    bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
-                     color_discrete_sequence=(['#008E97'])) 
+   # bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
+    #                 color_discrete_sequence=(['#008E97'])) 
+    bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[10,60], nbins=100)
+    bmi_bar.update_layout(bargap=0.2)
     
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
 
