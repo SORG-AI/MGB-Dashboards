@@ -49,7 +49,9 @@ def create_current_graphs(df):
     pat_eth_bar = px.bar(df_eth, y = 'PatientsEth', title = 'Ethnical Distribution of Patients', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
                      color_discrete_sequence=(['darkturquoise']))
                         
-    
+    df_age = df['Pat_age'].value_counts().to_frame(name = "Patient's Age")
+    pat_age_bar = px.bar(df_age, y = "Patient's Age", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Patient's Age": "Patient's Age"},
+                         color_discrete_sequence=(['Blue']))
     #Distribution of Procedures
     
     #proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
@@ -221,7 +223,7 @@ def create_current_graphs(df):
 
 
     
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar)
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar)
 
 
 
