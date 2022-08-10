@@ -41,6 +41,19 @@ def pat_glance_info(df):
 
 def create_current_graphs(df):
 
+    
+    #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
+    # from the dataset
+    searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
+    df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
+    df_prim_rev = df_clean.copy()
+
+    #Label all revisions as REVISION    
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'REVISION'
+
+    
     df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='PatientsRace')
     
     pat_race_bar = px.bar(df_race, y = 'PatientsRace', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
@@ -60,17 +73,7 @@ def create_current_graphs(df):
     
                                         #'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
                                         
-    #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
-    # from the dataset
-    searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
-    df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
-    df_prim_rev = df_clean.copy()
-
-    #Label all revisions as REVISION    
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'REVISION'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'REVISION'
-
+    
 
 
     proc_distr_pie = px.pie(df_prim_rev['ShortDSC'], names = df_prim_rev['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
@@ -227,10 +230,24 @@ def create_current_graphs(df):
     
    # bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
     #                 color_discrete_sequence=(['#008E97'])) 
-    bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[10,60], nbins=100)
+    bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[0,670], nbins=100)
     bmi_bar.update_layout(bargap=0.2)
     
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
