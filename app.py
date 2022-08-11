@@ -588,6 +588,16 @@ fin_patAndRev = html.Div([
 
                 ])
 
+fin_pat = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(figure = financial_pie)
+
+                        ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
 ##Institution information
 
 inst_info = html.Div([
@@ -858,6 +868,15 @@ fin_patAndRev_tab = html.Div([
 
                         ], style={'width': '50%','display': 'inline-block'})
                 ])
+
+fin_pat_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'financial_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'})
+                ])
                                   
 pat_race_and_eth_tab = html.Div([
                                 html.Div([
@@ -930,9 +949,8 @@ page_1_layout = html.Div([
 
                                                               inst_info_header,
                                                               
-                                                              fin_patAndRev,
-
-                                                              inst_prov  
+                                                              #fin_patAndRev,
+                                                              fin_pat 
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
@@ -966,7 +984,8 @@ page_1_layout = html.Div([
                                                                 
                                                                 inst_info_header,
                                                                 
-                                                                fin_patAndRev_tab
+                                                                #fin_patAndRev_tab
+                                                                fin_pat_tab
                                                                 
                                                                 ])
                         ])
@@ -1246,7 +1265,7 @@ def update_pat_info(username):
     Output('ICD10_bar','figure'),
     Output('discharge_distr_pie','figure'),
     Output('financial_pie','figure'),
-    Output('revenue_location_pie','figure'),
+    #Output('revenue_location_pie','figure'),
     Output('pat_race_bar', 'figure'),
     Output('pat_eth_bar', 'figure'),
     Output('hip_diag_bar','figure'),
@@ -1264,7 +1283,8 @@ def update_sur_spec_info(username):
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon)
 
             
-            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, #revenue_location_pie, 
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
         except:  
             return ('','','','','','','','','','','','','', '', '')
     else:
