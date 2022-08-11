@@ -50,9 +50,12 @@ def create_current_graphs(df):
     df = df_clean
 
     #Label all revisions as REVISION    
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'REVISION'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'REVISION'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'Revision'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'Revision'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'Revision'
+    #Lowercase total knee/hip replacement labels
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('TOTAL KNEE'), 'ShortDSC'] = 'Total Knee Replacement'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('TOTAL HIP'), 'ShortDSC'] = 'Total Hip Replacement'
 
     
     df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='PatientsRace')
@@ -83,16 +86,23 @@ def create_current_graphs(df):
     
     #Parse only revision data
     df_rev = df[~df['ShortDSC'].str.contains('TOTAL')]
+    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISE HIP JOINT REPLACEMENT'), 'ShortDSC'] = 'Revision of Hip Joint'
+    df_rev.loc[df_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'Partial Hip Replacement'
+    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISE/REPLACE KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
+    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISION OF KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
+    df_rev.loc[df_rev['ShortDSC'].str.contains('REMOVAL OF KNEE PROSTHESIS'), 'ShortDSC'] = 'Removal of Knee Prosthesis'
+    #df_rev = df_rev_hip.append(df_rev_knee)
     
-    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
     
-                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+                                                    'maroon'))
     
     
     
     hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
     
     df_hip_related_CPTs = df[hip_related_CPTs]
+  
     
     df_hip_shortDSC = df_hip_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
     
@@ -187,8 +197,11 @@ def create_current_graphs(df):
     
                        labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
     
-    
-    discharge_distr_pie = px.pie(df['DischargeDispositionDSC'], names = df['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
+    #Parse discharge distribution data
+    #TODO: The difference descriptions seem to refer to different discharges so hesitant to lump together into bigger categories 
+    df_discharge = df.copy()
+    #df_discharge.loc[df_discharge['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
+    discharge_distr_pie = px.pie(df_discharge['DischargeDispositionDSC'], names = df_discharge['DischargeDispositionDSC'], title = "Discharge Disposition Distribution",
                      color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
     
     financial_pie = px.pie(df['OriginalFinancialClassDSC'], names=df['OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
