@@ -46,16 +46,24 @@ def create_current_graphs(df):
     # from the dataset
     searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
     df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
-    df_prim_rev = df_clean.copy()
     df = df_clean
-
-    #Label all revisions as REVISION    
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'Revision'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REMOVAL'), 'ShortDSC'] = 'Revision'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'Revision'
+    
+    #Parse through procedure descriptions to condense and lowercase labels
+    df.loc[df['ShortDSC'].str.contains('REVISE HIP JOINT REPLACEMENT'), 'ShortDSC'] = 'Revision of Hip Joint'
+    df.loc[df['ShortDSC'].str.contains('PARTIAL HIP'), 'ShortDSC'] = 'Partial Hip Replacement'
+    df.loc[df['ShortDSC'].str.contains('REVISE/REPLACE KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
+    df.loc[df['ShortDSC'].str.contains('REVISION OF KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
+    df.loc[df['ShortDSC'].str.contains('REMOVAL OF KNEE PROSTHESIS'), 'ShortDSC'] = 'Removal of Knee Prosthesis'
     #Lowercase total knee/hip replacement labels
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('TOTAL KNEE'), 'ShortDSC'] = 'Total Knee Replacement'
-    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('TOTAL HIP'), 'ShortDSC'] = 'Total Hip Replacement'
+    df.loc[df['ShortDSC'].str.contains('TOTAL KNEE'), 'ShortDSC'] = 'Total Knee Replacement'
+    df.loc[df['ShortDSC'].str.contains('TOTAL HIP'), 'ShortDSC'] = 'Total Hip Replacement'
+
+    #Label all revisions as REVISION        
+    df_prim_rev = df.copy()
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Revis'), 'ShortDSC'] = 'Revision'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Removal'), 'ShortDSC'] = 'Revision'
+    df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Partial'), 'ShortDSC'] = 'Revision'
+    
 
     
     df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='PatientsRace')
@@ -85,13 +93,8 @@ def create_current_graphs(df):
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
     
     #Parse only revision data
-    df_rev = df[~df['ShortDSC'].str.contains('TOTAL')]
-    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISE HIP JOINT REPLACEMENT'), 'ShortDSC'] = 'Revision of Hip Joint'
-    df_rev.loc[df_rev['ShortDSC'].str.contains('PARTIAL'), 'ShortDSC'] = 'Partial Hip Replacement'
-    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISE/REPLACE KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
-    df_rev.loc[df_rev['ShortDSC'].str.contains('REVISION OF KNEE JOINT'), 'ShortDSC'] = 'Revision of Knee Joint'
-    df_rev.loc[df_rev['ShortDSC'].str.contains('REMOVAL OF KNEE PROSTHESIS'), 'ShortDSC'] = 'Removal of Knee Prosthesis'
-    #df_rev = df_rev_hip.append(df_rev_knee)
+    df_rev = df[~df['ShortDSC'].str.contains('Total')]
+
     
     proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna',
     
@@ -99,7 +102,7 @@ def create_current_graphs(df):
     
     
     
-    hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
+    hip_related_CPTs = df['ShortDSC'].str.contains('Hip')
     
     df_hip_related_CPTs = df[hip_related_CPTs]
   
@@ -111,7 +114,7 @@ def create_current_graphs(df):
                 labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['rosybrown']))
     
     
-    knee_related_CPTs = df['ShortDSC'].str.contains('KNEE')
+    knee_related_CPTs = df['ShortDSC'].str.contains('Knee')
     
     df_knee_related_CPTs = df[knee_related_CPTs]
     
