@@ -47,6 +47,7 @@ def create_current_graphs(df):
     searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
     df_clean = df[~df['ShortDSC'].str.contains('|'.join(searchfor))]
     df_prim_rev = df_clean.copy()
+    df = df_clean
 
     #Label all revisions as REVISION    
     df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('REVIS'), 'ShortDSC'] = 'REVISION'
@@ -81,7 +82,7 @@ def create_current_graphs(df):
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
     
     #Parse only revision data
-    df_rev = df_clean[~df_clean['ShortDSC'].str.contains('TOTAL')]
+    df_rev = df[~df['ShortDSC'].str.contains('TOTAL')]
     
     proc_revision_pie = px.pie(df_rev['ShortDSC'], names = df_rev['ShortDSC'], title = "Distribution of Revision Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
@@ -89,9 +90,9 @@ def create_current_graphs(df):
     
     
     
-    hip_related_CPTs = df_clean['ShortDSC'].str.contains('HIP')
+    hip_related_CPTs = df['ShortDSC'].str.contains('HIP')
     
-    df_hip_related_CPTs = df_clean[hip_related_CPTs]
+    df_hip_related_CPTs = df[hip_related_CPTs]
     
     df_hip_shortDSC = df_hip_related_CPTs['ShortDSC'].value_counts().to_frame(name='value_counts')
     
