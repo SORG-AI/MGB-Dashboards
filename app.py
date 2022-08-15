@@ -40,6 +40,15 @@ PATHS = {
 ### Loading Data for MGB Dashboard
 df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
+df_demo = pd.read_csv(os.path.join(PATHS['data_aaos'], 'demographics.csv'), dtype={'ID':str})
+df_alc = pd.read_csv(os.path.join(PATHS['data_aaos'],'alc_use.csv'), dtype={'ID':str})
+df_tob = pd.read_csv(os.path.join(PATHS['data_aaos'], 'tob_use.csv'), dtype={'ID':str})
+df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
+df_surg = pd.read_excel(os.path.join(PATHS['data_aaos'], 'surgeons.xlsx'), dtype={'ID':str})
+df_comorb = pd.read_csv(os.path.join(PATHS['data_aaos'], 'comorbidities.csv'), dtype={'ID':str})
+df_height = pd.read_csv(os.path.join(PATHS['data_aaos'], 'height.csv'), dtype={'ID':str})
+df_weight = pd.read_csv(os.path.join(PATHS['data_aaos'], 'weight.csv'), dtype={'ID':str})
+df_proc = pd.read_csv(os.path.join(PATHS['data_aaos'], 'procedures.csv'), dtype={'ID':str})
 
 
 # CREDIT: This code is copied from Dash official documentation:
@@ -236,9 +245,10 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_demo, df_weight, df_height)
 
-(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df)
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
+ provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar) = create_current_graphs(df, df_demo, df_diag)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -433,7 +443,11 @@ surg_info_header = html.Div([
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
-
+pat_diag_gen = html.Div([
+                    html.Div([
+                                dcc.Graph(figure = diag_gen_bar)
+                            ])
+                    ])
 
 ## Procedures and conditions
 
@@ -788,6 +802,7 @@ pat_tab_glance = html.Div([
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
 
+
 pat_bmi_tab = html.Div([
                 html.Div([
                             dcc.Graph(id = 'bmi_bar')
@@ -946,6 +961,8 @@ page_1_layout = html.Div([
                                                               proc_hip_and_knee,
                                                               
                                                               proc_diag,
+                                                              
+                                                              pat_diag_gen,
 
                                                               inst_info_header,
                                                               
@@ -1280,7 +1297,7 @@ def update_sur_spec_info(username):
             
             df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
 
-            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon)
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon, df_demo)
 
             
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, #revenue_location_pie, 

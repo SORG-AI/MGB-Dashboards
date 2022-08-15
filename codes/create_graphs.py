@@ -10,13 +10,13 @@ import pandas as pd
 import plotly.express as px
 
 
-def pat_glance_info(df):
+def pat_glance_info(df, df_demo, df_weight, df_height):
     
     # THESE ARE THE GENDER RATIO VARIABLES
 
-    AJRRPat_total = len(list(df['Sex'])) # int of total patients on the spreadsheet
+    AJRRPat_total = len(list(df_demo['SexDSC'])) # int of total patients on the spreadsheet
 
-    males_patients = list(df['Sex'] == 'M')
+    males_patients = list(df_demo['SexDSC'] == 'Male')
 
     #find the indeces  of the males in the data column
 
@@ -26,20 +26,22 @@ def pat_glance_info(df):
 
     female_ratio = (100 - males_ratio)
     
-    BMI_total = round((703 * (df['WeightOz']*0.0625) / (df['HeightIn'])**2).mean())
-
+    if round((703 * (df_weight['WeightOz']*0.0625) / (df_height['HeightIn'])**2).mean()) < 100:
+        BMI_total = round((703 * (df_weight['WeightOz']*0.0625) / (df_height['HeightIn'])**2).mean())
+    else:
+        BMI_total= 'not available'
     #avergae length of stay, aka the average of the column named Lenght of Stay
 
     avg_length_of_stay = round(df["Length of Stay"].mean())
     
-    avg_pat_age = round(df['Pat_age'].mean())
+    avg_pat_age = round(df_demo['Pat_age'].mean())
     
     return (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age)
 
 
 
 
-def create_current_graphs(df):
+def create_current_graphs(df, df_demo, df_diag):
 
     
     #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
@@ -63,20 +65,20 @@ def create_current_graphs(df):
     df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Revis'), 'ShortDSC'] = 'Revision'
     df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Removal'), 'ShortDSC'] = 'Revision'
     df_prim_rev.loc[df_prim_rev['ShortDSC'].str.contains('Partial'), 'ShortDSC'] = 'Revision'
-    
 
+
+    df_race = df_demo['PatientRaceDSC'].value_counts().to_frame(name='Count')
     
-    df_race =  df['PatientRaceDSC'].value_counts().to_frame(name='PatientsRace')
     
-    pat_race_bar = px.bar(df_race, y = 'PatientsRace', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
+    pat_race_bar = px.bar(df_race, y = 'Count', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
                       color_discrete_sequence=(['darkblue']))
     
-    df_eth =df['EthnicGroupDSC'].value_counts().to_frame(name = 'PatientsEth')
+    df_eth =df_demo['EthnicityDSC'].value_counts().to_frame(name = 'PatientsEth')
     
-    pat_eth_bar = px.bar(df_eth, y = 'PatientsEth', title = 'Ethnical Distribution of Patients', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
+    pat_eth_bar = px.bar(df_eth.head(10), y = 'PatientsEth', title = 'Ethnical Distribution of Patients: Top 10', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
                      color_discrete_sequence=(['darkturquoise']))
                         
-    df_age = df['Pat_age'].value_counts().to_frame(name = "Patient's Age")
+    df_age = df_demo['Pat_age'].value_counts().to_frame(name = "Patient's Age")
     pat_age_bar = px.bar(df_age, y = "Patient's Age", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Patient's Age": "Patient's Age"},
                          color_discrete_sequence=(['Blue']))
     #Distribution of Procedures
@@ -84,10 +86,7 @@ def create_current_graphs(df):
     #proc_distr_pie = px.pie(df['ShortDSC'], names = df['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
                                         #'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-                                        
-    
-
-
+                                
     proc_distr_pie = px.pie(df_prim_rev['ShortDSC'], names = df_prim_rev['ShortDSC'], title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
@@ -228,7 +227,7 @@ def create_current_graphs(df):
     
     df_hip_diag = df_hip_related_CPTs['ICD_DSC_1'].value_counts().to_frame(name='value_counts')
     
-    hip_diag_bar = px.bar(df_hip_diag, y = 'value_counts' ,title = 'Hip Diagnoses', color_discrete_sequence=(['darkblue']))
+    hip_diag_bar = px.bar(df_hip_diag.head(10), y = 'value_counts' ,title = 'Hip Diagnoses', color_discrete_sequence=(['darkblue']))
 
     
     #hip_diag_pie = px.pie(df_hip_related_CPTs['ICD_DSC_1'], names = df_hip_related_CPTs['ICD_DSC_1'], title = 'Hip Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
@@ -241,22 +240,21 @@ def create_current_graphs(df):
     
      #                                               'skyblue', 'steelblue'))
      
-    knee_diag_bar = px.bar(df_knee_diag, y = 'value_counts' ,title = 'Knee Diagnoses', color_discrete_sequence=(['darkblue']))
+    knee_diag_bar = px.bar(df_knee_diag.head(10), y = 'value_counts' ,title = 'Knee Diagnoses', color_discrete_sequence=(['darkblue']))
 
     df_BMI= df['BMI'].value_counts().to_frame(name = 'Patients')
     
    # bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
-    #                 color_discrete_sequence=(['#008E97'])) 
-    bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[0,670], nbins=100)
+   #                   color_discrete_sequence=(['#008E97'])) 
+    bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[0,100], nbins=100)
     bmi_bar.update_layout(bargap=0.2)
     
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
-
-
-
-
-
-
+    # find the distribution of diagnosis - overall categories
+    df_diag_count = df_diag['Category'].value_counts().to_frame(name = 'count per category')
+    diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
+                          color_discrete_sequence = (["DarkOliveGreen"]))
+    
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar)
 
 
 
