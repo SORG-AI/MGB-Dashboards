@@ -5,7 +5,7 @@ Created on Fri Aug  5 09:58:07 2022
 
 @author: kbdetels
 """
-
+from dash import dash_table
 import pandas as pd
 import plotly.express as px
 
@@ -41,7 +41,7 @@ def pat_glance_info(df, df_demo, df_weight, df_height):
 
 
 
-def create_current_graphs(df, df_demo, df_diag):
+def create_current_graphs(df, df_demo, df_diag, df_alc, df_tob):
 
     
     #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
@@ -243,15 +243,28 @@ def create_current_graphs(df, df_demo, df_diag):
     knee_diag_bar = px.bar(df_knee_diag.head(10), y = 'value_counts' ,title = 'Knee Diagnoses', color_discrete_sequence=(['darkblue']))
 
     df_BMI= df['BMI'].value_counts().to_frame(name = 'Patients')
-    
    # bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
    #                   color_discrete_sequence=(['#008E97'])) 
     bmi_bar = px.histogram(df['BMI'], x = 'BMI', range_x=[0,100], nbins=100)
     bmi_bar.update_layout(bargap=0.2)
     
+    tableBMI = dash_table.DataTable(
+                                df_BMI.to_dict('index'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
+                            )
     # find the distribution of diagnosis - overall categories
     df_diag_count = df_diag['Category'].value_counts().to_frame(name = 'count per category')
     diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
                           color_discrete_sequence = (["DarkOliveGreen"]))
     
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar)
+    df_alc_temp = df_alc['AlcoholDrinksPerWeekCNT'].value_counts().to_frame(name = 'Number of Patients')
+    alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'},title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
+                         color_discrete_sequence=(['#966fd6']))
+    
+    alc_use_type_pie = px.pie(df_alc['HistoryOfDrinkTypesDSC'], names=(df_alc['HistoryOfDrinkTypesDSC']), title = 'Type of Alcoholic Drink Consumed by Patients',
+                              
+                              color_discrete_sequence=(['#93ccea', '#e0ffff', '#acace6', '#b768a2']))
+    
+    
+    
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar,
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI)

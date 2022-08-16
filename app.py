@@ -10,7 +10,7 @@ from flask import Flask
 from flask_login import login_user, LoginManager, UserMixin, logout_user, current_user
 
 import dash
-from dash import html, dcc
+from dash import html, dcc, dash_table
 from dash.dependencies import Input, Output, State
 
 import dash_bootstrap_components as dbc
@@ -225,30 +225,13 @@ index_page = html.Div([
 
 
 
-
-
-
-
-#TODO: work on the surgeon specific stuff
-#TODO: work on dropdown: other surgeons can see other surgeons
-
-##surgeon_dropdown_names = list(df['Primary Surgeon'].unique())
-
-
-###LEAVE : OLD USER_TO_NAME
-# USER_TO_NAME = {
-#     'vivek': 'Vivek M Shah',
-#     'andreea': 'Antonia F Chen'
-#     }
-
-
-
 ### MGB Information Collection and Formatting ###
 
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_demo, df_weight, df_height)
 
+##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
- provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar) = create_current_graphs(df, df_demo, df_diag)
+ provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_demo, df_diag, df_alc, df_tob)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -426,7 +409,14 @@ pat_race_and_eth = html.Div([
 pat_bmi = html.Div([
                 html.Div([
                             dcc.Graph(figure = bmi_bar)
-                        ])
+                        ], style={'width' : '50%', 'display': 'inline-block'}),
+                html.Div([
+                            dbc.Container([
+                                    dbc.Label("Patient's BMI"),
+                                    dbc.Table(tableBMI),
+                                    dbc.Alert(id='tbl1')
+                                ])
+                        ], style={'width' : '50%', 'display': 'inline-block'})
                     ])
 
 surg_info_header = html.Div([
@@ -498,6 +488,33 @@ proc_hip_and_knee = html.Div([
                         ], style={'width': '50%', 'display': 'inline-block'})
                 ])
 
+substances_info  = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Alcohol, Tobacco, and Drug Use History"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+
+alc_use = html.Div([
+                html.Div([
+                        dcc.Graph(figure = alc_use_bar)
+                        ], style={'width': '100%','display': 'inline-block'})
+                    ])
+
+alc_use_type = html.Div([
+                html.Div([
+                        dcc.Graph(figure = alc_use_type_pie)
+                        ], style = {'width': '50%', 'display': 'inline-block'})
+                        ])
 ## Comorbidities and complications category
 
 comorb_info  = html.Div([
@@ -943,6 +960,12 @@ page_1_layout = html.Div([
                                                               
                                                               pat_bmi,
                                                               
+                                                              substances_info,
+                                                              
+                                                              alc_use,
+                                                              
+                                                              alc_use_type,
+                                                              
                                                               comorb_info,
 
                                                               comorb_ICD10Top10,
@@ -1302,11 +1325,11 @@ def update_sur_spec_info(username):
 
             
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, #revenue_location_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar)
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, alc_use_type)
         except:  
-            return ('','','','','','','','','','','','','')
+            return ('','','','','','','','','','','','','', '', '')
     else:
-        return ('','','','','','','','','','','','', '', '')
+        return ('','','','','','','','','','','','', '', '', '', '')
     
 
 
