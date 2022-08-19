@@ -163,9 +163,12 @@ def login_button_click(n_clicks, username, password):
     USER_LIST= {}
 
     for x in list_surgeons:
-        print(x)
-        USER_TO_NAME.update({x : ( x[0] + x.rsplit(' ', 1)[0])})
-        USER_LIST.update({( x[0] + x.rsplit(' ', 1)[0]) : (x[0: 2] + x[0:2])})
+        un = []
+        if type(x) == str:
+            for i in range(len(list_surgeons)): 
+                un = x[0] + x.rsplit(' ', 1)[1]
+                USER_TO_NAME.update({str(un) : x})
+                USER_LIST.update({str(un): (x[0: 2] + x[0:2])})
     print(USER_LIST)
     #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
