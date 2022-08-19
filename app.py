@@ -8,9 +8,8 @@ sys.path.append(file_dir)
 
 from flask import Flask
 from flask_login import login_user, LoginManager, UserMixin, logout_user, current_user
-
 import dash
-from dash import html, dcc, dash_table
+from dash import html, dcc
 from dash.dependencies import Input, Output, State
 
 import dash_bootstrap_components as dbc
@@ -38,20 +37,21 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
-df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'Deidentified_2021_AJRR_General_SurgeriesWithComorbidities.xlsx'), dtype={'ID':str})
-df_demo = pd.read_csv(os.path.join(PATHS['data_aaos'], 'demographics.csv'), dtype={'ID':str})
-df_alc = pd.read_csv(os.path.join(PATHS['data_aaos'],'alc_use.csv'), dtype={'ID':str})
-df_tob = pd.read_csv(os.path.join(PATHS['data_aaos'], 'tob_use.csv'), dtype={'ID':str})
+#This is the new excel shet that includes the data from q3 2021 matched with patient IDs
+df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
+df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
+# df_demo = pd.read_csv(os.path.join(PATHS['data_aaos'], 'demographics.csv'), dtype={'ID':str})
+# df_alc = pd.read_csv(os.path.join(PATHS['data_aaos'],'alc_use.csv'), dtype={'ID':str})
+# df_tob = pd.read_csv(os.path.join(PATHS['data_aaos'], 'tob_use.csv'), dtype={'ID':str})
 df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
-df_surg = pd.read_excel(os.path.join(PATHS['data_aaos'], 'surgeons.xlsx'), dtype={'ID':str})
-df_comorb = pd.read_csv(os.path.join(PATHS['data_aaos'], 'comorbidities.csv'), dtype={'ID':str})
-df_height = pd.read_csv(os.path.join(PATHS['data_aaos'], 'height.csv'), dtype={'ID':str})
-df_weight = pd.read_csv(os.path.join(PATHS['data_aaos'], 'weight.csv'), dtype={'ID':str})
-df_proc = pd.read_csv(os.path.join(PATHS['data_aaos'], 'procedures.csv'), dtype={'ID':str})
+# df_surg = pd.read_excel(os.path.join(PATHS['data_aaos'], 'surgeons.xlsx'), dtype={'ID':str})
+# df_comorb = pd.read_csv(os.path.join(PATHS['data_aaos'], 'comorbidities.csv'), dtype={'ID':str})
+# df_height = pd.read_csv(os.path.join(PATHS['data_aaos'], 'height.csv'), dtype={'ID':str})
+# df_weight = pd.read_csv(os.path.join(PATHS['data_aaos'], 'weight.csv'), dtype={'ID':str})
+# df_proc = pd.read_csv(os.path.join(PATHS['data_aaos'], 'procedures.csv'), dtype={'ID':str})
 
 
-# CREDIT: This code is copied from Dash official documentation:
+# CREDIT: This code follows the template here:
 # https://dash.plotly.com/urls
 
 # Since we're adding callbacks to elements that don't exist in the app.layout,
@@ -134,41 +134,39 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
 
 # Callback function to login the user, or update the screen if the username or password are incorrect
     #### Creating a dict with all surgeon names and usernames
-list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
-#create username for each primary surgeon using a loop
-USER_TO_NAME = {}
-USER_LIST= {}
+# list_surgeons = pd.Series(df['surgeons.PrimarySurgeon']).unique().tolist()
+# print(list_surgeons)
+# #create username for each primary surgeon using a loop
+
     
-#print(list_surgeons)
-for x in list_surgeons:
-    un = []
-    #print(x)
-    for i in range (len(list_surgeons)):
-            un =x[0] + x.rsplit(' ', 1)[1]
-            USER_TO_NAME.update({str(un): x})
-            USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
+# #print(list_surgeons)
+# for x in list_surgeons:
+#     un = []
+#     print(x)
+#     if len(str(x)) > 1:
+#         for i in range (len(list_surgeons)):
+#             un =str(x)[0] + str(x).rsplit(' ', 1)[1]
+#             USER_TO_NAME.update({str(un): x})
+#             USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
     
-print(USER_LIST)
+# print(USER_LIST)
 
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
     global df
     #### Creating a dict with all surgeon names and usernames
-    list_surgeons = pd.Series(df['Primary Surgeon']).unique().tolist()
+    list_surgeons = pd.Series(df['surgeons.PrimarySurgeon']).unique().tolist()
+    print(list_surgeons)
 #create username for each primary surgeon using a loop
     USER_TO_NAME = {}
     USER_LIST= {}
-    
-#print(list_surgeons)
+
     for x in list_surgeons:
-        un = []
-    #print(x)
-        for i in range (len(list_surgeons)):
-            un =x[0] + x.rsplit(' ', 1)[1]
-            USER_TO_NAME.update({str(un): x})
-            USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
-    
+        print(x)
+        USER_TO_NAME.update({x : ( x[0] + x.rsplit(' ', 1)[0])})
+        USER_LIST.update({( x[0] + x.rsplit(' ', 1)[0]) : (x[0: 2] + x[0:2])})
+    print(USER_LIST)
     #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
@@ -183,7 +181,6 @@ def login_button_click(n_clicks, username, password):
                 return '/success', ''
         except:
             return '/login', 'Incorrect username or password'
-
     else:
         return '/login', ''
 
@@ -227,11 +224,11 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_demo, df_weight, df_height)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_mgb)
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
- provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_demo, df_diag, df_alc, df_tob)
+ provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_mgb, df_diag)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -1278,7 +1275,7 @@ def update_pat_info(username):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
-            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+            df_surgeon = df[df['surgeons.PrimarySurgeon'] == USER_TO_NAME[username]]
             
             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
 
@@ -1317,11 +1314,11 @@ def update_sur_spec_info(username):
     if username in USER_TO_NAME.keys():
         try: 
             
-            df_surgeon = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
+            df_surgeon = df[df['surgeons.PrimarySurgeon'] == USER_TO_NAME[username]]
 
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, 
              revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, 
-             pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon, df_demo)
+             pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon, df, df_diag)
 
             
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, #revenue_location_pie, 
