@@ -10,7 +10,7 @@ import pandas as pd
 import plotly.express as px
 
 
-def pat_glance_info(df, df_mgb):
+def pat_glance_info(df):
    
     ####TODO: make sure these only count per patient and not all the copies
     # THESE ARE THE GENDER RATIO VARIABLES
@@ -42,7 +42,7 @@ def pat_glance_info(df, df_mgb):
 
 
 
-def create_current_graphs(df, df_mgb, df_diag):
+def create_current_graphs(df, df_diag):
 
     
     #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION

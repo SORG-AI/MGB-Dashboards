@@ -3,8 +3,8 @@ import os
 import sys
 
 # Need this for Kelsey's code to work - not sure why but please keep
-file_dir = os.path.dirname('create_graphs.py')
-sys.path.append(file_dir)
+#file_dir = os.path.dirname('create_graphs.py')
+#sys.path.append(file_dir)
 
 from flask import Flask
 from flask_login import login_user, LoginManager, UserMixin, logout_user, current_user
@@ -25,6 +25,7 @@ import numpy as np
 from codes.util_images import im_preprocess
 import cv2
 import base64
+import pickle
 
 from codes.create_graphs import create_current_graphs, pat_glance_info
 
@@ -38,8 +39,11 @@ PATHS = {
 
 ### Loading Data for MGB Dashboard
 #This is the new excel shet that includes the data from q3 2021 matched with patient IDs
-df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
-df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
+#df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
+#df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
+file_name = os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.pkl')
+fileo = open(file_name,'rb')
+df = pickle.load(fileo)
 # df_demo = pd.read_csv(os.path.join(PATHS['data_aaos'], 'demographics.csv'), dtype={'ID':str})
 # df_alc = pd.read_csv(os.path.join(PATHS['data_aaos'],'alc_use.csv'), dtype={'ID':str})
 # df_tob = pd.read_csv(os.path.join(PATHS['data_aaos'], 'tob_use.csv'), dtype={'ID':str})
@@ -227,11 +231,11 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_mgb)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
- provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_mgb, df_diag)
+ provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_diag)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
