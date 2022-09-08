@@ -33,27 +33,32 @@ from codes.create_graphs import create_current_graphs, pat_glance_info
 #### FIXUS BEGINS
 PATHS = {
     'images': os.path.join('images'),
-
+    'app_data' : os.path.join('data','app_data'),
     'data_aaos' : os.path.join('data','aaos_database')
     }
 
 ### Loading Data for MGB Dashboard
-#This is the new excel shet that includes the data from q3 2021 matched with patient IDs
-#df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
-#df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
-file_name = os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.pkl')
+file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2016Q1-2016Q1_app_data.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
-# df_demo = pd.read_csv(os.path.join(PATHS['data_aaos'], 'demographics.csv'), dtype={'ID':str})
-# df_alc = pd.read_csv(os.path.join(PATHS['data_aaos'],'alc_use.csv'), dtype={'ID':str})
-# df_tob = pd.read_csv(os.path.join(PATHS['data_aaos'], 'tob_use.csv'), dtype={'ID':str})
-df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
-# df_surg = pd.read_excel(os.path.join(PATHS['data_aaos'], 'surgeons.xlsx'), dtype={'ID':str})
-# df_comorb = pd.read_csv(os.path.join(PATHS['data_aaos'], 'comorbidities.csv'), dtype={'ID':str})
-# df_height = pd.read_csv(os.path.join(PATHS['data_aaos'], 'height.csv'), dtype={'ID':str})
-# df_weight = pd.read_csv(os.path.join(PATHS['data_aaos'], 'weight.csv'), dtype={'ID':str})
-# df_proc = pd.read_csv(os.path.join(PATHS['data_aaos'], 'procedures.csv'), dtype={'ID':str})
 
+df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
+
+
+#try creating surgeon list here
+surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
+#create username for each primary surgeon using a loop
+USER_TO_NAME = {}
+USER_LIST= {}
+
+for x in surgeons:
+    un = []
+    if type(x) == str:
+        for i in range(len(surgeons)): 
+            un = x[0] + x.rsplit(' ', 1)[1]
+            USER_TO_NAME.update({str(un) : x})
+            USER_LIST.update({str(un): (x[0: 2] + x[0:2])})
+print(USER_LIST)
 
 # CREDIT: This code follows the template here:
 # https://dash.plotly.com/urls
@@ -158,22 +163,11 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
-    global df
-    #### Creating a dict with all surgeon names and usernames
-    list_surgeons = pd.Series(df['surgeons.PrimarySurgeon']).unique().tolist()
-    print(list_surgeons)
-#create username for each primary surgeon using a loop
-    USER_TO_NAME = {}
-    USER_LIST= {}
 
-    for x in list_surgeons:
-        un = []
-        if type(x) == str:
-            for i in range(len(list_surgeons)): 
-                un = x[0] + x.rsplit(' ', 1)[1]
-                USER_TO_NAME.update({str(un) : x})
-                USER_LIST.update({str(un): (x[0: 2] + x[0:2])})
-    print(USER_LIST)
+    #### Creating a dict with all surgeon names and usernames
+    
+    
+    
     #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
@@ -234,8 +228,14 @@ index_page = html.Div([
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df, df_diag)
+
+"""
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
  provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_diag)
+
+"""
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -409,7 +409,7 @@ pat_race_and_eth = html.Div([
                                         dcc.Graph(figure = pat_eth_bar)
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
-
+"""
 pat_bmi = html.Div([
                 html.Div([
                             dcc.Graph(figure = bmi_bar)
@@ -420,6 +420,12 @@ pat_bmi = html.Div([
                                     dbc.Table(tableBMI),
                                     dbc.Alert(id='tbl1')
                                 ])
+                        ], style={'width' : '50%', 'display': 'inline-block'})
+                    ])
+"""
+pat_bmi = html.Div([
+                html.Div([
+                            dcc.Graph(figure = bmi_bar)
                         ], style={'width' : '50%', 'display': 'inline-block'})
                     ])
 
@@ -436,12 +442,13 @@ surg_info_header = html.Div([
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
-
+"""
 pat_diag_gen = html.Div([
                     html.Div([
                                 dcc.Graph(figure = diag_gen_bar)
                             ])
                     ])
+"""
 
 ## Procedures and conditions
 
@@ -507,7 +514,7 @@ substances_info  = html.Div([
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
-
+"""
 alc_use = html.Div([
                 html.Div([
                         dcc.Graph(figure = alc_use_bar)
@@ -519,6 +526,8 @@ alc_use_type = html.Div([
                         dcc.Graph(figure = alc_use_type_pie)
                         ], style = {'width': '50%', 'display': 'inline-block'})
                         ])
+"""
+
 ## Comorbidities and complications category
 
 comorb_info  = html.Div([
@@ -535,7 +544,7 @@ comorb_info  = html.Div([
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-
+"""
 comorb_ICD10Top10 = html.Div([
 
                 html.Div([
@@ -546,7 +555,7 @@ comorb_ICD10Top10 = html.Div([
                         ], style={'width': '100%','display': 'inline-block'})
 
                 ])
-
+"""
 
 other_info  = html.Div([
 
@@ -605,7 +614,7 @@ fin_info = html.Div([
 
 
 
-
+"""
 fin_patAndRev = html.Div([
 
                 html.Div([
@@ -631,6 +640,7 @@ fin_pat = html.Div([
                         ], style={'width': '50%','display': 'inline-block'})
 
                 ])
+"""
 
 ##Institution information
 
@@ -651,7 +661,7 @@ inst_info = html.Div([
 
 
 
-
+"""
 
 inst_prov = html.Div([
 
@@ -662,7 +672,7 @@ inst_prov = html.Div([
                                     ], style={'width': '50%','display': 'inline-block'})
 
                             ])
-
+"""
 proc_diag = html.Div([
     
                 html.Div([
@@ -867,7 +877,7 @@ proc_hip_and_knee_tab = html.Div([
                         ], style={'width': '50%', 'display': 'inline-block'})
                 ])
 
-
+"""
 comorb_ICD10Top10_tab = html.Div([
 
                 html.Div([
@@ -878,6 +888,7 @@ comorb_ICD10Top10_tab = html.Div([
                         ], style={'width': '100%','display': 'inline-block'})
 
                 ])
+"""
 
 prom_discharge_tab = html.Div([
 
@@ -888,7 +899,7 @@ prom_discharge_tab = html.Div([
                                     ])
 
                           ])
-
+"""
 fin_patAndRev_tab = html.Div([
 
                 html.Div([
@@ -912,6 +923,8 @@ fin_pat_tab = html.Div([
 
                         ], style={'width': '50%','display': 'inline-block'})
                 ])
+
+"""
                                   
 pat_race_and_eth_tab = html.Div([
                                 html.Div([
@@ -966,13 +979,13 @@ page_1_layout = html.Div([
                                                               
                                                               substances_info,
                                                               
-                                                              alc_use,
+                                                              #alc_use,
                                                               
-                                                              alc_use_type,
+                                                              #alc_use_type,
                                                               
                                                               comorb_info,
 
-                                                              comorb_ICD10Top10,
+                                                              #comorb_ICD10Top10,
                                                               
                                                               other_info,
                                                               
@@ -988,12 +1001,12 @@ page_1_layout = html.Div([
                                                               
                                                               proc_diag,
                                                               
-                                                              pat_diag_gen,
+                                                              #pat_diag_gen,
 
                                                               inst_info_header,
                                                               
                                                               #fin_patAndRev,
-                                                              fin_pat 
+                                                              #fin_pat 
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
@@ -1011,7 +1024,7 @@ page_1_layout = html.Div([
                                                                 
                                                                 comorb_info,
                                                                 
-                                                                comorb_ICD10Top10_tab,
+                                                                #comorb_ICD10Top10_tab,
                                                                 
                                                                 other_info,
                                                                 
@@ -1028,7 +1041,7 @@ page_1_layout = html.Div([
                                                                 inst_info_header,
                                                                 
                                                                 #fin_patAndRev_tab
-                                                                fin_pat_tab
+                                                                #fin_pat_tab
                                                                 
                                                                 ])
                         ])
@@ -1259,7 +1272,7 @@ def login_status(url):
     Output(component_id = 'surgeon-name', component_property='children'),
     [Input('login-status','data')])
 def update_output_div(username):
-    global USER_TO_NAME
+
     if username in USER_TO_NAME.keys():
         try: 
             name = USER_TO_NAME[username]            
@@ -1282,7 +1295,11 @@ def update_pat_info(username):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
-            df_surgeon = df[df['surgeons.PrimarySurgeon'] == USER_TO_NAME[username]]
+            #USER_TO_NAME mapped to surgeon first and last name
+            sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+            cond1 = df.SurFirstName == sur_first_last[0]
+            cond2 = df.SurLastName == sur_first_last[1]
+            df_surgeon = df.loc[cond1 & cond2]
             
             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
 
@@ -1305,9 +1322,9 @@ def update_pat_info(username):
     Output('proc_revision_pie','figure'),
     Output('hip_distr_bar', 'figure'),
     Output('knee_distr_bar','figure'),
-    Output('ICD10_bar','figure'),
+    #Output('ICD10_bar','figure'),
     Output('discharge_distr_pie','figure'),
-    Output('financial_pie','figure'),
+    #Output('financial_pie','figure'),
     #Output('revenue_location_pie','figure'),
     Output('pat_race_bar', 'figure'),
     Output('pat_eth_bar', 'figure'),
@@ -1317,8 +1334,9 @@ def update_pat_info(username):
     Output('bmi_bar', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
-    global USER_TO_NAME
+
     if username in USER_TO_NAME.keys():
+        """
         try: 
             
             df_surgeon = df[df['surgeons.PrimarySurgeon'] == USER_TO_NAME[username]]
@@ -1334,6 +1352,26 @@ def update_sur_spec_info(username):
             return ('','','','','','','','','','','','','', '', '')
     else:
         return ('','','','','','','','','','','','', '', '', '', '')
+    """
+        try:
+            
+            #USER_TO_NAME mapped to surgeon first and last name
+            sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+            cond1 = df.SurFirstName == sur_first_last[0]
+            cond2 = df.SurLastName == sur_first_last[1]
+            df_surgeon = df.loc[cond1 & cond2]
+            
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs (df_surgeon, df_diag)
+        
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar )
+        
+        except:
+            return ('','','','','','','','','','','')
+    else:
+        return ('','','','','','','','','','','')
+        
     
 
 
