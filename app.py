@@ -38,11 +38,10 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2016Q1-2016Q1_app_data.pkl')
+file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2016Q2-2016Q2_app_data.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
-df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
 
 
 #try creating surgeon list here
@@ -229,7 +228,7 @@ index_page = html.Div([
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df, df_diag)
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -1362,7 +1361,7 @@ def update_sur_spec_info(username):
             df_surgeon = df.loc[cond1 & cond2]
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs (df_surgeon, df_diag)
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs (df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
                     pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar )

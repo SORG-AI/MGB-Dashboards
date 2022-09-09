@@ -33,7 +33,7 @@ def pat_glance_info(all_data):
 
 
 
-def create_current_graphs(all_data, df_diag):
+def create_current_graphs(all_data):
 
 
     #Race data and graph
@@ -155,7 +155,6 @@ def create_current_graphs(all_data, df_diag):
     #financial_pie = px.pie(df['gensurgcomorb.OriginalFinancialClassDSC'], names=df['gensurgcomorb.OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
     #                       color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     #                                                'skyblue', 'steelblue'))
-    financial_pie = 0
     
     #Provider data and graph: who are providing for the patient's procedures
     #df_provider = df['gensurgcomorb.ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
@@ -183,6 +182,7 @@ def create_current_graphs(all_data, df_diag):
     bmi_bar = px.histogram(all_data.Pat_bmi, x = 'Pat_bmi', range_x=[0,100], nbins=100)
     bmi_bar.update_layout(bargap=0.2)
     
+    """
     tableBMI = dash_table.DataTable(
                                  df_BMI.to_dict('index'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
                             )
@@ -193,7 +193,7 @@ def create_current_graphs(all_data, df_diag):
     diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
                           color_discrete_sequence = (["DarkOliveGreen"]))
     
-    """
+    
     df_alc_temp = df['alc_use.AlcoholDrinksPerWeekCNT'].value_counts().to_frame(name = 'Number of Patients')
     alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'},title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
                          color_discrete_sequence=(['#966fd6']))
