@@ -34,13 +34,15 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2016Q2-2016Q2_app_data.pkl')
+file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2021Q1-2021Q4_app_data.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 
 #try creating surgeon list here
 surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
+surgeons = surgeons.drop_duplicates()
+
 #create username for each primary surgeon using a loop
 USER_TO_NAME = {}
 USER_LIST= {}
