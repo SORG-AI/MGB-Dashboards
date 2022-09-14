@@ -160,7 +160,7 @@ def login_button_click(n_clicks, username, password):
     print(list_surgeons)
 #create username for each primary surgeon using a loop
     USER_TO_NAME = {}
-    USER_LIST= {}
+    USER_LIST= {}.
 
     for x in list_surgeons:
         un = []
@@ -169,7 +169,8 @@ def login_button_click(n_clicks, username, password):
                 un = x[0] + x.rsplit(' ', 1)[1]
                 USER_TO_NAME.update({str(un) : x})
                 USER_LIST.update({str(un): (x[0: 2] + x[0:2])})
-    print(USER_LIST)
+                
+    print(USER_TO_NAME)
     #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
