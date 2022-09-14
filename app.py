@@ -37,6 +37,7 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
+<<<<<<< HEAD
 #This is the new excel shet that includes the data from q3 2021 matched with patient IDs
 df_mgb = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
 df = pd.read_excel(os.path.join(PATHS['data_aaos'], 'data2021cleanedcurrent.xlsx'), dtype={'ID':str})
@@ -49,7 +50,13 @@ df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dty
 # df_height = pd.read_csv(os.path.join(PATHS['data_aaos'], 'height.csv'), dtype={'ID':str})
 # df_weight = pd.read_csv(os.path.join(PATHS['data_aaos'], 'weight.csv'), dtype={'ID':str})
 # df_proc = pd.read_csv(os.path.join(PATHS['data_aaos'], 'procedures.csv'), dtype={'ID':str})
+=======
+file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2016Q1-2016Q1_app_data.pkl')
+fileo = open(file_name,'rb')
+df = pickle.load(fileo)
+>>>>>>> parent of 96c07a8 (Removed df_diag)
 
+df_diag  = pd.read_excel(os.path.join(PATHS['data_aaos'], 'diagnoses.xlsx'), dtype={'ID':str})
 
 # CREDIT: This code follows the template here:
 # https://dash.plotly.com/urls
@@ -231,6 +238,13 @@ index_page = html.Div([
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df, df_mgb)
 
 ##TODO: when adding another graph make sure to add it here
+<<<<<<< HEAD
+=======
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df, df_diag)
+
+"""
+>>>>>>> parent of 96c07a8 (Removed df_diag)
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
  provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_mgb, df_diag)
 
@@ -1331,6 +1345,29 @@ def update_sur_spec_info(username):
             return ('','','','','','','','','','','','','', '', '')
     else:
         return ('','','','','','','','','','','','', '', '', '', '')
+<<<<<<< HEAD
+=======
+    """
+        try:
+            
+            #USER_TO_NAME mapped to surgeon first and last name
+            sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+            cond1 = df.SurFirstName == sur_first_last[0]
+            cond2 = df.SurLastName == sur_first_last[1]
+            df_surgeon = df.loc[cond1 & cond2]
+            
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs (df_surgeon, df_diag)
+        
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar )
+        
+        except:
+            return ('','','','','','','','','','','')
+    else:
+        return ('','','','','','','','','','','')
+        
+>>>>>>> parent of 96c07a8 (Removed df_diag)
     
 
 

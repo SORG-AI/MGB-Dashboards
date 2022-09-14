@@ -45,6 +45,7 @@ def pat_glance_info(df, df_mgb):
 def create_current_graphs(df, df_mgb, df_diag):
 
     
+<<<<<<< HEAD
     #Remove TREAT THIGH FRACTURE, INSERT/REMOVE DRUG IMPLANT DEVICE, CPTR-ASST DIR MS PX, and TREAT HIP DISLOCATION
     # from the dataset
     searchfor = ['TREAT', 'DRUG IMPLANT DEVICE', 'CPTR']
@@ -60,6 +61,14 @@ def create_current_graphs(df, df_mgb, df_diag):
     #Lowercase total knee/hip replacement labels
     df.loc[df['procedures.ShortDSC'].str.contains('TOTAL KNEE'), 'procedures.ShortDSC'] = 'Total Knee Replacement'
     df.loc[df['procedures.ShortDSC'].str.contains('TOTAL HIP'), 'procedures.ShortDSC'] = 'Total Hip Replacement'
+=======
+    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age)
+
+
+
+
+def create_current_graphs(all_data, df_diag):
+>>>>>>> parent of 96c07a8 (Removed df_diag)
 
     #Label all revisions as REVISION        
     df_prim_rev = df.copy()
@@ -190,9 +199,16 @@ def create_current_graphs(df, df_mgb, df_diag):
                      color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
     
     ##Financial data - who pays for the patient's care
+<<<<<<< HEAD
     financial_pie = px.pie(df['gensurgcomorb.OriginalFinancialClassDSC'], names=df['gensurgcomorb.OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
                            color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                                     'skyblue', 'steelblue'))
+=======
+    #financial_pie = px.pie(df['gensurgcomorb.OriginalFinancialClassDSC'], names=df['gensurgcomorb.OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
+    #                       color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
+    #                                                'skyblue', 'steelblue'))
+    financial_pie = 0
+>>>>>>> parent of 96c07a8 (Removed df_diag)
     
     
     #Revenue as per location - this is quite irrelevant 
@@ -231,6 +247,10 @@ def create_current_graphs(df, df_mgb, df_diag):
     diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
                           color_discrete_sequence = (["DarkOliveGreen"]))
     
+<<<<<<< HEAD
+=======
+    """
+>>>>>>> parent of 96c07a8 (Removed df_diag)
     df_alc_temp = df['alc_use.AlcoholDrinksPerWeekCNT'].value_counts().to_frame(name = 'Number of Patients')
     alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'},title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
                          color_discrete_sequence=(['#966fd6']))
