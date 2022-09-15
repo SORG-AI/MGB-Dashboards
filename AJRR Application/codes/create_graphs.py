@@ -37,16 +37,16 @@ def create_current_graphs(all_data):
 
 
     #Race data and graph
-    df_race = all_data.PatRace.value_counts().to_frame(name='Count')
-    pat_race_bar = px.bar(df_race, y = 'Count', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
+    df_race = all_data.PatRace.value_counts().to_frame(name='Number of patients')
+    pat_race_bar = px.bar(df_race, y = 'Number of patients', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
                       color_discrete_sequence=(['darkblue']))
     #Ethnicity data and graph
     df_eth = all_data.PatEth.value_counts().to_frame(name = 'Number of patients')
     pat_eth_bar = px.bar(df_eth.head(10), y = 'Number of patients', title = 'Ethnical Distribution of Patients: Top 10', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
                      color_discrete_sequence=(['darkturquoise']))
     #Patient's Age
-    df_age = all_data.Pat_age.value_counts().to_frame(name = "Patient's Age")
-    pat_age_bar = px.bar(df_age, y = "Patient's Age", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Patient's Age": "Patient's Age"},
+    df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
+    pat_age_bar = px.bar(df_age, y = "Number of patients", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Number of patients": "Number of patients"},
                          color_discrete_sequence=(['Blue']))
 
     #Distribution of procedures
@@ -162,49 +162,56 @@ def create_current_graphs(all_data):
     
     #Hip diagnoses
     all_hip_data = all_data[all_data.Main_CPT_category.str.contains('Hip')]
-    df_hip_diag = all_hip_data.DX_prim.value_counts().to_frame(name='value_counts')
+    df_hip_diag = all_hip_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')
     #hip_diag_pie = px.pie(df_hip_related_CPTs['ICD_DSC_1'], names = df_hip_related_CPTs['ICD_DSC_1'], title = 'Hip Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     #    
-    hip_diag_bar = px.bar(df_hip_diag.head(10), y = 'value_counts', title = 'Hip Diagnoses', color_discrete_sequence=(['darkblue']))
+    hip_diag_bar = px.bar(df_hip_diag.head(10), y = 'Number of patients', title = 'Hip Diagnoses',  labels = {"index": "Diagnosis Type"},
+                          color_discrete_sequence=(['darkblue']))
     
     #Knee Diagnoses
     all_knee_data = all_data[all_data.Main_CPT_category.str.contains('Knee')]
-    df_knee_diag = all_knee_data.DX_prim.value_counts().to_frame(name='value_counts')
+    df_knee_diag = all_knee_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')
     #knee_diag_pie = px.pie(df_knee_related_CPTs['ICD_DSC_1'], names=df_knee_related_CPTs['ICD_DSC_1'],title = 'Knee Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
     #                                               'skyblue', 'steelblue'))
-    knee_diag_bar = px.bar(df_knee_diag.head(10), y = 'value_counts' ,title = 'Knee Diagnoses', color_discrete_sequence=(['darkblue']))
+    knee_diag_bar = px.bar(df_knee_diag.head(10), y = 'Number of patients' ,title = 'Knee Diagnoses', labels = {"index": "Diagnosis Type"},
+                           color_discrete_sequence=(['darkblue']))
 
 
     #Patients' BMI data
-    df_BMI= all_data.Pat_bmi.value_counts().to_frame(name = 'Patients')
-   # bmi_bar = px.bar(df_BMI, y = 'Patients', title = "BMI Distribution of Patients", labels = {'index': 'BMI', 'Patients': 'Patients'}, 
-   #                   color_discrete_sequence=(['#008E97'])) 
-    bmi_bar = px.histogram(all_data.Pat_bmi, x = 'Pat_bmi', range_x=[0,100], nbins=100)
-    bmi_bar.update_layout(bargap=0.2)
+    bmi_bar = px.histogram(all_data.Pat_bmi, x = 'Pat_bmi', title='Patient BMI Distribution',
+                           range_x=[0,80], nbins=100, labels={'Pat_bmi':'BMI'})
+    bmi_bar.update_layout(bargap=0.2, yaxis_title='Number of patients') 
     
     """
     tableBMI = dash_table.DataTable(
-                                 df_BMI.to_dict('index'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
+                                 round(all_data.Pat_bmi).to_dict('Pat_bmi'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
                             )
     
-    
+   
     #find the distribution of diagnosis - overall categories
     df_diag_count = df_diag['Category'].value_counts().to_frame(name = 'count per category')
     diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
                           color_discrete_sequence = (["DarkOliveGreen"]))
+    """
     
-    
-    df_alc_temp = df['alc_use.AlcoholDrinksPerWeekCNT'].value_counts().to_frame(name = 'Number of Patients')
+    df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
     alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'},title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
                          color_discrete_sequence=(['#966fd6']))
     
-    alc_use_type_pie = px.pie(df['alc_use.HistoryOfDrinkTypesCD'], names=(df['alc_use.HistoryOfDrinkTypesDSC']), title = 'Type of Alcoholic Drink Consumed by Patients',
+    """
+    alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',
                               color_discrete_sequence=(['#93ccea', '#e0ffff', '#acace6', '#b768a2']))
-    
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar,
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI )
     """
     
+    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
+    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
+                         color_discrete_sequence=(['#966fd6']))
+    
+    """
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar,
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI)
+    """
     
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar )
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar)
+    

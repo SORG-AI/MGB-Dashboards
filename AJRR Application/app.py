@@ -225,7 +225,7 @@ index_page = html.Div([
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs(df)
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -309,7 +309,7 @@ pat_info_at_glance =  html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(str(males_ratio) + '% males and ' + str(female_ratio) + '% females', className='card-content',
+                                                            html.P(str(males_ratio) + '% male and ' + str(female_ratio) + '% female', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -425,6 +425,7 @@ pat_bmi = html.Div([
                         ], style={'width' : '50%', 'display': 'inline-block'})
                     ])
 
+
 surg_info_header = html.Div([
 
                               html.Div([
@@ -510,19 +511,25 @@ substances_info  = html.Div([
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
-"""
+
 alc_use = html.Div([
                 html.Div([
                         dcc.Graph(figure = alc_use_bar)
-                        ], style={'width': '100%','display': 'inline-block'})
+                        ], style={'width': '50%','display': 'inline-block'})
                     ])
-
+"""
 alc_use_type = html.Div([
                 html.Div([
                         dcc.Graph(figure = alc_use_type_pie)
                         ], style = {'width': '50%', 'display': 'inline-block'})
                         ])
 """
+
+tob_use = html.Div([
+    html.Div([
+        dcc.Graph(figure = tob_use_bar)
+        ], style={'width':'100%','display':'inline-block'})
+    ])
 
 ## Comorbidities and complications category
 
@@ -975,9 +982,9 @@ page_1_layout = html.Div([
                                                               
                                                               substances_info,
                                                               
-                                                              #alc_use,
+                                                              alc_use,
                                                               
-                                                              #alc_use_type,
+                                                              tob_use,
                                                               
                                                               comorb_info,
 
@@ -1300,7 +1307,7 @@ def update_pat_info(username):
             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
-            sex_ratio_output = '{}% males and {}% females'.format(males_ratio, female_ratio)           
+            sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
             avg_stay_output = '{}'.format(avg_length_of_stay)
             avg_BMI_output = '{}'.format(avg_BMI)
             avg_age_output = '{}'.format(avg_pat_age)
@@ -1358,15 +1365,15 @@ def update_sur_spec_info(username):
             df_surgeon = df.loc[cond1 & cond2]
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar) = create_current_graphs (df_surgeon)
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs (df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar )
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar )
         
         except:
-            return ('','','','','','','','','','','')
+            return ('','','','','','','','','','','','','','')
     else:
-        return ('','','','','','','','','','','')
+        return ('','','','','','','','','','','','','','')
         
     
 
