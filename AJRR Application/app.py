@@ -202,16 +202,16 @@ app.layout = post_login_content
 index_page = html.Div([
     html.H1('Fixus', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
                        'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
+    html.H1('Welcome to your MGB dashboard!', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
         html.Br(),
-        dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        #dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(),
         html.Br(),
-        dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        #dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
     html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
@@ -225,7 +225,7 @@ index_page = html.Div([
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs(df)
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -237,7 +237,7 @@ index_page = html.Div([
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-size': '20px'}),
 
                             html.Div([
 
@@ -422,7 +422,10 @@ pat_bmi = html.Div([
 pat_bmi = html.Div([
                 html.Div([
                             dcc.Graph(figure = bmi_bar)
-                        ], style={'width' : '50%', 'display': 'inline-block'})
+                        ], style={'width' : '50%', 'display': 'inline-block'}),
+                html.Div([
+                            dcc.Graph(figure = bmi_bw)
+                        ], style = {'width' : '50%', 'display': 'inline-block'})
                     ])
 
 
@@ -837,7 +840,10 @@ pat_tab_glance = html.Div([
 pat_bmi_tab = html.Div([
                 html.Div([
                             dcc.Graph(id = 'bmi_bar')
-                        ])
+                        ], style={'width': '50%','display': 'inline-block'}), 
+                html.Div([
+                            dcc.Graph(id = 'bmi_bw')
+                        ], style={'width': '50%','display': 'inline-block'})
                     ])
 
 
@@ -1349,6 +1355,7 @@ def update_pat_info(username):
     Output('bmi_bar', 'figure'),
     Output('alc_use_bar', 'figure'),
     Output('tob_use_bar', 'figure'),
+    Output('bmi_bw', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
 
@@ -1362,10 +1369,10 @@ def update_sur_spec_info(username):
             df_surgeon = df.loc[cond1 & cond2]
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs (df_surgeon)
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw) = create_current_graphs(df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar )
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw)
         
         except:
             return ('','','','','','','','','','','','','','')

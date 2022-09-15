@@ -182,6 +182,8 @@ def create_current_graphs(all_data):
                            range_x=[0,80], nbins=100, labels={'Pat_bmi':'BMI'})
     bmi_bar.update_layout(bargap=0.2, yaxis_title='Number of patients') 
     
+    #make a box and whiskers plot for BMI as 
+    bmi_bw = px.box(all_data, x= 'Pat_bmi', color = 'PatSex')
     """
     tableBMI = dash_table.DataTable(
                                  round(all_data.Pat_bmi).to_dict('Pat_bmi'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
@@ -213,5 +215,5 @@ def create_current_graphs(all_data):
     """
     
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw)
     
