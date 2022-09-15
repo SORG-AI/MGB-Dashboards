@@ -956,6 +956,20 @@ proc_diag_tab = html.Div([
                 
                 ])
 
+alc_use_tab = html.Div([
+                html.Div([
+                        dcc.Graph(id = 'alc_use_bar')
+                        ], style={'width': '50%','display': 'inline-block'})
+                    ])
+
+
+tob_use_tab = html.Div([
+                html.Div([
+                    dcc.Graph(id = 'tob_use_bar')
+                    ], style={'width':'100%','display':'inline-block'})
+                ])
+
+
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
@@ -1024,6 +1038,12 @@ page_1_layout = html.Div([
                                                                 pat_race_and_eth_tab,
                                                                 
                                                                 pat_bmi_tab,
+                                                                
+                                                                substances_info,
+                                                                
+                                                                alc_use_tab,
+                                                                
+                                                                tob_use_tab,
                                                                 
                                                                 comorb_info,
                                                                 
@@ -1335,27 +1355,12 @@ def update_pat_info(username):
     Output('knee_diag_bar','figure'),
     Output('pat_age_bar', 'figure'),
     Output('bmi_bar', 'figure'),
+    Output('alc_use_bar', 'figure'),
+    Output('tob_use_bar', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
 
     if username in USER_TO_NAME.keys():
-        """
-        try: 
-            
-            df_surgeon = df[df['surgeons.PrimarySurgeon'] == USER_TO_NAME[username]]
-
-            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, 
-             revenue_location_pie, provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, 
-             pat_age_bar, bmi_bar) = create_current_graphs(df_surgeon, df, df_diag)
-
-            
-            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, #revenue_location_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, alc_use_type)
-        except:  
-            return ('','','','','','','','','','','','','', '', '')
-    else:
-        return ('','','','','','','','','','','','', '', '', '', '')
-    """
         try:
             
             #USER_TO_NAME mapped to surgeon first and last name
