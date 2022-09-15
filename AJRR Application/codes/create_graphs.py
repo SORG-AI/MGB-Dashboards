@@ -195,8 +195,8 @@ def create_current_graphs(all_data):
     """
     
     df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
-    alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'},title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
-                         color_discrete_sequence=(['#966fd6']))
+    alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'}, title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
+                         color_discrete_sequence=(['#966fd6']), range_x = [0, 15])
     
     """
     alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',

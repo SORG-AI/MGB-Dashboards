@@ -512,10 +512,13 @@ substances_info  = html.Div([
 
 
 
-alc_use = html.Div([
+alc_tob_use = html.Div([
                 html.Div([
                         dcc.Graph(figure = alc_use_bar)
-                        ], style={'width': '50%','display': 'inline-block'})
+                        ], style={'width': '50%','display': 'inline-block'}),
+                html.Div([
+                    dcc.Graph(figure = tob_use_bar)
+                    ], style={'width':'50%','display':'inline-block'})
                     ])
 """
 alc_use_type = html.Div([
@@ -525,11 +528,6 @@ alc_use_type = html.Div([
                         ])
 """
 
-tob_use = html.Div([
-    html.Div([
-        dcc.Graph(figure = tob_use_bar)
-        ], style={'width':'100%','display':'inline-block'})
-    ])
 
 ## Comorbidities and complications category
 
@@ -956,18 +954,16 @@ proc_diag_tab = html.Div([
                 
                 ])
 
-alc_use_tab = html.Div([
+alc_tob_tab = html.Div([
                 html.Div([
                         dcc.Graph(id = 'alc_use_bar')
-                        ], style={'width': '50%','display': 'inline-block'})
+                        ], style={'width': '50%','display': 'inline-block'}),
+                html.Div([
+                        dcc.Graph(id = 'tob_use_bar')
+                        ], style={'width':'50%','display':'inline-block'})
                     ])
 
 
-tob_use_tab = html.Div([
-                html.Div([
-                    dcc.Graph(id = 'tob_use_bar')
-                    ], style={'width':'100%','display':'inline-block'})
-                ])
 
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
@@ -996,9 +992,7 @@ page_1_layout = html.Div([
                                                               
                                                               substances_info,
                                                               
-                                                              alc_use,
-                                                              
-                                                              tob_use,
+                                                              alc_tob_use,
                                                               
                                                               comorb_info,
 
@@ -1041,9 +1035,7 @@ page_1_layout = html.Div([
                                                                 
                                                                 substances_info,
                                                                 
-                                                                alc_use_tab,
-                                                                
-                                                                tob_use_tab,
+                                                                alc_tob_tab,
                                                                 
                                                                 comorb_info,
                                                                 
