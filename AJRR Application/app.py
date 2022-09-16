@@ -225,7 +225,8 @@ index_page = html.Div([
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar) = create_current_graphs(df)
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -580,6 +581,11 @@ comorb_ICD10Top10 = html.Div([
 
                 ])
 
+comorb_cci = html.Div([
+                        
+                        dcc.Graph(figure = CCI_bw)    
+                            
+                    ], style={'width' : '50%', 'display': 'inline-block'})
 
 other_info  = html.Div([
 
@@ -936,6 +942,17 @@ comorb_ICD10Top10_tab = html.Div([
 
                 ])
 
+comorb_cci_tab =  html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'CCI_bw')
+                       
+
+                        ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
 
 prom_discharge_tab = html.Div([
 
@@ -1044,6 +1061,8 @@ page_1_layout = html.Div([
 
                                                               comorb_ICD10Top10,
                                                               
+                                                              comorb_cci,
+                                                              
                                                               other_info,
                                                               
                                                               prom_discharge,
@@ -1086,6 +1105,8 @@ page_1_layout = html.Div([
                                                                 comorb_info,
                                                                 
                                                                 comorb_ICD10Top10_tab,
+                                                                
+                                                                comorb_cci_tab,
                                                                 
                                                                 other_info,
                                                                 
@@ -1398,6 +1419,7 @@ def update_pat_info(username):
     Output('alc_use_bar', 'figure'),
     Output('tob_use_bar', 'figure'),
     Output('bmi_bw', 'figure'),
+    Output('CCI_bw', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
 
@@ -1411,15 +1433,16 @@ def update_sur_spec_info(username):
             df_surgeon = df.loc[cond1 & cond2]
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar) = create_current_graphs(df_surgeon)
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
+             tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar)
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
         
         except:
-            return ('','','','','','','','','','','','','','','')
+            return ('','','','','','','','','','','','','','','', '')
     else:
-        return ('','','','','','','','','','','','','','','')
+        return ('','','','','','','','','','','','','','','', '')
         
     
 

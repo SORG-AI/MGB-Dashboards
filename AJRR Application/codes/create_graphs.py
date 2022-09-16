@@ -183,7 +183,7 @@ def create_current_graphs(all_data):
     bmi_bar.update_layout(bargap=0.2, yaxis_title='Number of patients') 
     
     #make a box and whiskers plot for BMI as 
-    bmi_bw = px.box(all_data, x= 'Pat_bmi', color = 'PatSex')
+    bmi_bw = px.box(all_data, x= 'Pat_bmi', color = 'PatSex', color_discrete_sequence =['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels=({'Pat_bmi': 'BMI'}) )
     """
     tableBMI = dash_table.DataTable(
                                  round(all_data.Pat_bmi).to_dict('Pat_bmi'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
@@ -214,6 +214,9 @@ def create_current_graphs(all_data):
             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI)
     """
     
+    #Adding a CCI box and whiskers plot
+    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels={'CCI': 'Charlson Comorbidity Index'})
+    
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
     
