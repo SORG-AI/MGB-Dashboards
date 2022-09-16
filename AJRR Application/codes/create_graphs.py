@@ -25,12 +25,13 @@ def pat_glance_info(all_data):
     #avergae length of stay, aka the average of the column named Lenght of Stay
     avg_length_of_stay = round(all_data.Len_stay.mean())
 
-    avg_pat_age = round(all_data.Pat_age.mean())
+    avg_pat_age = round(all_data.Pat_age.mean())    
 
-    
     med_CCI = round(all_data.CCI.median())
 
-    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI)
+    inst = all_data.Hosp_name.values[0]
+
+    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
 
 
 

@@ -136,26 +136,6 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
                    ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
 
 
-
-# Callback function to login the user, or update the screen if the username or password are incorrect
-    #### Creating a dict with all surgeon names and usernames
-# list_surgeons = pd.Series(df['surgeons.PrimarySurgeon']).unique().tolist()
-# print(list_surgeons)
-# #create username for each primary surgeon using a loop
-
-    
-# #print(list_surgeons)
-# for x in list_surgeons:
-#     un = []
-#     print(x)
-#     if len(str(x)) > 1:
-#         for i in range (len(list_surgeons)):
-#             un =str(x)[0] + str(x).rsplit(' ', 1)[1]
-#             USER_TO_NAME.update({str(un): x})
-#             USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
-    
-# print(USER_LIST)
-
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
@@ -221,7 +201,7 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI) = pat_glance_info(df)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
@@ -587,6 +567,22 @@ comorb_cci = html.Div([
                             
                     ], style={'width' : '50%', 'display': 'inline-block'})
 
+
+PROM_info = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Patient Reported Outcome Measures"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
 other_info  = html.Div([
 
                         html.Div([
@@ -753,13 +749,13 @@ pat_tab_glance = html.Div([
 
                                             dbc.CardBody([
 
-                                                            html.H4('Institution', className= 'card-title',
+                                                html.H4('Institution', className= 'card-title',
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                html.P(id ='inst', className='card-content',
 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+                                                            style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
                                                         ])
 
@@ -1024,6 +1020,22 @@ alc_tob_tab = html.Div([
                         ], style={'width':'50%','display':'inline-block'})
                     ])
 
+
+PROM_info_tab = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Patient Reported Outcome Measures"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
 #TODO: make the table patient specific as well
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
@@ -1063,6 +1075,8 @@ page_1_layout = html.Div([
                                                               comorb_ICD10Top10,
                                                               
                                                               comorb_cci,
+                                                              
+                                                              PROM_info,
                                                               
                                                               other_info,
                                                               
@@ -1108,6 +1122,8 @@ page_1_layout = html.Div([
                                                                 comorb_ICD10Top10_tab,
                                                                 
                                                                 comorb_cci_tab,
+                                                                
+                                                                PROM_info_tab,
                                                                 
                                                                 other_info,
                                                                 
@@ -1374,6 +1390,7 @@ def update_output_div(username):
     Output('avgBMI', 'children'),
     Output('avgAge', 'children'),
     Output('med_CCI', 'children'),
+    Output('inst', 'children'),
     [Input('login-status','data')])
 def update_pat_info(username):
     global USER_TO_NAME
@@ -1385,7 +1402,7 @@ def update_pat_info(username):
             cond2 = df.SurLastName == sur_first_last[1]
             df_surgeon = df.loc[cond1 & cond2]
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI) = pat_glance_info(df_surgeon)
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
@@ -1393,12 +1410,13 @@ def update_pat_info(username):
             avg_BMI_output = '{}'.format(avg_BMI)
             avg_age_output = '{}'.format(avg_pat_age)
             med_CCI_output = '{}'.format(med_CCI)
+            inst_output = '{}'.format(inst)
             
-            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output)
+            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
         except:  
-            return ('', '','', '', '', '')
+            return ('', '','', '', '', '', '')
     else:
-        return ('','','', '', '', '')
+        return ('','','', '', '', '', '')
 
 
 #Surgeon specific graphs
@@ -1499,8 +1517,6 @@ def display_page(pathname):
         view = index_page
     # You could also return a 404 "URL not found" page here
     return view, url
-
-
 
 
 # "complete" layout
