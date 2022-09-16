@@ -881,7 +881,11 @@ pat_tab_glance = html.Div([
 
                                 ], style={'backgroundColor': 'rgb(220, 248, 285)'})
 
-
+pat_age_tab = html.Div([
+                    html.Div([
+                        dcc.Graph(id = 'pat_age_bar')
+                        ], style={'width' : '100%', 'display':'inline-block'})
+                    ])
 
 pat_bmi_tab = html.Div([
                 html.Div([
@@ -892,12 +896,6 @@ pat_bmi_tab = html.Div([
                         ], style={'width': '50%','display': 'inline-block'})
                     ])
 
-
-pat_age_tab = html.Div([
-                    html.Div([
-                        dcc.Graph(id = 'pat_age_bar')
-                        ])
-                    ])
 
 proc_total_tab = html.Div([
 
@@ -1406,7 +1404,6 @@ def update_pat_info(username):
     Output('proc_revision_pie','figure'),
     Output('hip_distr_bar', 'figure'),
     Output('knee_distr_bar','figure'),
-    Output('ICD10_bar','figure'),
     Output('discharge_distr_pie','figure'),
     #Output('financial_pie','figure'),
     #Output('revenue_location_pie','figure'),
@@ -1419,6 +1416,7 @@ def update_pat_info(username):
     Output('alc_use_bar', 'figure'),
     Output('tob_use_bar', 'figure'),
     Output('bmi_bw', 'figure'),
+    Output('ICD10_bar','figure'),
     Output('CCI_bw', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
