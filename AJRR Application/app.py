@@ -221,7 +221,7 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
@@ -257,7 +257,7 @@ pat_info_at_glance =  html.Div([
 
                                     ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
+                                ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -277,7 +277,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -297,7 +297,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -317,7 +317,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -337,7 +337,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -357,7 +357,27 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
+                            
+                            html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Median CCI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(med_CCI, className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                    ], style={'display': 'inline-block'}),
                             
                             
                             html.Div([
@@ -719,7 +739,7 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                        ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
+                                        ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -739,7 +759,7 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                        ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -759,7 +779,7 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                            ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                            ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -779,7 +799,7 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                        ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -799,7 +819,7 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                        ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -819,7 +839,27 @@ pat_tab_glance = html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                        ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                        ], style={'display': 'inline-block'}),
+                                
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Median CCI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='med_CCI', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                    ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -1311,6 +1351,7 @@ def update_output_div(username):
     Output('avg_stay', 'children'),
     Output('avgBMI', 'children'),
     Output('avgAge', 'children'),
+    Output('med_CCI', 'children'),
     [Input('login-status','data')])
 def update_pat_info(username):
     global USER_TO_NAME
@@ -1322,19 +1363,20 @@ def update_pat_info(username):
             cond2 = df.SurLastName == sur_first_last[1]
             df_surgeon = df.loc[cond1 & cond2]
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
             avg_stay_output = '{}'.format(avg_length_of_stay)
             avg_BMI_output = '{}'.format(avg_BMI)
             avg_age_output = '{}'.format(avg_pat_age)
+            med_CCI_output = '{}'.format(med_CCI)
             
-            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output)
+            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output)
         except:  
-            return ('', '','', '', '')
+            return ('', '','', '', '', '')
     else:
-        return ('','','', '', '')
+        return ('','','', '', '', '')
 
 
 #Surgeon specific graphs

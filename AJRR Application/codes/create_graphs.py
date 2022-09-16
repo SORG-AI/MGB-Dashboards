@@ -28,7 +28,9 @@ def pat_glance_info(all_data):
     avg_pat_age = round(all_data.Pat_age.mean())
 
     
-    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age)
+    med_CCI = all_data.CCI.median()
+
+    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI)
 
 
 
