@@ -1024,6 +1024,7 @@ alc_tob_tab = html.Div([
                         ], style={'width':'50%','display':'inline-block'})
                     ])
 
+#TODO: make the table patient specific as well
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
