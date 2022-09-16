@@ -206,7 +206,7 @@ index_page = html.Div([
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
- tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar) = create_current_graphs(df)
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar, mghinst_table, bwhinst_table) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -684,12 +684,34 @@ inst_info = html.Div([
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-inst_bar_hosp = html.Div([
+
+inst_tables_bar =  html.Div([html.Div([
                         html.Div([
                                     dcc.Graph(figure = inst_bar)
-                                ], style={'width':'100%','display':'inline-block'})
-                    ])
-
+                                ], style={'width':'40%','display':'inline-block'}), 
+                    ]),
+    
+                html.Div([
+                            html.Div([
+                                        html.H6([
+                                                    'MGH: Top 3 diagnoses'
+                                                ])
+                                    ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}),
+                            html.Div([
+                                    mghinst_table
+                                    ], style={'width': '90%', 'display': 'inline-block', 'text-align' : 'left'}),
+                            html.Div([
+                                        html.H6([
+                                                   'BWH: Top 3 diagnoses'
+                                                ])
+                                    ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}), 
+                            html.Div([
+                                        bwhinst_table
+                                    ], style={'width': '90%', 'display': 'inline-block', 'text-align' : 'left'})
+                            
+                        ], style={'width': '50%', 'display': 'inline-block', 'text-align' : 'left'})
+                
+                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
 """
 
@@ -1100,7 +1122,9 @@ page_1_layout = html.Div([
 
                                                               inst_info_header,
                                                               
-                                                              inst_bar_hosp,
+                                                              
+                                                              inst_tables_bar,
+                                                              
                                                               
                                                               #fin_patAndRev,
                                                               #fin_pat 

@@ -230,6 +230,24 @@ def create_current_graphs(all_data):
     df_inst_count = all_data.Hosp_name.value_counts()    
     inst_bar= px.bar(df_inst_count, title = 'Patients Distribution based on Location in the MGB System', labels = {'index': 'Location', 'color': 'Hospitals', 'value': 'Number of patients'}, color =[ 'MGH', 'BWH'], color_discrete_sequence=['rgb(202, 172, 255)', 'rgb(124, 164, 255)'])
     
+    #top 3 diagnoses in MGH
+    primDXmgh = all_data.DX_prim[all_data.Hosp_name == 'MGH']
+    primDX = primDXmgh.value_counts().head(5).to_dict()
+    primDX_items = [0]
+    primDX_items[0] = primDX
+    mghinst_table = dash_table.DataTable(
+                        data= primDX_items,  style_header={'backgroundColor': 'rgb(168, 231, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
+                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '30%'}
+                                    )
+    #top 3 diagnoses in BWH
+    primDXbwh = all_data.DX_prim[all_data.Hosp_name == 'BWH']
+    primDX_bw = primDXbwh.value_counts().head(5).to_dict()
+    primDX_items_bw = [0]
+    primDX_items_bw[0] = primDX_bw
+    bwhinst_table = dash_table.DataTable(
+                        data= primDX_items_bw,  style_header={'backgroundColor': 'rgb(210, 155, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
+                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '30%'}
+                                    )
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar, mghinst_table, bwhinst_table)
     
