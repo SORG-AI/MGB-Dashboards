@@ -70,71 +70,69 @@ def create_current_graphs(all_data):
     
     df = all_data.copy()
     
-    """
+    
    #Top 10 ICD codes
-    ICD_data = {'gensurgcomorb.Acute_MI_ICD10': [sum(df['gensurgcomorb.Acute_MI_ICD10'].value_counts())],
+    ICD_data = {'Acute_MI_ICD10': [sum(all_data.Acute_MI_ICD10.value_counts())],
 
-               'gensurgcomorb.CHF_ICD10' : [sum(df['gensurgcomorb.CHF_ICD10'].value_counts())],
+               'CHF_ICD10' : [sum(all_data.CHF_ICD10.value_counts())],
 
-               'gensurgcomorb.Peripheral_vascular_disease_ICD10': [sum(df['gensurgcomorb.Peripheral_vascular_disease_ICD10'].value_counts())],
+               'Peripheral_vascular_disease_ICD10': [sum(all_data.Peripheral_vascular_disease_ICD10.value_counts())],
 
-               'gensurgcomorb.CVA_ICD10' : [sum(df['gensurgcomorb.CVA_ICD10'].value_counts())],
+               'CVA_ICD10' : [sum(all_data.CVA_ICD10.value_counts())],
 
-               'gensurgcomorb.Dementia_ICD10' :[sum(df['gensurgcomorb.Dementia_ICD10'].value_counts())],
+               'Dementia_ICD10' :[sum(all_data.Dementia_ICD10.value_counts())],
 
-               'gensurgcomorb.Pulmonary_disease_ICD10' :[ sum(df['gensurgcomorb.Pulmonary_disease_ICD10'].value_counts())],
+               'Pulmonary_disease_ICD10' :[ sum(all_data.Pulmonary_disease_ICD10.value_counts())],
 
-               'gensurgcomorb.Connective_tissue_disorder_ICD10' :[ sum(df['gensurgcomorb.Connective_tissue_disorder_ICD10'].value_counts())],
+               'Connective_tissue_disorder_ICD10' :[ sum(all_data.Connective_tissue_disorder_ICD10.value_counts())],
 
-               'gensurgcomorb.Peptic_ulcer_ICD10' : [sum(df['gensurgcomorb.Peptic_ulcer_ICD10'].value_counts())],
+               'Peptic_ulcer_ICD10' : [sum(all_data.Peptic_ulcer_ICD10.value_counts())],
 
-               'gensurgcomorb.Liver_disease_ICD10' : [sum(df['gensurgcomorb.Liver_disease_ICD10'].value_counts())],
+               'Liver_disease_ICD10' : [sum(all_data.Liver_disease_ICD10.value_counts())],
 
-               'gensurgcomorb.Diabetes_ICD10' : [sum(df['gensurgcomorb.Diabetes_ICD10'].value_counts())],
+               'Diabetes_ICD10' : [sum(all_data.Diabetes_ICD10.value_counts())],
 
-               'gensurgcomorb.Diabetes_complications_ICD10' : [sum(df['gensurgcomorb.Diabetes_complications_ICD10'].value_counts())],
+               'Diabetes_complications_ICD10' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
 
-               'gensurgcomorb.Paraplegia_ICD10' : [sum(df['gensurgcomorb.Paraplegia_ICD10'].value_counts())],
+               'Paraplegia_ICD10' : [sum(all_data.Paraplegia_ICD10.value_counts())],
 
-               'gensurgcomorb.Renal_disease_ICD10':[ sum(df['gensurgcomorb.Renal_disease_ICD10'].value_counts())],
+               'Renal_disease_ICD10':[ sum(all_data.Renal_disease_ICD10.value_counts())],
 
-               'gensurgcomorb.Cancer_ICD10' : [sum(df['gensurgcomorb.Cancer_ICD10'].value_counts())],
+               'Cancer_ICD10' : [sum(all_data.Cancer_ICD10.value_counts())],
 
-               'gensurgcomorb.Metastatic_cancer_ICD10' : [sum(df['gensurgcomorb.Metastatic_cancer_ICD10'].value_counts())],
+               'Metastatic_cancer_ICD10' : [sum(all_data.Metastatic_cancer_ICD10.value_counts())],
 
-               'gensurgcomorb.Severe_liver_disease_ICD10' : [sum(df['gensurgcomorb.Severe_liver_disease_ICD10'].value_counts())],
+               'Severe_liver_disease_ICD10' : [sum(all_data.Severe_liver_disease_ICD10.value_counts())],
 
-               'gensurgcomorb.HIV_ICD10' : [sum(df['gensurgcomorb.HIV_ICD10'].value_counts())],
+               'HIV_ICD10' : [sum(all_data.HIV_ICD10.value_counts())],
 
-               'gensurgcomorb.ALL_ICD10' : [sum(df['gensurgcomorb.ALL_ICD10'].value_counts())],
+               'Osteoporosis_ICD10' : [sum(all_data.Osteoporosis_ICD10.value_counts())],
 
-               'gensurgcomorb.Osteoporosis_ICD10' : [sum(df['gensurgcomorb.Osteoporosis_ICD10'].value_counts())],
+               'Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10' : [sum(all_data.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10.value_counts())],
 
-               'gensurgcomorb.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10' : [sum(df['gensurgcomorb.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10'].value_counts())],
+               'Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10' : [sum(all_data.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10.value_counts())],
 
-               'gensurgcomorb.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10' : [sum(df['gensurgcomorb.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10'].value_counts())],
+               'Mood_affective_disorders_ICD10' :[ sum(all_data.Mood_affective_disorders_ICD10.value_counts())],
 
-               'gensurgcomorb.Mood_affective_disorders_ICD10' :[ sum(df['gensurgcomorb.Mood_affective_disorders_ICD10'].value_counts())],
+               'Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10' : [sum(all_data.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10.value_counts())],
 
-               'gensurgcomorb.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10' : [sum(df['gensurgcomorb.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10'].value_counts())],
+               'PULMONARY_EMBOLISM_ACUTE_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_ACUTE_ICD10.value_counts())],
 
-               'gensurgcomorb.PULMONARY_EMBOLISM_ACUTE_ICD10' : [sum(df['gensurgcomorb.PULMONARY_EMBOLISM_ACUTE_ICD10'].value_counts())],
+               'PULMONARY_EMBOLISM_CHRONIC_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_CHRONIC_ICD10.value_counts())],
 
-               'gensurgcomorb.PULMONARY_EMBOLISM_CHRONIC_ICD10' : [sum(df['gensurgcomorb.PULMONARY_EMBOLISM_CHRONIC_ICD10'].value_counts())],
+               'ACUTE_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.ACUTE_DVT_LOWER_EXTREMITY_ICD10' :[ sum(df['gensurgcomorb.ACUTE_DVT_LOWER_EXTREMITY_ICD10'].value_counts())],
+               'CHRONIC_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.CHRONIC_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.CHRONIC_DVT_LOWER_EXTREMITY_ICD10' :[ sum(df['gensurgcomorb.CHRONIC_DVT_LOWER_EXTREMITY_ICD10'].value_counts())],
+               'ACUTE_DVT_UPPER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.ACUTE_DVT_UPPER_EXTREMITY_ICD10' :[ sum(df['gensurgcomorb.ACUTE_DVT_UPPER_EXTREMITY_ICD10'].value_counts())],
+               'CHRONIC_DVT_UPPER_EXTREMITY_ICD10' : [sum(all_data.CHRONIC_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.CHRONIC_DVT_UPPER_EXTREMITY_ICD10' : [sum(df['gensurgcomorb.CHRONIC_DVT_UPPER_EXTREMITY_ICD10'].value_counts())],
+               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(df['gensurgcomorb.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10'].value_counts())],
+               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10.value_counts())],
 
-               'gensurgcomorb.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(df['gensurgcomorb.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10'].value_counts())],
-
-               'gensurgcomorb.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(df['gensurgcomorb.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10'].value_counts())]}
+               'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
 
 
     df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
@@ -144,7 +142,7 @@ def create_current_graphs(all_data):
     ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
     
                        labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
-    """
+    
     
     #Parse discharge distribution data
     #TODO: The difference descriptions seem to refer to different discharges so hesitant to lump together into bigger categories 
@@ -215,5 +213,5 @@ def create_current_graphs(all_data):
     """
     
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar)
     
