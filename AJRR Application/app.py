@@ -206,7 +206,7 @@ index_page = html.Div([
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
- tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table) = create_current_graphs(df)
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -684,7 +684,11 @@ inst_info = html.Div([
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-
+inst_bar_hosp = html.Div([
+                        html.Div([
+                                    dcc.Graph(figure = inst_bar)
+                                ], style={'width':'100%','display':'inline-block'})
+                    ])
 
 
 """
@@ -1096,6 +1100,8 @@ page_1_layout = html.Div([
 
                                                               inst_info_header,
                                                               
+                                                              inst_bar_hosp,
+                                                              
                                                               #fin_patAndRev,
                                                               #fin_pat 
                                                             ]),
@@ -1459,9 +1465,9 @@ def update_sur_spec_info(username):
                     pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
         
         except:
-            return ('','','','','','','','','','','','','','','', '', '')
+            return ('','','','','','','','','','','','','','','', '')
     else:
-        return ('','','','','','','','','','','','','','','', '', '')
+        return ('','','','','','','','','','','','','','','', '')
         
     
 

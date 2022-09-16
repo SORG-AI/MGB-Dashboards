@@ -34,10 +34,7 @@ def pat_glance_info(all_data):
     return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
 
 
-
-
 def create_current_graphs(all_data):
-
 
     #Race data and graph
     df_race = all_data.PatRace.value_counts().to_frame(name='Number of patients')
@@ -230,6 +227,9 @@ def create_current_graphs(all_data):
                             data = alc_use_items, style_header={'backgroundColor': 'rgb(178, 180, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
                             style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '50%'}
                                     )
+    df_inst_count = all_data.Hosp_name.value_counts()    
+    inst_bar= px.bar(df_inst_count, title = 'Patients Distribution based on Location in the MGB System', labels = {'index': 'Location', 'color': 'Hospitals', 'value': 'Number of patients'}, color =[ 'MGH', 'BWH'], color_discrete_sequence=['rgb(202, 172, 255)', 'rgb(124, 164, 255)'])
+    
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar)
     
