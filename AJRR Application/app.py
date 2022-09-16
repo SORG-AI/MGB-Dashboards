@@ -225,7 +225,7 @@ index_page = html.Div([
 
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw) = create_current_graphs(df)
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -548,7 +548,7 @@ comorb_info  = html.Div([
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-"""
+
 comorb_ICD10Top10 = html.Div([
 
                 html.Div([
@@ -559,7 +559,7 @@ comorb_ICD10Top10 = html.Div([
                         ], style={'width': '100%','display': 'inline-block'})
 
                 ])
-"""
+
 
 other_info  = html.Div([
 
@@ -884,7 +884,7 @@ proc_hip_and_knee_tab = html.Div([
                         ], style={'width': '50%', 'display': 'inline-block'})
                 ])
 
-"""
+
 comorb_ICD10Top10_tab = html.Div([
 
                 html.Div([
@@ -895,7 +895,7 @@ comorb_ICD10Top10_tab = html.Div([
                         ], style={'width': '100%','display': 'inline-block'})
 
                 ])
-"""
+
 
 prom_discharge_tab = html.Div([
 
@@ -1002,7 +1002,7 @@ page_1_layout = html.Div([
                                                               
                                                               comorb_info,
 
-                                                              #comorb_ICD10Top10,
+                                                              comorb_ICD10Top10,
                                                               
                                                               other_info,
                                                               
@@ -1045,7 +1045,7 @@ page_1_layout = html.Div([
                                                                 
                                                                 comorb_info,
                                                                 
-                                                                #comorb_ICD10Top10_tab,
+                                                                comorb_ICD10Top10_tab,
                                                                 
                                                                 other_info,
                                                                 
@@ -1343,7 +1343,7 @@ def update_pat_info(username):
     Output('proc_revision_pie','figure'),
     Output('hip_distr_bar', 'figure'),
     Output('knee_distr_bar','figure'),
-    #Output('ICD10_bar','figure'),
+    Output('ICD10_bar','figure'),
     Output('discharge_distr_pie','figure'),
     #Output('financial_pie','figure'),
     #Output('revenue_location_pie','figure'),
@@ -1369,15 +1369,15 @@ def update_sur_spec_info(username):
             df_surgeon = df.loc[cond1 & cond2]
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw) = create_current_graphs(df_surgeon)
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar) = create_current_graphs(df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw)
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar)
         
         except:
-            return ('','','','','','','','','','','','','','')
+            return ('','','','','','','','','','','','','','','')
     else:
-        return ('','','','','','','','','','','','','','')
+        return ('','','','','','','','','','','','','','','')
         
     
 
