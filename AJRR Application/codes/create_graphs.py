@@ -8,7 +8,7 @@ Created on Fri Aug  5 09:58:07 2022
 from dash import dash_table
 import pandas as pd
 import plotly.express as px
-
+import numpy as np
 
 def pat_glance_info(all_data):
     
@@ -217,6 +217,18 @@ def create_current_graphs(all_data):
     #Adding a CCI box and whiskers plot
     CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
     
+    
+    #create a table for the types of drinks each patient has
+        #first make a dict from the df you want in the table
+    df_alc_use_type = all_data.HistoryOfDrinkTypesDSC.value_counts().to_dict()
+        #create an empty array and put like one random thing in it
+    alc_use_items = [0]
+        #replace that one random thing with the dict from above
+    alc_use_items[0] = df_alc_use_type
+    drinks_table = dash_table.DataTable(
+                            data = alc_use_items, style_header={'backgroundColor': 'rgb(178, 180, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
+                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '50%'}
+                                    )
     return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table)
     

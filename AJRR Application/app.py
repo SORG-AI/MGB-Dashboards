@@ -226,7 +226,7 @@ index_page = html.Div([
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
- tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df)
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table) = create_current_graphs(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -1025,8 +1025,6 @@ alc_tob_tab = html.Div([
                     ])
 
 
-
-
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
@@ -1054,6 +1052,10 @@ page_1_layout = html.Div([
                                                               substances_info,
                                                               
                                                               alc_tob_use,
+                                                              
+                                                              drinks_table,
+                                                              
+                                                              html.Br(),
                                                               
                                                               comorb_info,
 
@@ -1432,15 +1434,15 @@ def update_sur_spec_info(username):
             
             (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
              pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
-             tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df_surgeon)
+             tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table) = create_current_graphs(df_surgeon)
         
             return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
                     pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
         
         except:
-            return ('','','','','','','','','','','','','','','', '')
+            return ('','','','','','','','','','','','','','','', '', '')
     else:
-        return ('','','','','','','','','','','','','','','', '')
+        return ('','','','','','','','','','','','','','','', '', '')
         
     
 
