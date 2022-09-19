@@ -34,7 +34,7 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2021Q1-2021Q4_app_data.pkl')
+file_name = os.path.join(PATHS['app_data'], 'ASR_Cervical Spine_2021Q1-2021Q4_app_data.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
@@ -137,34 +137,9 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
 
 
 
-# Callback function to login the user, or update the screen if the username or password are incorrect
-    #### Creating a dict with all surgeon names and usernames
-# list_surgeons = pd.Series(df['surgeons.PrimarySurgeon']).unique().tolist()
-# print(list_surgeons)
-# #create username for each primary surgeon using a loop
-
-    
-# #print(list_surgeons)
-# for x in list_surgeons:
-#     un = []
-#     print(x)
-#     if len(str(x)) > 1:
-#         for i in range (len(list_surgeons)):
-#             un =str(x)[0] + str(x).rsplit(' ', 1)[1]
-#             USER_TO_NAME.update({str(un): x})
-#             USER_LIST.update({str(un) : str(x[0: 2] + x[0:2])})
-    
-# print(USER_LIST)
-
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
-
-    #### Creating a dict with all surgeon names and usernames
-    
-    
-    
-    #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
     password = '' if password == None else password
@@ -200,18 +175,18 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('Fixus', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
+    html.H1('Fixus - ASR Cervical Spine', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
                        'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
     html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
-        html.Br(),
-        html.Br(),
-        dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
-        html.Br(),
-        html.Br(),
-        dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        # html.Br(),
+        # html.Br(),
+        # dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        # html.Br(),
+        # html.Br(),
+        # dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
     html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
@@ -224,14 +199,11 @@ index_page = html.Div([
 (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
-(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
- pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs(df)
+# (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
+#  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs(df)
 
-"""
-(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
- provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_diag)
+(proc_distr_pie) = create_current_graphs(df)
 
-"""
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
@@ -388,7 +360,7 @@ pat_info_header = html.Div([
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
-
+"""
 pat_age = html.Div([
                     html.Div([
                         dcc.Graph(figure = pat_age_bar)
@@ -405,7 +377,7 @@ pat_race_and_eth = html.Div([
                                         dcc.Graph(figure = pat_eth_bar)
                                         ], style={'width': '50%','display': 'inline-block'})
                             ], style={'width': '100%', 'display': 'inline-block'})
-"""
+
 pat_bmi = html.Div([
                 html.Div([
                             dcc.Graph(figure = bmi_bar)
@@ -418,13 +390,13 @@ pat_bmi = html.Div([
                                 ])
                         ], style={'width' : '50%', 'display': 'inline-block'})
                     ])
-"""
+
 pat_bmi = html.Div([
                 html.Div([
                             dcc.Graph(figure = bmi_bar)
                         ], style={'width' : '50%', 'display': 'inline-block'})
                     ])
-
+"""
 
 surg_info_header = html.Div([
 
@@ -439,13 +411,7 @@ surg_info_header = html.Div([
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
-"""
-pat_diag_gen = html.Div([
-                    html.Div([
-                                dcc.Graph(figure = diag_gen_bar)
-                            ])
-                    ])
-"""
+
 
 ## Procedures and conditions
 
@@ -464,231 +430,208 @@ proc_info = html.Div([
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
-
 proc_total = html.Div([
 
                  html.Div([
 
                           dcc.Graph(figure = proc_distr_pie)
 
-                          ], style={'width': '50%','display': 'inline-block'}),
+                          ], style={'width': '100%','display': 'inline-block'})
+
+                ])
+
+# proc_total = html.Div([
+
+#                  html.Div([
+
+#                           dcc.Graph(figure = proc_distr_pie)
+
+#                           ], style={'width': '50%','display': 'inline-block'}),
                  
-                 html.Div([
+#                  html.Div([
 
-                          dcc.Graph(figure = proc_revision_pie)
+#                           dcc.Graph(figure = proc_revision_pie)
 
-                          ], style={'width': '50%','display': 'inline-block'})
+#                           ], style={'width': '50%','display': 'inline-block'})
 
-                ])
+#                 ])
 
-proc_hip_and_knee = html.Div([
+# proc_hip_and_knee = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(figure = hip_distr_bar)
+#                         dcc.Graph(figure = hip_distr_bar)
 
-                        ], style={'width': '50%', 'display': 'inline-block'}), 
+#                         ], style={'width': '50%', 'display': 'inline-block'}), 
                 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(figure = knee_distr_bar)
+#                         dcc.Graph(figure = knee_distr_bar)
 
-                        ], style={'width': '50%', 'display': 'inline-block'})
-                ])
+#                         ], style={'width': '50%', 'display': 'inline-block'})
+#                 ])
 
-substances_info  = html.Div([
+# substances_info  = html.Div([
 
-                        html.Div([
+#                         html.Div([
 
-                                html.H5([
+#                                 html.H5([
 
-                                        "Alcohol, Tobacco, and Drug Use History"
+#                                         "Alcohol, Tobacco, and Drug Use History"
 
-                                        ])
+#                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+#                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
 
-alc_tob_use = html.Div([
-                html.Div([
-                        dcc.Graph(figure = alc_use_bar)
-                        ], style={'width': '50%','display': 'inline-block'}),
-                html.Div([
-                    dcc.Graph(figure = tob_use_bar)
-                    ], style={'width':'50%','display':'inline-block'})
-                    ])
-"""
-alc_use_type = html.Div([
-                html.Div([
-                        dcc.Graph(figure = alc_use_type_pie)
-                        ], style = {'width': '50%', 'display': 'inline-block'})
-                        ])
-"""
+# alc_tob_use = html.Div([
+#                 html.Div([
+#                         dcc.Graph(figure = alc_use_bar)
+#                         ], style={'width': '50%','display': 'inline-block'}),
+#                 html.Div([
+#                     dcc.Graph(figure = tob_use_bar)
+#                     ], style={'width':'50%','display':'inline-block'})
+#                     ])
+
 
 
 ## Comorbidities and complications category
 
-comorb_info  = html.Div([
+# comorb_info  = html.Div([
 
-                        html.Div([
+#                         html.Div([
 
-                                html.H5([
+#                                 html.H5([
 
-                                        "Comorbidities and complications"
+#                                         "Comorbidities and complications"
 
-                                        ])
+#                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+#                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-"""
-comorb_ICD10Top10 = html.Div([
+# """
+# comorb_ICD10Top10 = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(figure = ICD10_bar)
+#                         dcc.Graph(figure = ICD10_bar)
                        
 
-                        ], style={'width': '100%','display': 'inline-block'})
+#                         ], style={'width': '100%','display': 'inline-block'})
 
-                ])
-"""
+#                 ])
+# """
 
-other_info  = html.Div([
+# other_info  = html.Div([
 
-                        html.Div([
+#                         html.Div([
 
-                                html.H5([
+#                                 html.H5([
 
-                                        "Other patient related information"
+#                                         "Other patient related information"
 
-                                        ])
+#                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+#                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-prom_discharge = html.Div([
+# prom_discharge = html.Div([
 
-                            html.Div([
+#                             html.Div([
 
-                                    dcc.Graph(figure = discharge_distr_pie)
+#                                     dcc.Graph(figure = discharge_distr_pie)
 
-                                    ])
+#                                     ])
 
-                          ])
+#                           ])
 
-## Financial information category
+# ## Financial information category
 
-inst_info_header = html.Div([
+# inst_info_header = html.Div([
 
-                              html.Div([
+#                               html.Div([
 
-                                      html.H2([
+#                                       html.H2([
 
-                                          "Institution Related Data"
+#                                           "Institution Related Data"
 
-                                              ])
+#                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+#                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
-
-
-fin_info = html.Div([
-
-                        html.Div([
-
-                                html.H5([
-
-                                        "Financial Information"
-
-                                        ])
-
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
-
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+#                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
 
+# fin_info = html.Div([
 
-"""
-fin_patAndRev = html.Div([
+#                         html.Div([
 
-                html.Div([
+#                                 html.H5([
 
-                        dcc.Graph(figure = financial_pie)
+#                                         "Financial Information"
 
-                        ], style={'width': '50%','display': 'inline-block'}),
+#                                         ])
 
-                html.Div([
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                        dcc.Graph(figure = revenue_location_pie)
+#                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
-                        ], style={'width': '50%','display': 'inline-block'})
 
-                ])
 
-fin_pat = html.Div([
 
-                html.Div([
-
-                        dcc.Graph(figure = financial_pie)
-
-                        ], style={'width': '50%','display': 'inline-block'})
-
-                ])
-"""
 
 ##Institution information
 
-inst_info = html.Div([
+# inst_info = html.Div([
 
-                        html.Div([
+#                         html.Div([
 
-                                html.H5([
+#                                 html.H5([
 
-                                        "Institution Information"
+#                                         "Institution Information"
 
-                                        ])
+#                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
-
-
+#                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
 
-"""
 
-inst_prov = html.Div([
 
-                            html.Div([
+# """
 
-                                    dcc.Graph(figure = provider_specialty_bar)
+# inst_prov = html.Div([
 
-                                    ], style={'width': '50%','display': 'inline-block'})
+#                             html.Div([
 
-                            ])
-"""
-proc_diag = html.Div([
+#                                     dcc.Graph(figure = provider_specialty_bar)
+
+#                                     ], style={'width': '50%','display': 'inline-block'})
+
+#                             ])
+# """
+# proc_diag = html.Div([
     
-                html.Div([
+#                 html.Div([
                     
-                        dcc.Graph(figure = hip_diag_bar)
+#                         dcc.Graph(figure = hip_diag_bar)
                         
-                        ], style={'width': '50%','display': 'inline-block'}),
+#                         ], style={'width': '50%','display': 'inline-block'}),
                 
-                html.Div([
+#                 html.Div([
                     
-                        dcc.Graph(figure = knee_diag_bar)
+#                         dcc.Graph(figure = knee_diag_bar)
                         
-                        ], style={'width': '50%','display': 'inline-block'})
+#                         ], style={'width': '50%','display': 'inline-block'})
                 
-                ])
+#                 ])
 
 
 
@@ -834,18 +777,18 @@ pat_tab_glance = html.Div([
 
 
 
-pat_bmi_tab = html.Div([
-                html.Div([
-                            dcc.Graph(id = 'bmi_bar')
-                        ])
-                    ])
+# pat_bmi_tab = html.Div([
+#                 html.Div([
+#                             dcc.Graph(id = 'bmi_bar')
+#                         ])
+#                     ])
 
 
-pat_age_tab = html.Div([
-                    html.Div([
-                        dcc.Graph(id = 'pat_age_bar')
-                        ])
-                    ])
+# pat_age_tab = html.Div([
+#                     html.Div([
+#                         dcc.Graph(id = 'pat_age_bar')
+#                         ])
+#                     ])
 
 proc_total_tab = html.Div([
 
@@ -853,115 +796,125 @@ proc_total_tab = html.Div([
 
                           dcc.Graph(id = 'proc_distr_pie')
 
-                          ], style={'width': '50%','display': 'inline-block'}),
+                          ], style={'width': '100%','display': 'inline-block'})
+
+                ])
+
+# proc_total_tab = html.Div([
+
+#                  html.Div([
+
+#                           dcc.Graph(id = 'proc_distr_pie')
+
+#                           ], style={'width': '50%','display': 'inline-block'}),
                  
-                 html.Div([
+#                  html.Div([
 
-                          dcc.Graph(id = 'proc_revision_pie')
+#                           dcc.Graph(id = 'proc_revision_pie')
 
-                          ], style={'width': '50%','display': 'inline-block'})
+#                           ], style={'width': '50%','display': 'inline-block'})
 
-                ])
+#                 ])
 
-proc_hip_and_knee_tab = html.Div([
+# proc_hip_and_knee_tab = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'hip_distr_bar')
+#                         dcc.Graph(id = 'hip_distr_bar')
 
-                        ], style={'width': '50%', 'display': 'inline-block'}), 
+#                         ], style={'width': '50%', 'display': 'inline-block'}), 
                 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'knee_distr_bar')
+#                         dcc.Graph(id = 'knee_distr_bar')
 
-                        ], style={'width': '50%', 'display': 'inline-block'})
-                ])
+#                         ], style={'width': '50%', 'display': 'inline-block'})
+#                 ])
 
-"""
-comorb_ICD10Top10_tab = html.Div([
+# """
+# comorb_ICD10Top10_tab = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'ICD10_bar')
+#                         dcc.Graph(id = 'ICD10_bar')
                        
 
-                        ], style={'width': '100%','display': 'inline-block'})
+#                         ], style={'width': '100%','display': 'inline-block'})
 
-                ])
-"""
+#                 ])
+# """
 
-prom_discharge_tab = html.Div([
+# prom_discharge_tab = html.Div([
 
-                            html.Div([
+#                             html.Div([
 
-                                    dcc.Graph(id = 'discharge_distr_pie')
+#                                     dcc.Graph(id = 'discharge_distr_pie')
 
-                                    ])
+#                                     ])
 
-                          ])
-"""
-fin_patAndRev_tab = html.Div([
+#                           ])
+# """
+# fin_patAndRev_tab = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'financial_pie')
+#                         dcc.Graph(id = 'financial_pie')
 
-                        ], style={'width': '50%','display': 'inline-block'}),
+#                         ], style={'width': '50%','display': 'inline-block'}),
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'revenue_location_pie')
+#                         dcc.Graph(id = 'revenue_location_pie')
 
-                        ], style={'width': '50%','display': 'inline-block'})
-                ])
+#                         ], style={'width': '50%','display': 'inline-block'})
+#                 ])
 
-fin_pat_tab = html.Div([
+# fin_pat_tab = html.Div([
 
-                html.Div([
+#                 html.Div([
 
-                        dcc.Graph(id = 'financial_pie')
+#                         dcc.Graph(id = 'financial_pie')
 
-                        ], style={'width': '50%','display': 'inline-block'})
-                ])
+#                         ], style={'width': '50%','display': 'inline-block'})
+#                 ])
 
-"""
+# """
                                   
-pat_race_and_eth_tab = html.Div([
-                                html.Div([
+# pat_race_and_eth_tab = html.Div([
+#                                 html.Div([
 
-                                    dcc.Graph(id = 'pat_race_bar')
+#                                     dcc.Graph(id = 'pat_race_bar')
 
-                                     ], style={'width': '50%','display': 'inline-block'}),              
-                                html.Div([
-                                        dcc.Graph(id = 'pat_eth_bar')
-                                        ], style={'width': '50%','display': 'inline-block'})
-                            ], style={'width': '100%', 'display': 'inline-block'})
+#                                      ], style={'width': '50%','display': 'inline-block'}),              
+#                                 html.Div([
+#                                         dcc.Graph(id = 'pat_eth_bar')
+#                                         ], style={'width': '50%','display': 'inline-block'})
+#                             ], style={'width': '100%', 'display': 'inline-block'})
 
-proc_diag_tab = html.Div([
+# proc_diag_tab = html.Div([
     
-                html.Div([
+#                 html.Div([
                     
-                        dcc.Graph(id = 'hip_diag_bar')
+#                         dcc.Graph(id = 'hip_diag_bar')
                         
-                        ], style={'width': '50%','display': 'inline-block'}),
+#                         ], style={'width': '50%','display': 'inline-block'}),
                 
-                 html.Div([
+#                  html.Div([
                     
-                        dcc.Graph(id = 'knee_diag_bar')
+#                         dcc.Graph(id = 'knee_diag_bar')
                         
-                        ], style={'width': '50%','display': 'inline-block'})
+#                         ], style={'width': '50%','display': 'inline-block'})
                 
-                ])
+#                 ])
 
-alc_tob_tab = html.Div([
-                html.Div([
-                        dcc.Graph(id = 'alc_use_bar')
-                        ], style={'width': '50%','display': 'inline-block'}),
-                html.Div([
-                        dcc.Graph(id = 'tob_use_bar')
-                        ], style={'width':'50%','display':'inline-block'})
-                    ])
+# alc_tob_tab = html.Div([
+#                 html.Div([
+#                         dcc.Graph(id = 'alc_use_bar')
+#                         ], style={'width': '50%','display': 'inline-block'}),
+#                 html.Div([
+#                         dcc.Graph(id = 'tob_use_bar')
+#                         ], style={'width':'50%','display':'inline-block'})
+#                     ])
 
 
 
@@ -982,25 +935,25 @@ page_1_layout = html.Div([
                                                                                                                             
                                                               html.Br(),
                                                               
-                                                              pat_info_header,
+                                                              # pat_info_header,
                                                               
-                                                              pat_age,
+                                                              # pat_age,
                                                               
-                                                              pat_race_and_eth,
+                                                              # pat_race_and_eth,
                                                               
-                                                              pat_bmi,
+                                                              # pat_bmi,
                                                               
-                                                              substances_info,
+                                                              # substances_info,
                                                               
-                                                              alc_tob_use,
+                                                              # alc_tob_use,
                                                               
-                                                              comorb_info,
+                                                              # comorb_info,
 
-                                                              #comorb_ICD10Top10,
+                                                              # #comorb_ICD10Top10,
                                                               
-                                                              other_info,
+                                                              # other_info,
                                                               
-                                                              prom_discharge,
+                                                              # prom_discharge,
                                                               
                                                               surg_info_header,
 
@@ -1008,16 +961,14 @@ page_1_layout = html.Div([
 
                                                               proc_total,
 
-                                                              proc_hip_and_knee,
+                                                              # proc_hip_and_knee,
                                                               
-                                                              proc_diag,
+                                                              # proc_diag,
                                                               
-                                                              #pat_diag_gen,
+                                                              # #pat_diag_gen,
 
-                                                              inst_info_header,
-                                                              
-                                                              #fin_patAndRev,
-                                                              #fin_pat 
+                                                              # inst_info_header,
+
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
@@ -1025,38 +976,35 @@ page_1_layout = html.Div([
                                                                                                                                 
                                                                 html.Br(),
                                                               
-                                                                pat_info_header,
+                                                                # pat_info_header,
                                                                 
-                                                                pat_age_tab,
+                                                                # pat_age_tab,
                                                                 
-                                                                pat_race_and_eth_tab,
+                                                                # pat_race_and_eth_tab,
                                                                 
-                                                                pat_bmi_tab,
+                                                                # pat_bmi_tab,
                                                                 
-                                                                substances_info,
+                                                                # substances_info,
                                                                 
-                                                                alc_tob_tab,
+                                                                # alc_tob_tab,
                                                                 
-                                                                comorb_info,
+                                                                # comorb_info,
                                                                 
-                                                                #comorb_ICD10Top10_tab,
+                                                                # #comorb_ICD10Top10_tab,
                                                                 
-                                                                other_info,
+                                                                # other_info,
                                                                 
-                                                                prom_discharge_tab,
+                                                                # prom_discharge_tab,
                                                                 
                                                                 surg_info_header,
 
                                                                 proc_total_tab,
                                                                 
-                                                                proc_hip_and_knee_tab,
+                                                                # proc_hip_and_knee_tab,
                                                                 
-                                                                proc_diag_tab,
+                                                                # proc_diag_tab,
                                                                 
-                                                                inst_info_header,
-                                                                
-                                                                #fin_patAndRev_tab
-                                                                #fin_pat_tab
+                                                                # inst_info_header,
                                                                 
                                                                 ])
                         ])
@@ -1066,205 +1014,205 @@ page_1_layout = html.Div([
 
 
 
-########### MODEL DEPLOYMENT LAYOUT DEFINITION
-def model_image_view_html(id_upload, id_output_img, title_name="Default Model", select_button_name="Select Images"):
-    layout = html.Div([
-                    html.Div(className='container',
-                      children=[
-                                dbc.Row(html.H1(title_name), style={'textAlign': 'center'}),
-                                dbc.Row(html.H1(" ")),
-                                dbc.Row(
-                                    html.Div([
-                                            dcc.Upload(
-                                                id=id_upload,
-                                                children=html.Div([
-                                                    'Drag and Drop or ',
-                                                    html.A(select_button_name)
-                                                ]),
-                                                style={
-                                                    'width': '100%',
-                                                    'height': '60px',
-                                                    'font-size': '22px',
-                                                    'lineHeight': '60px',
-                                                    'borderWidth': '1px',
-                                                    'borderStyle': 'dashed',
-                                                    'borderRadius': '5px',
-                                                    },
-                                                # Allow multiple files to be uploaded
-                                                multiple=True),
-                                            html.Div(id=id_output_img, style={'textAlign': 'center'})
-                                            ])
+# ########### MODEL DEPLOYMENT LAYOUT DEFINITION
+# def model_image_view_html(id_upload, id_output_img, title_name="Default Model", select_button_name="Select Images"):
+#     layout = html.Div([
+#                     html.Div(className='container',
+#                       children=[
+#                                 dbc.Row(html.H1(title_name), style={'textAlign': 'center'}),
+#                                 dbc.Row(html.H1(" ")),
+#                                 dbc.Row(
+#                                     html.Div([
+#                                             dcc.Upload(
+#                                                 id=id_upload,
+#                                                 children=html.Div([
+#                                                     'Drag and Drop or ',
+#                                                     html.A(select_button_name)
+#                                                 ]),
+#                                                 style={
+#                                                     'width': '100%',
+#                                                     'height': '60px',
+#                                                     'font-size': '22px',
+#                                                     'lineHeight': '60px',
+#                                                     'borderWidth': '1px',
+#                                                     'borderStyle': 'dashed',
+#                                                     'borderRadius': '5px',
+#                                                     },
+#                                                 # Allow multiple files to be uploaded
+#                                                 multiple=True),
+#                                             html.Div(id=id_output_img, style={'textAlign': 'center'})
+#                                             ])
                                             
-                                        , style={'textAlign': 'center'}),
-                                ]
-                        ),
-                    html.Br(),
-                    dcc.Link('Go to Page 1', href='/page-1'),
-                    html.Br(),
-                    dcc.Link('Go back to home', href='/')
-                    ])
+#                                         , style={'textAlign': 'center'}),
+#                                 ]
+#                         ),
+#                     html.Br(),
+#                     dcc.Link('Go to Page 1', href='/page-1'),
+#                     html.Br(),
+#                     dcc.Link('Go back to home', href='/')
+#                     ])
                     
-    return layout
+#     return layout
     
 
 
-########################## START: PAGE 2
+# ########################## START: PAGE 2
 
-page_2_layout = model_image_view_html(id_upload= 'upload-image', id_output_img= 'output-image-upload',
-                                      title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
+# page_2_layout = model_image_view_html(id_upload= 'upload-image', id_output_img= 'output-image-upload',
+#                                       title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
 
-@app.callback(Output('output-image-upload', 'children'),
-              Input('upload-image', 'contents'),
-              State('upload-image', 'filename'),
-              State('upload-image', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [
-            parse_contents_hip_fracture(c, n, d) for c, n, d in
-            zip(list_of_contents, list_of_names, list_of_dates)]
+# @app.callback(Output('output-image-upload', 'children'),
+#               Input('upload-image', 'contents'),
+#               State('upload-image', 'filename'),
+#               State('upload-image', 'last_modified'))
+# def update_output(list_of_contents, list_of_names, list_of_dates):
+#     if list_of_contents is not None:
+#         children = [
+#             parse_contents_hip_fracture(c, n, d) for c, n, d in
+#             zip(list_of_contents, list_of_names, list_of_dates)]
 
-        return children    
+#         return children    
     
-### IMAGE LOADERS
-def parse_contents_hip_fracture(contents, filename, date):
+# ### IMAGE LOADERS
+# def parse_contents_hip_fracture(contents, filename, date):
 
-    ### READ IMAGE AND RESIZE
-    im_bytes = base64.b64decode(contents.split("base64,")[-1])
-    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
-    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+#     ### READ IMAGE AND RESIZE
+#     im_bytes = base64.b64decode(contents.split("base64,")[-1])
+#     im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+#     img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
 
-    # Preprocessing
-    img_new = im_preprocess(img, im_newsize = (1062, 1062))
+#     # Preprocessing
+#     img_new = im_preprocess(img, im_newsize = (1062, 1062))
     
-    # Encoding Back
-    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
-    encoding =  base64.b64encode(im_arr)
-    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+#     # Encoding Back
+#     _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+#     encoding =  base64.b64encode(im_arr)
+#     image    = 'data:image/png;base64,{}'.format(encoding.decode())
 
-    # Get the Prediction
-    prediction  = read_image_and_classify(img_new)
-
-
-    output_view = html.Div([
-                            html.H5(filename),
-                            html.H6(datetime.datetime.fromtimestamp(date)),
-
-                            # HTML images accept base64 encoded strings in the same format
-                            # that is supplied by the upload
-                            html.Div('Pre-processed Image'),        
-                            html.Img(src=image, style={'height': '256px'}),
-                            # html.Div('Actual Image'),
-                            # html.Img(src=contents, style={'height': '500px'}),
-                            html.Hr(),
-                            html.Div('Prediction: {}'.format(prediction)),
-                            html.Pre(contents[0:200] + '...', style={
-                                'whiteSpace': 'pre-wrap',
-                                'wordBreak': 'break-all'
-                            })
-                        ], style={'textAlign': 'center'})
-
-    return output_view
+#     # Get the Prediction
+#     prediction  = read_image_and_classify(img_new)
 
 
-### ML Preprocessor
-def read_image_and_classify(image_in):
+#     output_view = html.Div([
+#                             html.H5(filename),
+#                             html.H6(datetime.datetime.fromtimestamp(date)),
 
-    image_width  = 1062 #384
-    image_height = 1062 #384
-    max_im_size = image_width
-    n_channel = 3
-    class_names = ['Control','Fracture']
+#                             # HTML images accept base64 encoded strings in the same format
+#                             # that is supplied by the upload
+#                             html.Div('Pre-processed Image'),        
+#                             html.Img(src=image, style={'height': '256px'}),
+#                             # html.Div('Actual Image'),
+#                             # html.Img(src=contents, style={'height': '500px'}),
+#                             html.Hr(),
+#                             html.Div('Prediction: {}'.format(prediction)),
+#                             html.Pre(contents[0:200] + '...', style={
+#                                 'whiteSpace': 'pre-wrap',
+#                                 'wordBreak': 'break-all'
+#                             })
+#                         ], style={'textAlign': 'center'})
 
-    # # 3) Making the predictions
-    student_images = np.zeros((1, image_width, image_height, n_channel))
-
-    ## Preprocessing
-    for channel in range(n_channel):
-        student_images[0, :, :, channel] = image_in
+#     return output_view
 
 
-    # Use the Model to Predict the Image
-    student_images = student_images.astype(np.uint8)
+# ### ML Preprocessor
+# def read_image_and_classify(image_in):
 
-    prediction_prob = [0.66, 0.34]
-    predicted_class = prediction_prob[0]
-    # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
+#     image_width  = 1062 #384
+#     image_height = 1062 #384
+#     max_im_size = image_width
+#     n_channel = 3
+#     class_names = ['Control','Fracture']
+
+#     # # 3) Making the predictions
+#     student_images = np.zeros((1, image_width, image_height, n_channel))
+
+#     ## Preprocessing
+#     for channel in range(n_channel):
+#         student_images[0, :, :, channel] = image_in
+
+
+#     # Use the Model to Predict the Image
+#     student_images = student_images.astype(np.uint8)
+
+#     prediction_prob = [0.66, 0.34]
+#     predicted_class = prediction_prob[0]
+#     # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
     
-    return predicted_class
+#     return predicted_class
 
 
 
-########################## END: PAGE 2
+# ########################## END: PAGE 2
 
 
 
-########################## START: PAGE 3
+# ########################## START: PAGE 3
 
-page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_output_img= 'output-image-upload-soomin',
-                                      title_name= "Hello Soomin!", select_button_name = "Select Radiographs")
+# page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_output_img= 'output-image-upload-soomin',
+#                                       title_name= "Hello Soomin!", select_button_name = "Select Radiographs")
 
-@app.callback(Output('output-image-upload-soomin', 'children'),
-              Input('upload-image-soomin', 'contents'),
-              State('upload-image-soomin', 'filename'),
-              State('upload-image-soomin', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        children = [
-            parse_contents_hip_fracture(c, n, d) for c, n, d in
-            zip(list_of_contents, list_of_names, list_of_dates)]
+# @app.callback(Output('output-image-upload-soomin', 'children'),
+#               Input('upload-image-soomin', 'contents'),
+#               State('upload-image-soomin', 'filename'),
+#               State('upload-image-soomin', 'last_modified'))
+# def update_output(list_of_contents, list_of_names, list_of_dates):
+#     if list_of_contents is not None:
+#         children = [
+#             parse_contents_hip_fracture(c, n, d) for c, n, d in
+#             zip(list_of_contents, list_of_names, list_of_dates)]
 
-        return children    
+#         return children    
     
-### IMAGE LOADERS
-def parse_contents_soomin(contents, filename, date):
+# ### IMAGE LOADERS
+# def parse_contents_soomin(contents, filename, date):
 
-    ### READ IMAGE AND RESIZE
-    im_bytes = base64.b64decode(contents.split("base64,")[-1])
-    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
-    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+#     ### READ IMAGE AND RESIZE
+#     im_bytes = base64.b64decode(contents.split("base64,")[-1])
+#     im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+#     img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
 
-    # Preprocessing
-    # TODO: Soomin adds her preprocessing stuff here
-    img_new = img_new
+#     # Preprocessing
+#     # TODO: Soomin adds her preprocessing stuff here
+#     img_new = img_new
     
-    # Encoding Back
-    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
-    encoding =  base64.b64encode(im_arr)
-    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+#     # Encoding Back
+#     _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+#     encoding =  base64.b64encode(im_arr)
+#     image    = 'data:image/png;base64,{}'.format(encoding.decode())
 
-    # Get the Prediction
-    # TODO: Soomin adds her preprocessing stuff here
-    prediction  = 0.5000000
+#     # Get the Prediction
+#     # TODO: Soomin adds her preprocessing stuff here
+#     prediction  = 0.5000000
 
-    output_view = html.Div([
-                            html.H5(filename),
-                            html.H6(datetime.datetime.fromtimestamp(date)),
+#     output_view = html.Div([
+#                             html.H5(filename),
+#                             html.H6(datetime.datetime.fromtimestamp(date)),
 
-                            # HTML images accept base64 encoded strings in the same format
-                            # that is supplied by the upload
-                            html.Div('Pre-processed Image'),        
-                            html.Img(src=image, style={'height': '256px'}),
-                            # html.Div('Actual Image'),
-                            # html.Img(src=contents, style={'height': '500px'}),
-                            html.Hr(),
-                            html.Div('Prediction: {}'.format(prediction)),
-                            html.Pre(contents[0:200] + '...', style={
-                                'whiteSpace': 'pre-wrap',
-                                'wordBreak': 'break-all'
-                            })
-                        ], style={'textAlign': 'center'})
+#                             # HTML images accept base64 encoded strings in the same format
+#                             # that is supplied by the upload
+#                             html.Div('Pre-processed Image'),        
+#                             html.Img(src=image, style={'height': '256px'}),
+#                             # html.Div('Actual Image'),
+#                             # html.Img(src=contents, style={'height': '500px'}),
+#                             html.Hr(),
+#                             html.Div('Prediction: {}'.format(prediction)),
+#                             html.Pre(contents[0:200] + '...', style={
+#                                 'whiteSpace': 'pre-wrap',
+#                                 'wordBreak': 'break-all'
+#                             })
+#                         ], style={'textAlign': 'center'})
 
-    return output_view
-
-
-### ML Preprocessor
-def read_image_and_classify_soomin(image_in):
-
-    pass
+#     return output_view
 
 
+# ### ML Preprocessor
+# def read_image_and_classify_soomin(image_in):
 
-########################## END: PAGE 2
+#     pass
+
+
+
+# ########################## END: PAGE 2
 
 
 
@@ -1334,21 +1282,19 @@ def update_pat_info(username):
 #Surgeon specific graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
-    Output('proc_revision_pie','figure'),
-    Output('hip_distr_bar', 'figure'),
-    Output('knee_distr_bar','figure'),
-    #Output('ICD10_bar','figure'),
-    Output('discharge_distr_pie','figure'),
-    #Output('financial_pie','figure'),
-    #Output('revenue_location_pie','figure'),
-    Output('pat_race_bar', 'figure'),
-    Output('pat_eth_bar', 'figure'),
-    Output('hip_diag_bar','figure'),
-    Output('knee_diag_bar','figure'),
-    Output('pat_age_bar', 'figure'),
-    Output('bmi_bar', 'figure'),
-    Output('alc_use_bar', 'figure'),
-    Output('tob_use_bar', 'figure'),
+    # Output('proc_revision_pie','figure'),
+    # Output('hip_distr_bar', 'figure'),
+    # Output('knee_distr_bar','figure'),
+    # Output('ICD10_bar','figure'),
+    # Output('discharge_distr_pie','figure'),
+    # Output('pat_race_bar', 'figure'),
+    # Output('pat_eth_bar', 'figure'),
+    # Output('hip_diag_bar','figure'),
+    # Output('knee_diag_bar','figure'),
+    # Output('pat_age_bar', 'figure'),
+    # Output('bmi_bar', 'figure'),
+    # Output('alc_use_bar', 'figure'),
+    # Output('tob_use_bar', 'figure'),
     [Input('login-status','data')])
 def update_sur_spec_info(username):
 
@@ -1361,16 +1307,14 @@ def update_sur_spec_info(username):
             cond2 = df.SurLastName == sur_first_last[1]
             df_surgeon = df.loc[cond1 & cond2]
             
-            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs (df_surgeon)
+            (proc_distr_pie) = create_current_graphs (df_surgeon)
         
-            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar )
+            return (proc_distr_pie)
         
         except:
-            return ('','','','','','','','','','','','','','')
+            return ('')
     else:
-        return ('','','','','','','','','','','','','','')
+        return ('')
         
     
 
@@ -1410,18 +1354,18 @@ def display_page(pathname):
         else:
             view = 'Redirecting to login...'
             url = '/login'
-    elif pathname == '/page-2':
-        if current_user.is_authenticated:
-            view = page_2_layout
-        else:
-            view = 'Redirecting to login...'
-            url = '/login'
-    elif pathname == '/page-3':
-        if current_user.is_authenticated:
-            view = page_3_layout
-        else:
-            view = 'Redirecting to login...'
-            url = '/login'            
+    # elif pathname == '/page-2':
+    #     if current_user.is_authenticated:
+    #         view = page_2_layout
+    #     else:
+    #         view = 'Redirecting to login...'
+    #         url = '/login'
+    # elif pathname == '/page-3':
+    #     if current_user.is_authenticated:
+    #         view = page_3_layout
+    #     else:
+    #         view = 'Redirecting to login...'
+    #         url = '/login'            
     else:
         view = index_page
     # You could also return a 404 "URL not found" page here
@@ -1438,8 +1382,8 @@ app.validation_layout = html.Div([
     logout,
     post_login_content,
     page_1_layout,
-    page_2_layout,
-    page_3_layout
+    # page_2_layout,
+    # page_3_layout
 ])
 
 
