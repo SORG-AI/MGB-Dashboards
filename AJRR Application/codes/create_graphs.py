@@ -215,7 +215,21 @@ def create_current_graphs(all_data):
     #Adding a CCI box and whiskers plot
     CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
     
+
     
+    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
+
+def create_inst_MGH_graphs(all_data):
+    
+    df_inst_count = all_data.Hosp_name.value_counts()    
+    inst_bar= px.bar(df_inst_count, title = 'Patients Distribution based on Location in the MGB System', labels = {'index': 'Location', 'color': 'Hospitals', 'value': 'Number of patients'}, color =[ 'MGH', 'BWH'], color_discrete_sequence=['rgb(202, 172, 255)', 'rgb(124, 164, 255)'])
+    
+    return (inst_bar)
+
+def create_current_tables(all_data):
+    
+        
     #create a table for the types of drinks each patient has
         #first make a dict from the df you want in the table
     df_alc_use_type = all_data.HistoryOfDrinkTypesDSC.value_counts().to_dict()
@@ -223,14 +237,13 @@ def create_current_graphs(all_data):
     alc_use_items = [0]
         #replace that one random thing with the dict from above
     alc_use_items[0] = df_alc_use_type
+
+    
     drinks_table = dash_table.DataTable(
                             data = alc_use_items, style_header={'backgroundColor': 'rgb(178, 180, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
                             style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '50%'}
                                     )
-    df_inst_count = all_data.Hosp_name.value_counts()    
-    inst_bar= px.bar(df_inst_count, title = 'Patients Distribution based on Location in the MGB System', labels = {'index': 'Location', 'color': 'Hospitals', 'value': 'Number of patients'}, color =[ 'MGH', 'BWH'], color_discrete_sequence=['rgb(202, 172, 255)', 'rgb(124, 164, 255)'])
-    
-    #top 3 diagnoses in MGH
+        #top 3 diagnoses in MGH
     primDXmgh = all_data.DX_prim[all_data.Hosp_name == 'MGH']
     primDX = primDXmgh.value_counts().head(5).to_dict()
     primDX_items = [0]
@@ -248,6 +261,5 @@ def create_current_graphs(all_data):
                         data= primDX_items_bw,  style_header={'backgroundColor': 'rgb(210, 155, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
                             style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '30%'}
                                     )
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar, mghinst_table, bwhinst_table)
     
+    return (drinks_table, mghinst_table, bwhinst_table)

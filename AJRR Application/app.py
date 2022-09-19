@@ -23,7 +23,7 @@ import cv2
 import base64
 import pickle
 
-from codes.create_graphs import create_current_graphs, pat_glance_info
+from codes.create_graphs import create_current_graphs, pat_glance_info, create_current_tables, create_inst_MGH_graphs
 
 
 #### FIXUS BEGINS
@@ -206,7 +206,12 @@ index_page = html.Div([
 ##TODO: when adding another graph make sure to add it here
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
- tob_use_bar, bmi_bw, ICD10_bar, CCI_bw, drinks_table, inst_bar, mghinst_table, bwhinst_table) = create_current_graphs(df)
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df)
+
+
+(inst_bar) = create_inst_MGH_graphs(df)
+
+(drinks_table, mghinst_table, bwhinst_table) = create_current_tables(df)
 
 """
 (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
@@ -694,7 +699,7 @@ inst_tables_bar =  html.Div([html.Div([
                 html.Div([
                             html.Div([
                                         html.H6([
-                                                    'MGH: Top 3 diagnoses'
+                                                    'MGH: Top 5 diagnoses'
                                                 ])
                                     ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}),
                             html.Div([
@@ -702,7 +707,7 @@ inst_tables_bar =  html.Div([html.Div([
                                     ], style={'width': '90%', 'display': 'inline-block', 'text-align' : 'left'}),
                             html.Div([
                                         html.H6([
-                                                   'BWH: Top 3 diagnoses'
+                                                   'BWH: Top 5 diagnoses'
                                                 ])
                                     ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}), 
                             html.Div([
@@ -1118,16 +1123,11 @@ page_1_layout = html.Div([
                                                               
                                                               proc_diag,
                                                               
-                                                              #pat_diag_gen,
-
                                                               inst_info_header,
-                                                              
                                                               
                                                               inst_tables_bar,
                                                               
-                                                              
-                                                              #fin_patAndRev,
-                                                              #fin_pat 
+                       
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
@@ -1489,9 +1489,9 @@ def update_sur_spec_info(username):
                     pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
         
         except:
-            return ('','','','','','','','','','','','','','','', '')
+            return ('','','','','','','','','','','','','','','','')
     else:
-        return ('','','','','','','','','','','','','','','', '')
+        return ('','','','','','','','','','','','','','','','')
         
     
 
