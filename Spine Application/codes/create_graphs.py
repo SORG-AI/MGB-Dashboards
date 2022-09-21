@@ -26,9 +26,13 @@ def pat_glance_info(all_data):
     avg_length_of_stay = round(all_data.Len_stay.mean())
 
     avg_pat_age = round(all_data.Pat_age.mean())
+    
+    med_CCI = round(all_data.CCI.mean(),2)
+    
+    inst = all_data.Hosp_name.values[0]
 
     
-    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age)
+    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
 
 
 
@@ -52,7 +56,12 @@ def create_current_graphs(all_data):
     #Distribution of procedures
     proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
                                         'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-                                
+      
+    #Diagnoses
+    df_diag = all_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')   
+    diag_bar = px.bar(df_diag.head(10), y = 'Number of patients', title = 'Diagnoses',  labels = {"index": "Diagnosis Type"},
+                      color_discrete_sequence=(['darkblue']))
+                          
     # #Parse only revision data
     # rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
     # proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna','maroon'))

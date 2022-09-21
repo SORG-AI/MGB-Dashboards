@@ -39,6 +39,10 @@ fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 
+#Only spinal stenosis
+# df = df[df.DX_prim == 'Spinal stenosis, cervical region']
+
+
 #try creating surgeon list here
 surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
 surgeons = surgeons.drop_duplicates()
@@ -181,12 +185,6 @@ index_page = html.Div([
                                 'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
-        # html.Br(),
-        # html.Br(),
-        # dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
-        # html.Br(),
-        # html.Br(),
-        # dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
     html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
@@ -196,12 +194,9 @@ index_page = html.Div([
 
 ### MGB Information Collection and Formatting ###
 
-(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df)
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df)
 
 ##TODO: when adding another graph make sure to add it here
-# (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
-#  pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar) = create_current_graphs(df)
-
 (proc_distr_pie) = create_current_graphs(df)
 
 
@@ -330,6 +325,26 @@ pat_info_at_glance =  html.Div([
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                     ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                            
+                            html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average CCI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(med_CCI, className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                    ], style={'display': 'inline-block'}),
                             
                             
                             html.Div([
@@ -633,7 +648,10 @@ proc_total = html.Div([
                 
 #                 ])
 
-
+diag_dropdown = html.Div([
+    dcc.Dropdown(['All','Spinal Stenosis - Cervical Region'], 'All', id='diag_dropdown_'),
+    html.Div(id='dd-output-container')
+    ])
 
 ### Surgeon related info tab ###
 
@@ -671,7 +689,7 @@ pat_tab_glance = html.Div([
 
                                                             style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P('-', className='card-content',
+                                                            html.P(id = 'inst', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -760,6 +778,26 @@ pat_tab_glance = html.Div([
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
                                         ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average CCI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='med_CCI', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                    ], style={'display': 'inline-block'}),
 
                                 html.Div([
 
@@ -917,6 +955,10 @@ proc_total_tab = html.Div([
 #                     ])
 
 
+diag_dropdown_tab = html.Div([
+    dcc.Dropdown(['All','Spinal Stenosis - Cervical Region'], 'All', id='diag_dropdown'),
+    html.Div(id='dd-output-container')
+    ])
 
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
@@ -931,6 +973,10 @@ page_1_layout = html.Div([
             
             dcc.Tabs([
                     dcc.Tab(label = 'MGB Patients', children = [
+                                                              diag_dropdown,
+                                                              
+                                                              html.Br(),
+                        
                                                               pat_info_at_glance,
                                                                                                                             
                                                               html.Br(),
@@ -972,6 +1018,8 @@ page_1_layout = html.Div([
                                                             ]),
 
                         dcc.Tab(label= 'Your patients', children = [
+                                                                diag_dropdown_tab,
+                            
                                                                 pat_tab_glance,
                                                                                                                                 
                                                                 html.Br(),
@@ -1014,210 +1062,6 @@ page_1_layout = html.Div([
 
 
 
-# ########### MODEL DEPLOYMENT LAYOUT DEFINITION
-# def model_image_view_html(id_upload, id_output_img, title_name="Default Model", select_button_name="Select Images"):
-#     layout = html.Div([
-#                     html.Div(className='container',
-#                       children=[
-#                                 dbc.Row(html.H1(title_name), style={'textAlign': 'center'}),
-#                                 dbc.Row(html.H1(" ")),
-#                                 dbc.Row(
-#                                     html.Div([
-#                                             dcc.Upload(
-#                                                 id=id_upload,
-#                                                 children=html.Div([
-#                                                     'Drag and Drop or ',
-#                                                     html.A(select_button_name)
-#                                                 ]),
-#                                                 style={
-#                                                     'width': '100%',
-#                                                     'height': '60px',
-#                                                     'font-size': '22px',
-#                                                     'lineHeight': '60px',
-#                                                     'borderWidth': '1px',
-#                                                     'borderStyle': 'dashed',
-#                                                     'borderRadius': '5px',
-#                                                     },
-#                                                 # Allow multiple files to be uploaded
-#                                                 multiple=True),
-#                                             html.Div(id=id_output_img, style={'textAlign': 'center'})
-#                                             ])
-                                            
-#                                         , style={'textAlign': 'center'}),
-#                                 ]
-#                         ),
-#                     html.Br(),
-#                     dcc.Link('Go to Page 1', href='/page-1'),
-#                     html.Br(),
-#                     dcc.Link('Go back to home', href='/')
-#                     ])
-                    
-#     return layout
-    
-
-
-# ########################## START: PAGE 2
-
-# page_2_layout = model_image_view_html(id_upload= 'upload-image', id_output_img= 'output-image-upload',
-#                                       title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
-
-# @app.callback(Output('output-image-upload', 'children'),
-#               Input('upload-image', 'contents'),
-#               State('upload-image', 'filename'),
-#               State('upload-image', 'last_modified'))
-# def update_output(list_of_contents, list_of_names, list_of_dates):
-#     if list_of_contents is not None:
-#         children = [
-#             parse_contents_hip_fracture(c, n, d) for c, n, d in
-#             zip(list_of_contents, list_of_names, list_of_dates)]
-
-#         return children    
-    
-# ### IMAGE LOADERS
-# def parse_contents_hip_fracture(contents, filename, date):
-
-#     ### READ IMAGE AND RESIZE
-#     im_bytes = base64.b64decode(contents.split("base64,")[-1])
-#     im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
-#     img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
-
-#     # Preprocessing
-#     img_new = im_preprocess(img, im_newsize = (1062, 1062))
-    
-#     # Encoding Back
-#     _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
-#     encoding =  base64.b64encode(im_arr)
-#     image    = 'data:image/png;base64,{}'.format(encoding.decode())
-
-#     # Get the Prediction
-#     prediction  = read_image_and_classify(img_new)
-
-
-#     output_view = html.Div([
-#                             html.H5(filename),
-#                             html.H6(datetime.datetime.fromtimestamp(date)),
-
-#                             # HTML images accept base64 encoded strings in the same format
-#                             # that is supplied by the upload
-#                             html.Div('Pre-processed Image'),        
-#                             html.Img(src=image, style={'height': '256px'}),
-#                             # html.Div('Actual Image'),
-#                             # html.Img(src=contents, style={'height': '500px'}),
-#                             html.Hr(),
-#                             html.Div('Prediction: {}'.format(prediction)),
-#                             html.Pre(contents[0:200] + '...', style={
-#                                 'whiteSpace': 'pre-wrap',
-#                                 'wordBreak': 'break-all'
-#                             })
-#                         ], style={'textAlign': 'center'})
-
-#     return output_view
-
-
-# ### ML Preprocessor
-# def read_image_and_classify(image_in):
-
-#     image_width  = 1062 #384
-#     image_height = 1062 #384
-#     max_im_size = image_width
-#     n_channel = 3
-#     class_names = ['Control','Fracture']
-
-#     # # 3) Making the predictions
-#     student_images = np.zeros((1, image_width, image_height, n_channel))
-
-#     ## Preprocessing
-#     for channel in range(n_channel):
-#         student_images[0, :, :, channel] = image_in
-
-
-#     # Use the Model to Predict the Image
-#     student_images = student_images.astype(np.uint8)
-
-#     prediction_prob = [0.66, 0.34]
-#     predicted_class = prediction_prob[0]
-#     # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
-    
-#     return predicted_class
-
-
-
-# ########################## END: PAGE 2
-
-
-
-# ########################## START: PAGE 3
-
-# page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_output_img= 'output-image-upload-soomin',
-#                                       title_name= "Hello Soomin!", select_button_name = "Select Radiographs")
-
-# @app.callback(Output('output-image-upload-soomin', 'children'),
-#               Input('upload-image-soomin', 'contents'),
-#               State('upload-image-soomin', 'filename'),
-#               State('upload-image-soomin', 'last_modified'))
-# def update_output(list_of_contents, list_of_names, list_of_dates):
-#     if list_of_contents is not None:
-#         children = [
-#             parse_contents_hip_fracture(c, n, d) for c, n, d in
-#             zip(list_of_contents, list_of_names, list_of_dates)]
-
-#         return children    
-    
-# ### IMAGE LOADERS
-# def parse_contents_soomin(contents, filename, date):
-
-#     ### READ IMAGE AND RESIZE
-#     im_bytes = base64.b64decode(contents.split("base64,")[-1])
-#     im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
-#     img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
-
-#     # Preprocessing
-#     # TODO: Soomin adds her preprocessing stuff here
-#     img_new = img_new
-    
-#     # Encoding Back
-#     _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
-#     encoding =  base64.b64encode(im_arr)
-#     image    = 'data:image/png;base64,{}'.format(encoding.decode())
-
-#     # Get the Prediction
-#     # TODO: Soomin adds her preprocessing stuff here
-#     prediction  = 0.5000000
-
-#     output_view = html.Div([
-#                             html.H5(filename),
-#                             html.H6(datetime.datetime.fromtimestamp(date)),
-
-#                             # HTML images accept base64 encoded strings in the same format
-#                             # that is supplied by the upload
-#                             html.Div('Pre-processed Image'),        
-#                             html.Img(src=image, style={'height': '256px'}),
-#                             # html.Div('Actual Image'),
-#                             # html.Img(src=contents, style={'height': '500px'}),
-#                             html.Hr(),
-#                             html.Div('Prediction: {}'.format(prediction)),
-#                             html.Pre(contents[0:200] + '...', style={
-#                                 'whiteSpace': 'pre-wrap',
-#                                 'wordBreak': 'break-all'
-#                             })
-#                         ], style={'textAlign': 'center'})
-
-#     return output_view
-
-
-# ### ML Preprocessor
-# def read_image_and_classify_soomin(image_in):
-
-#     pass
-
-
-
-# ########################## END: PAGE 2
-
-
-
-
-
 ############################## USER STATUS
 @app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
@@ -1246,6 +1090,16 @@ def update_output_div(username):
         return ('', '')
     
 
+@app.callback(
+    Output('dd-output-container','children'),
+    Output('diag', 'children'),
+    Input('diag_dropdown', 'children')
+    )
+def update_dropdown(value):
+    return [f'You have selected {value}', value]
+
+
+
 #Surgeon specific patient info at a glance
 @app.callback(
     Output('num_patients','children'), 
@@ -1253,8 +1107,11 @@ def update_output_div(username):
     Output('avg_stay', 'children'),
     Output('avgBMI', 'children'),
     Output('avgAge', 'children'),
-    [Input('login-status','data')])
-def update_pat_info(username):
+    Output('med_CCI', 'children'),
+    Output('inst', 'children'),
+    Input('login-status','data'),
+    Input('diag','children'))
+def update_pat_info(username, value):
     global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
@@ -1264,19 +1121,26 @@ def update_pat_info(username):
             cond2 = df.SurLastName == sur_first_last[1]
             df_surgeon = df.loc[cond1 & cond2]
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age) = pat_glance_info(df_surgeon)
+            if value == 'Spinal Stenosis, cervical region':
+                df_surgeon = df_surgeon[df_surgeon.DX_prim == 'Spinal stenosis, cervical region']
+            else:
+                df_surgeon = df_surgeon
+            
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
             avg_stay_output = '{}'.format(avg_length_of_stay)
             avg_BMI_output = '{}'.format(avg_BMI)
             avg_age_output = '{}'.format(avg_pat_age)
+            med_CCI_output = '{}'.format(med_CCI)
+            inst_output = '{}'.format(inst)
             
-            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output)
+            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
         except:  
-            return ('', '','', '', '')
+            return ('', '','', '', '','','')
     else:
-        return ('','','', '', '')
+        return ('','','', '', '', '', '')
 
 
 #Surgeon specific graphs
@@ -1295,8 +1159,9 @@ def update_pat_info(username):
     # Output('bmi_bar', 'figure'),
     # Output('alc_use_bar', 'figure'),
     # Output('tob_use_bar', 'figure'),
-    [Input('login-status','data')])
-def update_sur_spec_info(username):
+    Input('login-status','data'),
+    Input('diag' ,'children'))
+def update_sur_spec_info(username, value):
 
     if username in USER_TO_NAME.keys():
         try:
@@ -1307,6 +1172,12 @@ def update_sur_spec_info(username):
             cond2 = df.SurLastName == sur_first_last[1]
             df_surgeon = df.loc[cond1 & cond2]
             
+            
+            if value == 'Spinal Stenosis, cervical region':
+                df_surgeon = df_surgeon[df_surgeon.DX_prim == 'Spinal stenosis, cervical region']
+            else:
+                df_surgeon = df_surgeon
+            
             (proc_distr_pie) = create_current_graphs (df_surgeon)
         
             return (proc_distr_pie)
@@ -1316,7 +1187,15 @@ def update_sur_spec_info(username):
     else:
         return ('')
         
+ 
     
+@app.callback(
+    Output('dd-output-container','children'),
+    Output('diag', 'children'),
+    Input('diag_dropdown', 'children')
+    )
+def update_dropdown(value):
+    return [f'You have selected {value}', value]
 
 
 # Main router
