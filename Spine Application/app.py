@@ -7,6 +7,7 @@ from flask_login import login_user, LoginManager, UserMixin, logout_user, curren
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -165,7 +166,7 @@ post_login_content = html.Div([
     html.Div(id='user-status-div'),
     html.Div(id='show-output', children='username', style ={'textAlign': 'right'}),
     html.P(id = 'surgeon-name', children = 'name', style ={'textAlign': 'right'}),
-    html.Hr(),
+    html.Hr(style={'borderColor':'crimson'}),
     html.Br(),
     html.Div(id='page-content'),
 ])
@@ -175,8 +176,8 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('Fixus - ASR Cervical Spine', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
-                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
+    html.H1('Fixus', style={'font-family' : 'sans-serif','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
@@ -192,7 +193,7 @@ index_page = html.Div([
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-family': 'sans-serif'}),
 
                             html.Div([
 
@@ -202,7 +203,7 @@ pat_info_at_glance =  html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#0074D9'}),
+                                                        style ={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                 html.P(id = 'num_patients', className = 'card-content',
 
@@ -222,11 +223,11 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Institution', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'inst', className='card-content',
 
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+                                                                   style={'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px'})
 
                                                         ])
 
@@ -242,7 +243,7 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average patient age', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'avgAge', className='card-content',
 
@@ -262,7 +263,7 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Sex Ratio', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'sex_ratio', className='card-content',
 
@@ -282,7 +283,7 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average patient BMI', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'avgBMI', className='card-content',
 
@@ -302,7 +303,7 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average hospitalization duration', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'avg_stay', className='card-content',
 
@@ -322,7 +323,7 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average CCI', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9'}),
+                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
 
                                                             html.P(id = 'med_CCI', className='card-content',
 
@@ -360,7 +361,7 @@ pat_info_header = html.Div([
 
                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
@@ -375,7 +376,7 @@ surg_info_header = html.Div([
 
                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
 
@@ -392,7 +393,7 @@ proc_info = html.Div([
 
                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
 
@@ -415,14 +416,14 @@ provider_dropdown = dcc.Dropdown(
     value='All', 
     id='provider_dd')
 
-diag_dropdown = dcc.Dropdown(id='diag_dd')
+diag_dropdown = dcc.Dropdown(id='diag_dd', multi=False)
 
-inst_dropdown = dcc.Dropdown(id='inst_dd')
+inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False)
 
 filter_dropdowns = html.Div([
-    html.Div([provider_dropdown], style={'width':'33%','display':'inline-block'}),
-    html.Div([inst_dropdown], style={'width':'33%','display':'inline-block'}),
-    html.Div([diag_dropdown], style={'width':'33%','display':'inline-block'})
+    html.Div([provider_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
+    html.Div([inst_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
+    html.Div([diag_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'})
     ])
 
 
@@ -434,7 +435,8 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
+                html.H3('Fixus Dashboard', style={'font-family' : 'sans-serif','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                                                  'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
                                                           filter_dropdowns,
@@ -453,7 +455,8 @@ page_1_layout = html.Div([
                                                           
                                                         ])
                        
-])
+                ])
+            ])
 
 
 
@@ -505,11 +508,11 @@ def set_diag_dd_option(username, value):
         data = df
     
     #setting institution dropdown options
-    inst_dd_options = [{'label': i, 'value': i} for i in data.Hosp_name.unique()]
+    inst_dd_options = [{'label':'All Institutions', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Hosp_name.unique()] 
     
     #setting diagnosis dropdown options
     main_diag = data.DX_Main_Category.unique()
-    diag_dd_options = [{'label': i, 'value': i} for i in main_diag]
+    diag_dd_options = [{'label':'All Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
     return (inst_dd_options, diag_dd_options)
 
@@ -555,8 +558,18 @@ def update_pat_info(username, provider, inst, diag):
             else:
                 data = df
             
-            data = data[data.Hosp_name == inst]
-            data = data[data.DX_Main_Category == diag]
+            # data = data[data.Hosp_name == inst]
+            # data = data[data.DX_Main_Category == diag]
+            
+            if inst != ['All']:
+                data = data[data.Hosp_name == inst]
+            else:
+                data = data[data.Hosp_name == 'BWH']
+                
+            if diag != ['All']:
+                data = data[data.DX_Main_Category == diag]
+            else:
+                data = data
             
             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
 
