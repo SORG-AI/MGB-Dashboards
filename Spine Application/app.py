@@ -7,7 +7,6 @@ from flask_login import login_user, LoginManager, UserMixin, logout_user, curren
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -24,7 +23,7 @@ import cv2
 import base64
 import pickle
 
-from codes.create_graphs import create_current_graphs, pat_glance_info
+from codes.create_graphs import create_current_graphs, pat_glance_info, create_current_tables, create_inst_MGH_graphs
 
 
 #### FIXUS BEGINS
@@ -137,10 +136,15 @@ logout = html.Div([html.Div(html.H2('You are securely logged out - Please login 
                    ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
 
 
-
 @app.callback(
     Output('url_login', 'pathname'), Output('output-state', 'children'), [Input('login-button', 'n_clicks')], [State('uname-box', 'value'), State('pwd-box', 'value')])
 def login_button_click(n_clicks, username, password):
+
+    #### Creating a dict with all surgeon names and usernames
+    
+    
+    
+    #df = df[df['Primary Surgeon'] == USER_TO_NAME[username]]
     
     # we need this to account for empty pass code
     password = '' if password == None else password
@@ -166,7 +170,7 @@ post_login_content = html.Div([
     html.Div(id='user-status-div'),
     html.Div(id='show-output', children='username', style ={'textAlign': 'right'}),
     html.P(id = 'surgeon-name', children = 'name', style ={'textAlign': 'right'}),
-    html.Hr(style={'borderColor':'crimson'}),
+    html.Hr(),
     html.Br(),
     html.Div(id='page-content'),
 ])
@@ -176,12 +180,18 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('Fixus', style={'font-family' : 'sans-serif','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
-                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
+    html.H1('Fixus', style={'font-family' : 'cursive','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold', 'font-style': 'oblique',
+                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center'}),
+    html.H1('Welcome to your MGB dashboard!', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        html.Br(),
+        html.Br(),
+        #dcc.Link('Models Page', href='/page-2', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        html.Br(),
+        html.Br(),
+        #dcc.Link('Soomin Models Page', href='/page-3', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br()
         ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
     html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
@@ -189,11 +199,31 @@ index_page = html.Div([
 
 
 
+### MGB Information Collection and Formatting ###
+
+(AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df)
+
+##TODO: when adding another graph make sure to add it here
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar,discharge_distr_pie,  
+ pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
+ tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df)
+
+
+(inst_bar) = create_inst_MGH_graphs(df)
+
+(drinks_table, mghinst_table, bwhinst_table) = create_current_tables(df)
+
+"""
+(proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, 
+ provider_specialty_bar, pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI) = create_current_graphs(df, df_diag)
+
+"""
+
 # the whole blue row on the dashboard that gives patient info at a glance
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-family': 'sans-serif'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-size': '20px'}),
 
                             html.Div([
 
@@ -203,9 +233,9 @@ pat_info_at_glance =  html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                        style ={'textAlign': 'center','color': '#0074D9'}),
 
-                                                html.P(id = 'num_patients', className = 'card-content',
+                                                html.P(AJRRPat_total, className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -213,7 +243,7 @@ pat_info_at_glance =  html.Div([
 
                                     ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
+                                ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -223,17 +253,17 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Institution', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'inst', className='card-content',
+                                                            html.P('All MGB', className='card-content',
 
-                                                                   style={'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px'})
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
                                                         ])
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -243,9 +273,9 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average patient age', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'avgAge', className='card-content',
+                                                            html.P(avg_pat_age, className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -253,7 +283,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -263,9 +293,9 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Sex Ratio', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'sex_ratio', className='card-content',
+                                                            html.P(str(males_ratio) + '% male and ' + str(female_ratio) + '% female', className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -273,7 +303,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -283,9 +313,9 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average patient BMI', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'avgBMI', className='card-content',
+                                                            html.P(avg_BMI, className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -293,7 +323,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
 
                             html.Div([
 
@@ -303,9 +333,9 @@ pat_info_at_glance =  html.Div([
 
                                                             html.H4('Average hospitalization duration', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'avg_stay', className='card-content',
+                                                            html.P(avg_length_of_stay, className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -313,7 +343,7 @@ pat_info_at_glance =  html.Div([
 
                                             ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
+                                    ], style={'display': 'inline-block'}),
                             
                             html.Div([
 
@@ -321,11 +351,11 @@ pat_info_at_glance =  html.Div([
 
                                             dbc.CardBody([
 
-                                                            html.H4('Average CCI', className= 'card-title',
+                                                            html.H4('Median CCI', className= 'card-title',
 
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
 
-                                                            html.P(id = 'med_CCI', className='card-content',
+                                                            html.P(med_CCI, className='card-content',
 
                                                                    style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
 
@@ -361,9 +391,48 @@ pat_info_header = html.Div([
 
                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+
+pat_age = html.Div([
+                    html.Div([
+                        dcc.Graph(figure = pat_age_bar)
+                        ])
+                    ])
+
+pat_race_and_eth = html.Div([
+                                html.Div([
+
+                                    dcc.Graph(figure = pat_race_bar)
+
+                                     ], style={'width': '50%','display': 'inline-block'}),              
+                                html.Div([
+                                        dcc.Graph(figure = pat_eth_bar)
+                                        ], style={'width': '50%','display': 'inline-block'})
+                            ], style={'width': '100%', 'display': 'inline-block'})
+"""
+pat_bmi = html.Div([
+                html.Div([
+                            dcc.Graph(figure = bmi_bar)
+                        ], style={'width' : '50%', 'display': 'inline-block'}),
+                html.Div([
+                            dbc.Container([
+                                    dbc.Label("Patient's BMI"),
+                                    dbc.Table(tableBMI),
+                                    dbc.Alert(id='tbl1')
+                                ])
+                        ], style={'width' : '50%', 'display': 'inline-block'})
+                    ])
+"""
+pat_bmi = html.Div([
+                html.Div([
+                            dcc.Graph(figure = bmi_bar)
+                        ], style={'width' : '50%', 'display': 'inline-block'}),
+                html.Div([
+                            dcc.Graph(figure = bmi_bw)
+                        ], style = {'width' : '50%', 'display': 'inline-block'})
+                    ])
 
 
 surg_info_header = html.Div([
@@ -376,10 +445,16 @@ surg_info_header = html.Div([
 
                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                               ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
-
+"""
+pat_diag_gen = html.Div([
+                    html.Div([
+                                dcc.Graph(figure = diag_gen_bar)
+                            ])
+                    ])
+"""
 
 ## Procedures and conditions
 
@@ -393,79 +468,924 @@ proc_info = html.Div([
 
                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
 
                         ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
 
 
 proc_total = html.Div([
 
                  html.Div([
 
-                          dcc.Graph(id = 'proc_distr_pie')
+                          dcc.Graph(figure = proc_distr_pie)
 
-                          ], style={'width': '100%','display': 'inline-block'})
+                          ], style={'width': '50%','display': 'inline-block'}),
+                 
+                 html.Div([
+
+                          dcc.Graph(figure = proc_revision_pie)
+
+                          ], style={'width': '50%','display': 'inline-block'})
 
                 ])
 
-### DROPDOWNS
+proc_hip_and_knee = html.Div([
 
-provider_dropdown = dcc.Dropdown(
-    options=[{'label': 'All MGB Data', 'value': 'All'},
-             {'label': 'My Data', 'value': 'Surgeon'}], 
-    value='All', 
-    id='provider_dd')
+                html.Div([
 
-diag_dropdown = dcc.Dropdown(id='diag_dd', multi=False)
+                        dcc.Graph(figure = hip_distr_bar)
 
-inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False)
+                        ], style={'width': '50%', 'display': 'inline-block'}), 
+                
+                html.Div([
 
-filter_dropdowns = html.Div([
-    html.Div([provider_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
-    html.Div([inst_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([diag_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'})
-    ])
+                        dcc.Graph(figure = knee_distr_bar)
 
+                        ], style={'width': '50%', 'display': 'inline-block'})
+                ])
+
+substances_info  = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Alcohol, Tobacco, and Drug Use History"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+
+alc_tob_use = html.Div([
+                html.Div([
+                        dcc.Graph(figure = alc_use_bar)
+                        ], style={'width': '50%','display': 'inline-block'}),
+                html.Div([
+                    dcc.Graph(figure = tob_use_bar)
+                    ], style={'width':'50%','display':'inline-block'})
+                    ])
+"""
+alc_use_type = html.Div([
+                html.Div([
+                        dcc.Graph(figure = alc_use_type_pie)
+                        ], style = {'width': '50%', 'display': 'inline-block'})
+                        ])
+"""
+
+
+## Comorbidities and complications category
+
+comorb_info  = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Comorbidities and complications"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+comorb_ICD10Top10 = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(figure = ICD10_bar)
+                       
+
+                        ], style={'width': '100%','display': 'inline-block'})
+
+                ])
+
+comorb_cci = html.Div([
+                        
+                        dcc.Graph(figure = CCI_bw)    
+                            
+                    ], style={'width' : '50%', 'display': 'inline-block'})
+
+
+PROM_info = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Patient Reported Outcome Measures"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+other_info  = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Other patient related information"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+prom_discharge = html.Div([
+
+                            html.Div([
+
+                                    dcc.Graph(figure = discharge_distr_pie)
+
+                                    ])
+
+                          ])
+
+## Financial information category
+
+inst_info_header = html.Div([
+
+                              html.Div([
+
+                                      html.H2([
+
+                                          "Institution Related Data"
+
+                                              ])
+
+                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+
+
+fin_info = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Financial Information"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+
+"""
+fin_patAndRev = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(figure = financial_pie)
+
+                        ], style={'width': '50%','display': 'inline-block'}),
+
+                html.Div([
+
+                        dcc.Graph(figure = revenue_location_pie)
+
+                        ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
+fin_pat = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(figure = financial_pie)
+
+                        ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+"""
+
+##Institution information
+
+inst_info = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Institution Information"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+inst_tables_bar =  html.Div([html.Div([
+                        html.Div([
+                                    dcc.Graph(figure = inst_bar)
+                                ], style={'width':'40%','display':'inline-block'}), 
+                    ]),
+    
+                html.Div([
+                            html.Div([
+                                        html.H6([
+                                                    'MGH: Top 5 diagnoses'
+                                                ])
+                                    ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}),
+                            html.Div([
+                                    mghinst_table
+                                    ], style={'width': '90%', 'display': 'inline-block', 'text-align' : 'left'}),
+                            html.Div([
+                                        html.H6([
+                                                   'BWH: Top 5 diagnoses'
+                                                ])
+                                    ], style={'width': '10%', 'display': 'inline-block', 'text-align' : 'left'}), 
+                            html.Div([
+                                        bwhinst_table
+                                    ], style={'width': '90%', 'display': 'inline-block', 'text-align' : 'left'})
+                            
+                        ], style={'width': '50%', 'display': 'inline-block', 'text-align' : 'left'})
+                
+                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+"""
+
+inst_prov = html.Div([
+
+                            html.Div([
+
+                                    dcc.Graph(figure = provider_specialty_bar)
+
+                                    ], style={'width': '50%','display': 'inline-block'})
+
+                            ])
+"""
+proc_diag = html.Div([
+    
+                html.Div([
+                    
+                        dcc.Graph(figure = hip_diag_bar)
+                        
+                        ], style={'width': '50%','display': 'inline-block'}),
+                
+                html.Div([
+                    
+                        dcc.Graph(figure = knee_diag_bar)
+                        
+                        ], style={'width': '50%','display': 'inline-block'})
+                
+                ])
+
+
+
+### Surgeon related info tab ###
+
+pat_tab_glance = html.Div([
+
+                                html.H4(children ='Patient Information At A Glance', style={'text-align': 'center'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
+
+                                                        style ={'textAlign': 'center','color': '#0074D9'}),
+
+                                                html.P(id='num_patients', className = 'card-content',
+
+                                                       style = {'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                    ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                html.H4('Institution', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                html.P(id ='inst', className='card-content',
+
+                                                            style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average patient age', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id = 'avgAge', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                            ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Sex Ratio', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='sex_ratio', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average patient BMI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='avgBMI', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Average hospitalization duration', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='avg_stay', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                        ], style={'display': 'inline-block'}),
+                                
+                                html.Div([
+
+                                    dbc.Card([
+
+                                            dbc.CardBody([
+
+                                                            html.H4('Median CCI', className= 'card-title',
+
+                                                            style={'textAlign': 'center','color': '#0074D9'}),
+
+                                                            html.P(id='med_CCI', className='card-content',
+
+                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                                        ])
+
+                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+
+                                    ], style={'display': 'inline-block'}),
+
+                                html.Div([
+
+                                    html.H4('', className= 'card-title',
+
+                                                style={'textAlign': 'center','color': '#0074D9'}),
+
+                                    html.P('', className='card-content',
+
+                                               style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+
+                                              ],  style={'backgroundColor': 'rgb(220, 248, 285)'})
+
+                                ], style={'backgroundColor': 'rgb(220, 248, 285)'})
+
+pat_age_tab = html.Div([
+                    html.Div([
+                        dcc.Graph(id = 'pat_age_bar')
+                        ], style={'width' : '100%', 'display':'inline-block'})
+                    ])
+
+pat_bmi_tab = html.Div([
+                html.Div([
+                            dcc.Graph(id = 'bmi_bar')
+                        ], style={'width': '50%','display': 'inline-block'}), 
+                html.Div([
+                            dcc.Graph(id = 'bmi_bw')
+                        ], style={'width': '50%','display': 'inline-block'})
+                    ])
+
+
+proc_total_tab = html.Div([
+
+                 html.Div([
+
+                          dcc.Graph(id = 'proc_distr_pie')
+
+                          ], style={'width': '50%','display': 'inline-block'}),
+                 
+                 html.Div([
+
+                          dcc.Graph(id = 'proc_revision_pie')
+
+                          ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
+proc_hip_and_knee_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'hip_distr_bar')
+
+                        ], style={'width': '50%', 'display': 'inline-block'}), 
+                
+                html.Div([
+
+                        dcc.Graph(id = 'knee_distr_bar')
+
+                        ], style={'width': '50%', 'display': 'inline-block'})
+                ])
+
+
+comorb_ICD10Top10_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'ICD10_bar')
+                       
+
+                        ], style={'width': '100%','display': 'inline-block'})
+
+                ])
+
+comorb_cci_tab =  html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'CCI_bw')
+                       
+
+                        ], style={'width': '50%','display': 'inline-block'})
+
+                ])
+
+
+prom_discharge_tab = html.Div([
+
+                            html.Div([
+
+                                    dcc.Graph(id = 'discharge_distr_pie')
+
+                                    ])
+
+                          ])
+"""
+fin_patAndRev_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'financial_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'}),
+
+                html.Div([
+
+                        dcc.Graph(id = 'revenue_location_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'})
+                ])
+
+fin_pat_tab = html.Div([
+
+                html.Div([
+
+                        dcc.Graph(id = 'financial_pie')
+
+                        ], style={'width': '50%','display': 'inline-block'})
+                ])
+
+"""
+                                  
+pat_race_and_eth_tab = html.Div([
+                                html.Div([
+
+                                    dcc.Graph(id = 'pat_race_bar')
+
+                                     ], style={'width': '50%','display': 'inline-block'}),              
+                                html.Div([
+                                        dcc.Graph(id = 'pat_eth_bar')
+                                        ], style={'width': '50%','display': 'inline-block'})
+                            ], style={'width': '100%', 'display': 'inline-block'})
+
+proc_diag_tab = html.Div([
+    
+                html.Div([
+                    
+                        dcc.Graph(id = 'hip_diag_bar')
+                        
+                        ], style={'width': '50%','display': 'inline-block'}),
+                
+                 html.Div([
+                    
+                        dcc.Graph(id = 'knee_diag_bar')
+                        
+                        ], style={'width': '50%','display': 'inline-block'})
+                
+                ])
+
+alc_tob_tab = html.Div([
+                html.Div([
+                        dcc.Graph(id = 'alc_use_bar')
+                        ], style={'width': '50%','display': 'inline-block'}),
+                html.Div([
+                        dcc.Graph(id = 'tob_use_bar')
+                        ], style={'width':'50%','display':'inline-block'})
+                    ])
+
+
+PROM_info_tab = html.Div([
+
+                        html.Div([
+
+                                html.H5([
+
+                                        "Patient Reported Outcome Measures"
+
+                                        ])
+
+                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center'})
+
+                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+
+
+#TODO: make the table patient specific as well
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
 
 page_1_layout = html.Div([
 
             dcc.Link('Go back to home', href='/'),
-            
             html.Div([
 
-                html.H3('Fixus Dashboard', style={'font-family' : 'sans-serif','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
-                                                  'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
+                html.H3("Analytics Dashboard")], style={'textAlign': 'center'}),
+          
             
-                dcc.Tab(label = 'MGB Patients', children = [
-                                                          filter_dropdowns,
-                                                          
-                                                          html.Br(),
-                    
-                                                          pat_info_at_glance,
-                                                                                                                        
-                                                          html.Br(),
-                                                          
-                                                          surg_info_header,
-    
-                                                          proc_info,
-    
-                                                          proc_total
-                                                          
-                                                        ])
+            dcc.Tabs([
+                    dcc.Tab(label = 'MGB Patients', children = [
+                                                              pat_info_at_glance,
+                                                                                                                            
+                                                              html.Br(),
+                                                              
+                                                              pat_info_header,
+                                                              
+                                                              pat_age,
+                                                              
+                                                              pat_race_and_eth,
+                                                              
+                                                              pat_bmi,
+                                                              
+                                                              substances_info,
+                                                              
+                                                              alc_tob_use,
+                                                              
+                                                              drinks_table,
+                                                              
+                                                              html.Br(),
+                                                              
+                                                              comorb_info,
+
+                                                              comorb_ICD10Top10,
+                                                              
+                                                              comorb_cci,
+                                                              
+                                                              PROM_info,
+                                                              
+                                                              other_info,
+                                                              
+                                                              prom_discharge,
+                                                              
+                                                              surg_info_header,
+
+                                                              proc_info,
+
+                                                              proc_total,
+
+                                                              proc_hip_and_knee,
+                                                              
+                                                              proc_diag,
+                                                              
+                                                              inst_info_header,
+                                                              
+                                                              inst_tables_bar,
+                                                              
                        
-                ])
-            ])
+                                                            ]),
+
+                        dcc.Tab(label= 'Your patients', children = [
+                                                                pat_tab_glance,
+                                                                                                                                
+                                                                html.Br(),
+                                                              
+                                                                pat_info_header,
+                                                                
+                                                                pat_age_tab,
+                                                                
+                                                                pat_race_and_eth_tab,
+                                                                
+                                                                pat_bmi_tab,
+                                                                
+                                                                substances_info,
+                                                                
+                                                                alc_tob_tab,
+                                                                
+                                                                comorb_info,
+                                                                
+                                                                comorb_ICD10Top10_tab,
+                                                                
+                                                                comorb_cci_tab,
+                                                                
+                                                                PROM_info_tab,
+                                                                
+                                                                other_info,
+                                                                
+                                                                prom_discharge_tab,
+                                                                
+                                                                surg_info_header,
+
+                                                                proc_total_tab,
+                                                                
+                                                                proc_hip_and_knee_tab,
+                                                                
+                                                                proc_diag_tab,
+                                                                
+                                                                inst_info_header,
+                                                                
+                                                                #fin_patAndRev_tab
+                                                                #fin_pat_tab
+                                                                
+                                                                ])
+                        ])
+])
+
+
+
+
+
+########### MODEL DEPLOYMENT LAYOUT DEFINITION
+def model_image_view_html(id_upload, id_output_img, title_name="Default Model", select_button_name="Select Images"):
+    layout = html.Div([
+                    html.Div(className='container',
+                      children=[
+                                dbc.Row(html.H1(title_name), style={'textAlign': 'center'}),
+                                dbc.Row(html.H1(" ")),
+                                dbc.Row(
+                                    html.Div([
+                                            dcc.Upload(
+                                                id=id_upload,
+                                                children=html.Div([
+                                                    'Drag and Drop or ',
+                                                    html.A(select_button_name)
+                                                ]),
+                                                style={
+                                                    'width': '100%',
+                                                    'height': '60px',
+                                                    'font-size': '22px',
+                                                    'lineHeight': '60px',
+                                                    'borderWidth': '1px',
+                                                    'borderStyle': 'dashed',
+                                                    'borderRadius': '5px',
+                                                    },
+                                                # Allow multiple files to be uploaded
+                                                multiple=True),
+                                            html.Div(id=id_output_img, style={'textAlign': 'center'})
+                                            ])
+                                            
+                                        , style={'textAlign': 'center'}),
+                                ]
+                        ),
+                    html.Br(),
+                    dcc.Link('Go to Page 1', href='/page-1'),
+                    html.Br(),
+                    dcc.Link('Go back to home', href='/')
+                    ])
+                    
+    return layout
+    
+
+
+########################## START: PAGE 2
+
+page_2_layout = model_image_view_html(id_upload= 'upload-image', id_output_img= 'output-image-upload',
+                                      title_name= "Hip Fracture Detection Models", select_button_name = "Select Hip Radiographs")
+
+@app.callback(Output('output-image-upload', 'children'),
+              Input('upload-image', 'contents'),
+              State('upload-image', 'filename'),
+              State('upload-image', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents_hip_fracture(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+
+        return children    
+    
+### IMAGE LOADERS
+def parse_contents_hip_fracture(contents, filename, date):
+
+    ### READ IMAGE AND RESIZE
+    im_bytes = base64.b64decode(contents.split("base64,")[-1])
+    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+    # Preprocessing
+    img_new = im_preprocess(img, im_newsize = (1062, 1062))
+    
+    # Encoding Back
+    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+    encoding =  base64.b64encode(im_arr)
+    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+
+    # Get the Prediction
+    prediction  = read_image_and_classify(img_new)
+
+
+    output_view = html.Div([
+                            html.H5(filename),
+                            html.H6(datetime.datetime.fromtimestamp(date)),
+
+                            # HTML images accept base64 encoded strings in the same format
+                            # that is supplied by the upload
+                            html.Div('Pre-processed Image'),        
+                            html.Img(src=image, style={'height': '256px'}),
+                            # html.Div('Actual Image'),
+                            # html.Img(src=contents, style={'height': '500px'}),
+                            html.Hr(),
+                            html.Div('Prediction: {}'.format(prediction)),
+                            html.Pre(contents[0:200] + '...', style={
+                                'whiteSpace': 'pre-wrap',
+                                'wordBreak': 'break-all'
+                            })
+                        ], style={'textAlign': 'center'})
+
+    return output_view
+
+
+### ML Preprocessor
+def read_image_and_classify(image_in):
+
+    image_width  = 1062 #384
+    image_height = 1062 #384
+    max_im_size = image_width
+    n_channel = 3
+    class_names = ['Control','Fracture']
+
+    # # 3) Making the predictions
+    student_images = np.zeros((1, image_width, image_height, n_channel))
+
+    ## Preprocessing
+    for channel in range(n_channel):
+        student_images[0, :, :, channel] = image_in
+
+
+    # Use the Model to Predict the Image
+    student_images = student_images.astype(np.uint8)
+
+    prediction_prob = [0.66, 0.34]
+    predicted_class = prediction_prob[0]
+    # predicted_class = tf.argmax(input=prediction_prob, axis=1).numpy()
+    
+    return predicted_class
+
+
+
+########################## END: PAGE 2
+
+
+
+########################## START: PAGE 3
+
+page_3_layout = model_image_view_html(id_upload= 'upload-image-soomin', id_output_img= 'output-image-upload-soomin',
+                                      title_name= "Hello Soomin!", select_button_name = "Select Radiographs")
+
+@app.callback(Output('output-image-upload-soomin', 'children'),
+              Input('upload-image-soomin', 'contents'),
+              State('upload-image-soomin', 'filename'),
+              State('upload-image-soomin', 'last_modified'))
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents_hip_fracture(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+
+        return children    
+    
+### IMAGE LOADERS
+def parse_contents_soomin(contents, filename, date):
+
+    ### READ IMAGE AND RESIZE
+    im_bytes = base64.b64decode(contents.split("base64,")[-1])
+    im_arr   = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+    # Preprocessing
+    # TODO: Soomin adds her preprocessing stuff here
+    img_new = img_new
+    
+    # Encoding Back
+    _, im_arr   =  cv2.imencode('.png', img_new)  # im_arr: image in Numpy one-dim array format.
+    encoding =  base64.b64encode(im_arr)
+    image    = 'data:image/png;base64,{}'.format(encoding.decode())
+
+    # Get the Prediction
+    # TODO: Soomin adds her preprocessing stuff here
+    prediction  = 0.5000000
+
+    output_view = html.Div([
+                            html.H5(filename),
+                            html.H6(datetime.datetime.fromtimestamp(date)),
+
+                            # HTML images accept base64 encoded strings in the same format
+                            # that is supplied by the upload
+                            html.Div('Pre-processed Image'),        
+                            html.Img(src=image, style={'height': '256px'}),
+                            # html.Div('Actual Image'),
+                            # html.Img(src=contents, style={'height': '500px'}),
+                            html.Hr(),
+                            html.Div('Prediction: {}'.format(prediction)),
+                            html.Pre(contents[0:200] + '...', style={
+                                'whiteSpace': 'pre-wrap',
+                                'wordBreak': 'break-all'
+                            })
+                        ], style={'textAlign': 'center'})
+
+    return output_view
+
+
+### ML Preprocessor
+def read_image_and_classify_soomin(image_in):
+
+    pass
+
+
+
+########################## END: PAGE 2
 
 
 
 
 
 ############################## USER STATUS
-@app.callback(Output('user-status-div', 'children'), 
-              Output('login-status', 'data'), 
-              [Input('url', 'pathname')])
+@app.callback(Output('user-status-div', 'children'), Output('login-status', 'data'), [Input('url', 'pathname')])
 def login_status(url):
     ''' callback to display login/logout link in the header '''
     if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated \
@@ -481,6 +1401,7 @@ def login_status(url):
     Output(component_id = 'surgeon-name', component_property='children'),
     [Input('login-status','data')])
 def update_output_div(username):
+
     if username in USER_TO_NAME.keys():
         try: 
             name = USER_TO_NAME[username]            
@@ -490,50 +1411,8 @@ def update_output_div(username):
     else:
         return ('', '')
     
-#Set diagnosis dropdown options
-@app.callback(
-    Output('inst_dd','options'),
-    Output('diag_dd', 'options'),
-    Input('login-status','data'),
-    Input('provider_dd', 'value')
-    )
-def set_diag_dd_option(username, value):
-    if value == 'Surgeon':
-        #USER_TO_NAME mapped to surgeon first and last name
-        sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-        cond1 = df.SurFirstName == sur_first_last[0]
-        cond2 = df.SurLastName == sur_first_last[1]
-        data = df.loc[cond1 & cond2]
-    else:
-        data = df
-    
-    #setting institution dropdown options
-    inst_dd_options = [{'label':'All Institutions', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Hosp_name.unique()] 
-    
-    #setting diagnosis dropdown options
-    main_diag = data.DX_Main_Category.unique()
-    diag_dd_options = [{'label':'All Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
-    
-    return (inst_dd_options, diag_dd_options)
 
-#Set institution dropdown values based on options
-@app.callback(
-    Output('inst_dd','value'),
-    Input('inst_dd','options')
-    )
-def set_inst_dd_value(available_options):
-    return available_options[0]['value']
-
-#Set diagnosis dropdown value based on options
-@app.callback(
-    Output('diag_dd', 'value'),
-    Input('diag_dd', 'options')
-    )
-def set_diag_dd_value(available_options):
-    return available_options[0]['value']
-
-
-#Patient info at a glance
+#Surgeon specific patient info at a glance
 @app.callback(
     Output('num_patients','children'), 
     Output('sex_ratio','children'),
@@ -542,36 +1421,18 @@ def set_diag_dd_value(available_options):
     Output('avgAge', 'children'),
     Output('med_CCI', 'children'),
     Output('inst', 'children'),
-    Input('login-status','data'),
-    Input('provider_dd','value'),
-    Input('inst_dd','value'),
-    Input('diag_dd','value'))
-def update_pat_info(username, provider, inst, diag):
+    [Input('login-status','data')])
+def update_pat_info(username):
+    global USER_TO_NAME
     if username in USER_TO_NAME.keys():
         try: 
-            if provider == 'Surgeon':
-                #USER_TO_NAME mapped to surgeon first and last name
-                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-                cond1 = df.SurFirstName == sur_first_last[0]
-                cond2 = df.SurLastName == sur_first_last[1]
-                data = df.loc[cond1 & cond2]
-            else:
-                data = df
+            #USER_TO_NAME mapped to surgeon first and last name
+            sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+            cond1 = df.SurFirstName == sur_first_last[0]
+            cond2 = df.SurLastName == sur_first_last[1]
+            df_surgeon = df.loc[cond1 & cond2]
             
-            # data = data[data.Hosp_name == inst]
-            # data = data[data.DX_Main_Category == diag]
-            
-            if inst != ['All']:
-                data = data[data.Hosp_name == inst]
-            else:
-                data = data[data.Hosp_name == 'BWH']
-                
-            if diag != ['All']:
-                data = data[data.DX_Main_Category == diag]
-            else:
-                data = data
-            
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
+            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(df_surgeon)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
@@ -583,43 +1444,57 @@ def update_pat_info(username, provider, inst, diag):
             
             return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
         except:  
-            return ('', '','', '', '','','')
+            return ('', '','', '', '', '', '')
     else:
         return ('','','', '', '', '', '')
 
 
-#Charts and graphs
+#Surgeon specific graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
-    Input('login-status','data'),
-    Input('provider_dd' ,'value'),
-    Input('inst_dd','value'),
-    Input('diag_dd','value'))
-def update_sur_spec_info(username, provider, inst, diag):
+    Output('proc_revision_pie','figure'),
+    Output('hip_distr_bar', 'figure'),
+    Output('knee_distr_bar','figure'),
+    Output('discharge_distr_pie','figure'),
+    #Output('financial_pie','figure'),
+    #Output('revenue_location_pie','figure'),
+    Output('pat_race_bar', 'figure'),
+    Output('pat_eth_bar', 'figure'),
+    Output('hip_diag_bar','figure'),
+    Output('knee_diag_bar','figure'),
+    Output('pat_age_bar', 'figure'),
+    Output('bmi_bar', 'figure'),
+    Output('alc_use_bar', 'figure'),
+    Output('tob_use_bar', 'figure'),
+    Output('bmi_bw', 'figure'),
+    Output('ICD10_bar','figure'),
+    Output('CCI_bw', 'figure'),
+    [Input('login-status','data')])
+def update_sur_spec_info(username):
 
     if username in USER_TO_NAME.keys():
         try:
-            if provider == 'Surgeon':
-                #USER_TO_NAME mapped to surgeon first and last name
-                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-                cond1 = df.SurFirstName == sur_first_last[0]
-                cond2 = df.SurLastName == sur_first_last[1]
-                data = df.loc[cond1 & cond2]
-            else:
-                data = df
-                
-            data = data[data.Hosp_name == inst]
-            data = data[data.DX_Main_Category == diag]
             
-            (proc_distr_pie) = create_current_graphs(data)
+            #USER_TO_NAME mapped to surgeon first and last name
+            sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+            cond1 = df.SurFirstName == sur_first_last[0]
+            cond2 = df.SurLastName == sur_first_last[1]
+            df_surgeon = df.loc[cond1 & cond2]
+            
+            (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+             pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar,
+             tob_use_bar, bmi_bw, ICD10_bar, CCI_bw) = create_current_graphs(df_surgeon)
         
-            return (proc_distr_pie)
+            return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
+                    pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
         
         except:
-            return ('')
+            return ('','','','','','','','','','','','','','','','')
     else:
-        return ('')
+        return ('','','','','','','','','','','','','','','','')
         
+    
+
 
 # Main router
 @app.callback(Output('page-content', 'children'), Output('redirect', 'pathname'),
@@ -655,7 +1530,19 @@ def display_page(pathname):
             view = page_1_layout
         else:
             view = 'Redirecting to login...'
-            url = '/login'         
+            url = '/login'
+    elif pathname == '/page-2':
+        if current_user.is_authenticated:
+            view = page_2_layout
+        else:
+            view = 'Redirecting to login...'
+            url = '/login'
+    elif pathname == '/page-3':
+        if current_user.is_authenticated:
+            view = page_3_layout
+        else:
+            view = 'Redirecting to login...'
+            url = '/login'            
     else:
         view = index_page
     # You could also return a 404 "URL not found" page here
@@ -670,6 +1557,8 @@ app.validation_layout = html.Div([
     logout,
     post_login_content,
     page_1_layout,
+    page_2_layout,
+    page_3_layout
 ])
 
 
