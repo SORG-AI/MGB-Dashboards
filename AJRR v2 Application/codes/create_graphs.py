@@ -54,8 +54,8 @@ def create_current_graphs(all_data):
     #                      color_discrete_sequence=(['Blue']))
 
     #Distribution of procedures
-    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
+    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, title = "Distribution of Procedures", color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+                                        '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
       
     #Diagnoses
     df_diag = all_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')   

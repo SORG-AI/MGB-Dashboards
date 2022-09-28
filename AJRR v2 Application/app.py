@@ -69,7 +69,7 @@ print(USER_LIST)
 # Exposing the Flask Server to enable configuring it for logging in
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server,
-                title='Fixus App v0.0.1',
+                title='Fixus App v0.1.0',
                 update_title='Cooking awesomeness...',
                 suppress_callback_exceptions=True)
 
@@ -112,18 +112,18 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Br(),
                   html.Br(),
                   html.Br(),
-                  html.Button(children='LOGIN', n_clicks=0, style={'backgroundColor': '#00BFFF', 'border-color': '#F5FFFA', 'color' : '#F5FFFA', 'font-size': '20px', 'padding': '10px 25px'},
+                  html.Button(children='LOGIN', n_clicks=0, style={'backgroundColor': 'crimson', 'border-color': '#F5FFFA', 'color' : '#F5FFFA', 'font-size': '20px', 'padding': '10px 25px'},
                               type='submit', id='login-button'),
                   html.Div(children='', id='output-state'),
                   html.Br(),
                   dcc.Link('Home', href='/')], 
-                  style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})
+                  style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})
 # Successful login screen
 success = html.Div([html.Div([html.H2('Login successful.'),
                               html.Br(),
-                              dcc.Link('Home', href='/')], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
+                              dcc.Link('Home', href='/')], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})  # end div
                     ], 
-                   style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})  # end div
+                   style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})  # end div
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              html.Br(),
@@ -135,7 +135,7 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
 logout = html.Div([html.Div(html.H2('You are securely logged out - Please login to access your data!')),
                    html.Br(),
                    dcc.Link('Home', href='/')
-                   ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})  # end div
+                   ], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})  # end div
 
 
 
@@ -177,16 +177,29 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('Fixus', style={'font-family' : 'sans-serif','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
-                       'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
-    html.H1('MAIN MENU', style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',
-                                'backgroundColor': 'rgb(220, 248, 285)', 'text-align': 'center'}),
+    html.H1('FIXUS', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+                       'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
+    html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
+                                'backgroundColor': 'rgb(240,240,241)', 'text-align': 'center'}),
     html.Div([
-        dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '15px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
-        html.Br()
-        ], style ={'border-top': '1px gray solid', 'border-bottom': '1px gray solid', 'justify-content':'center', 'display': 'flex'}),
-    html.Img(src = 'https://i1.wp.com/onlyvectorbackgrounds.com/wp-content/uploads/2019/03/Subtle-Lines-Abstract-Gradient-Background-Cool.jpg?fit=1191%2C843', width = '100%', height='400px')
-], style={ 'width':'100%'})
+        dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
+        html.Br(), 
+    
+        ], style ={'border-top': '1px gray solid', 'border-bottom': '0px gray solid', 'justify-content':'center', 'display': 'flex'}),
+    html.Br(),
+    html.H2('Our Vision', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
+                                 'text-align': 'center'}
+            ),
+    html.Br(),
+    html.H3('To provide accessible and user friendly information. Striving to help our users interpret data to address problems. Providing the power of data analysis and visualization with one click.',
+            style={'font-family' : 'Helvetica', 'font-size' : '20px', 'text-decoration': 'bold', 'padding': '0px 30px',  'text-align': 'center',
+                                 'width':'100%', 'text-align': 'center'}
+            ),
+    html.Br(),
+    
+    html.Img(src = 'https://static.vecteezy.com/system/resources/previews/000/543/821/original/white-abstract-background-vector-gray-abstract-modern-design-background-for-report-and-project-presentation-template-vector-illustration-graphic-futuristic-and-circular-curve-shape.jpg',
+             width = '100%', height='600px')
+], style={ 'width':'100%','backgroundColor': 'rgb(240,240,241)' })
 
 
 
@@ -194,7 +207,7 @@ index_page = html.Div([
 
 pat_info_at_glance =  html.Div([
 
-                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-family': 'sans-serif'}),
+                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-family': 'sans-serif', 'background-color': 'white'}),
 
                             html.Div([
 
@@ -204,7 +217,7 @@ pat_info_at_glance =  html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
+                                                        style ={'textAlign': 'center','color': 'crimson', 'font-family':'sans-serif'}),
 
                                                 html.P(id = 'num_patients', className = 'card-content',
 
@@ -214,142 +227,8 @@ pat_info_at_glance =  html.Div([
 
                                     ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
 
-                                ], style={'display': 'inline-block', 'padding':'10px, 10px'}),
-
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Institution', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'inst', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Average patient age', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'avgAge', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Sex Ratio', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'sex_ratio', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Average patient BMI', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'avgBMI', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Average hospitalization duration', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'avg_stay', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block', 'padding': '10px 10px'}),
-                            
-                            html.Div([
-
-                                    dbc.Card([
-
-                                            dbc.CardBody([
-
-                                                            html.H4('Average CCI', className= 'card-title',
-
-                                                            style={'textAlign': 'center','color': '#0074D9', 'font-family':'sans-serif'}),
-
-                                                            html.P(id = 'med_CCI', className='card-content',
-
-                                                                   style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                                        ])
-
-                                            ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
-
-                                    ], style={'display': 'inline-block'}),
-                            
-                            
-                            html.Div([
-
-                                    html.H4('', className= 'card-title',
-
-                                                style={'textAlign': 'center','color': '#0074D9'}),
-
-                                    html.P('', className='card-content',
-
-                                               style={'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
-
-                                              ],  style={'backgroundColor': 'rgb(220, 248, 285)'})
-
-                            ], style={'backgroundColor': 'rgb(220, 248, 285)'})
+                                ], style={'display': 'inline-block', 'padding':'10px, 10px', 'background-color': 'rgb(240, 240, 241)'})
+                            ])
 
 
 pat_info_header = html.Div([
@@ -364,7 +243,7 @@ pat_info_header = html.Div([
 
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+                              ], style={'backgroundColor': 'rgb(250, 250, 250)', 'display': 'inline-block','width':'100%'})
 
 
 surg_info_header = html.Div([
@@ -379,7 +258,7 @@ surg_info_header = html.Div([
 
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                              ], style={'backgroundColor': 'rgb(220, 248, 285)', 'display': 'inline-block','width':'100%'})
+                              ], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})
 
 
 ## Procedures and conditions
@@ -396,7 +275,7 @@ proc_info = html.Div([
 
                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                        ], style={'backgroundColor': 'rgb(224, 224, 255)', 'display': 'inline-block', 'width': '100%'})
+                        ], style={'backgroundColor': 'white', 'display': 'inline-block', 'width': '100%'})
 
 
 proc_total = html.Div([
@@ -456,7 +335,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('Fixus Dashboard', style={'font-family' : 'sans-serif','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H3('FIXUS Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
@@ -579,77 +458,77 @@ def set_type_dd_value(available_options):
 
 
 #Patient info at a glance
-@app.callback(
-    Output('num_patients','children'), 
-    Output('sex_ratio','children'),
-    Output('avg_stay', 'children'),
-    Output('avgBMI', 'children'),
-    Output('avgAge', 'children'),
-    Output('med_CCI', 'children'),
-    Output('inst', 'children'),
-    Input('login-status','data'),
-    Input('provider_dd','value'),
-    Input('inst_dd','value'),
-    Input('diag_dd','value'),
-    Input('site_dd','value'),
-    Input('type_dd','value'),
-    Input('enc_daterange','start_date'),
-    Input('enc_daterange','end_date'))
-def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
-    if username in USER_TO_NAME.keys():
-        try: 
-            if provider == 'Surgeon':
-                #USER_TO_NAME mapped to surgeon first and last name
-                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-                cond1 = df.SurFirstName == sur_first_last[0]
-                cond2 = df.SurLastName == sur_first_last[1]
-                data = df.loc[cond1 & cond2]
-            else:
-                data = df
+# @app.callback(
+#     Output('num_patients','children'), 
+#     Output('sex_ratio','children'),
+#     Output('avg_stay', 'children'),
+#     Output('avgBMI', 'children'),
+#     Output('avgAge', 'children'),
+#     Output('med_CCI', 'children'),
+#     Output('inst', 'children'),
+#     Input('login-status','data'),
+#     Input('provider_dd','value'),
+#     Input('inst_dd','value'),
+#     Input('diag_dd','value'),
+#     Input('site_dd','value'),
+#     Input('type_dd','value'),
+#     Input('enc_daterange','start_date'),
+#     Input('enc_daterange','end_date'))
+# def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
+#     if username in USER_TO_NAME.keys():
+#         try: 
+#             if provider == 'Surgeon':
+#                 #USER_TO_NAME mapped to surgeon first and last name
+#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+#                 cond1 = df.SurFirstName == sur_first_last[0]
+#                 cond2 = df.SurLastName == sur_first_last[1]
+#                 data = df.loc[cond1 & cond2]
+#             else:
+#                 data = df
             
 
             
-            if 'All' in inst:
-                data = data
-            else:
-                data = data[data.Hosp_name == inst]
+#             if 'All' in inst:
+#                 data = data
+#             else:
+#                 data = data[data.Hosp_name == inst]
              
-            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
-            if 'All' in diag:
-                data = data
-            else:
-                data = data[data.DX_Main_Category.isin(diag)]
+#             #TODO: this errors just once when trying to delete the all diagnoses option --> why?
+#             if 'All' in diag:
+#                 data = data
+#             else:
+#                 data = data[data.DX_Main_Category.isin(diag)]
                 
-            if 'All' in site:
-                data = data
-            else:
-                data = data[data.Procedure_site == site]
+#             if 'All' in site:
+#                 data = data
+#             else:
+#                 data = data[data.Procedure_site == site]
                 
-            if 'All' in proc:
-                data = data
-            else:
-                data = data[data.Main_CPT_category.isin(proc)]   
+#             if 'All' in proc:
+#                 data = data
+#             else:
+#                 data = data[data.Main_CPT_category.isin(proc)]   
                 
-            #Filter by date range
-            data.Surg_date = pd.to_datetime(data.Surg_date)
-            data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
+#             #Filter by date range
+#             data.Surg_date = pd.to_datetime(data.Surg_date)
+#             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             
-            (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
+#             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
 
-            AJRRPat_total_output = '{}'.format(AJRRPat_total)
-            sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
-            avg_stay_output = '{} hours'.format(avg_length_of_stay)
-            avg_BMI_output = '{}'.format(avg_BMI)
-            avg_age_output = '{}'.format(avg_pat_age)
-            med_CCI_output = '{}'.format(med_CCI)
-            inst_output = '{}'.format(inst)
+#             AJRRPat_total_output = '{}'.format(AJRRPat_total)
+#             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
+#             avg_stay_output = '{} hours'.format(avg_length_of_stay)
+#             avg_BMI_output = '{}'.format(avg_BMI)
+#             avg_age_output = '{}'.format(avg_pat_age)
+#             med_CCI_output = '{}'.format(med_CCI)
+#             inst_output = '{}'.format(inst)
             
-            return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
-        except:  
-            return ('', '','', '', '','','')
-    else:
-        return ('','','', '', '', '', '')
+#             return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
+#         except:  
+#             return ('', '','', '', '','','')
+#     else:
+#         return ('','','', '', '', '', '')
 
 
 #Charts and graphs
