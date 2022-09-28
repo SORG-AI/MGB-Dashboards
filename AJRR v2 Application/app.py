@@ -23,6 +23,7 @@ from codes.util_images import im_preprocess
 import cv2
 import base64
 import pickle
+from datetime import date
 
 from codes.create_graphs import create_current_graphs, pat_glance_info
 
@@ -408,22 +409,42 @@ proc_total = html.Div([
 
                 ])
 
+
 ### DROPDOWNS
 
 provider_dropdown = dcc.Dropdown(
     options=[{'label': 'All MGB Data', 'value': 'All'},
              {'label': 'My Data', 'value': 'Surgeon'}], 
-    value='All', 
-    id='provider_dd')
+    value='All', id='provider_dd', clearable = False)
 
-diag_dropdown = dcc.Dropdown(id='diag_dd', multi=False)
+div_dropdown = dcc.Dropdown(
+    options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
+    value='AJRR', id='div_dd', multi=False, clearable = False)
 
-inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False)
+inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False)
+
+diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False)
+
+site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False)
+
+type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False)
+
+enc_daterange = dcc.DatePickerRange(id='enc_daterange', 
+                                    min_date_allowed = date(2015,1,1),
+                                    max_date_allowed = date(2021,12,31),
+                                    initial_visible_month = date(2021,1,1),
+                                    end_date = date(2021,12,31))
+
+
 
 filter_dropdowns = html.Div([
     html.Div([provider_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
+    html.Div([div_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
     html.Div([inst_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([diag_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'})
+    html.Div([diag_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([site_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([type_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
     ])
 
 
@@ -493,7 +514,9 @@ def update_output_div(username):
 #Set diagnosis dropdown options
 @app.callback(
     Output('inst_dd','options'),
-    Output('diag_dd', 'options'),
+    Output('diag_dd','options'),
+    Output('site_dd','options'),
+    Output('type_dd','options'),
     Input('login-status','data'),
     Input('provider_dd', 'value')
     )
@@ -514,7 +537,13 @@ def set_diag_dd_option(username, value):
     main_diag = data.DX_Main_Category.unique()
     diag_dd_options = [{'label':'All Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
-    return (inst_dd_options, diag_dd_options)
+    #setting procedure site dropdown options
+    site_dd_options =  [{'label':'All Sites', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Procedure_site.unique()]
+    
+    #setting procedure type dropdown options
+    type_dd_options =  [{'label':'All Procedures', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Main_CPT_category.unique()]
+    
+    return (inst_dd_options, diag_dd_options, site_dd_options, type_dd_options)
 
 #Set institution dropdown values based on options
 @app.callback(
@@ -532,6 +561,22 @@ def set_inst_dd_value(available_options):
 def set_diag_dd_value(available_options):
     return available_options[0]['value']
 
+#Set procedure site dropdown value based on options
+@app.callback(
+    Output('site_dd', 'value'),
+    Input('site_dd', 'options')
+    )
+def set_site_dd_value(available_options):
+    return available_options[0]['value']
+
+#Set procedure type dropdown value based on options
+@app.callback(
+    Output('type_dd', 'value'),
+    Input('type_dd', 'options')
+    )
+def set_type_dd_value(available_options):
+    return available_options[0]['value']
+
 
 #Patient info at a glance
 @app.callback(
@@ -545,8 +590,12 @@ def set_diag_dd_value(available_options):
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
-    Input('diag_dd','value'))
-def update_pat_info(username, provider, inst, diag):
+    Input('diag_dd','value'),
+    Input('site_dd','value'),
+    Input('type_dd','value'),
+    Input('enc_daterange','start_date'),
+    Input('enc_daterange','end_date'))
+def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
     if username in USER_TO_NAME.keys():
         try: 
             if provider == 'Surgeon':
@@ -558,24 +607,39 @@ def update_pat_info(username, provider, inst, diag):
             else:
                 data = df
             
-            # data = data[data.Hosp_name == inst]
-            # data = data[data.DX_Main_Category == diag]
+
             
-            if inst != ['All']:
-                data = data[data.Hosp_name == inst]
-            else:
-                data = data[data.Hosp_name == 'BWH']
-                
-            if diag != ['All']:
-                data = data[data.DX_Main_Category == diag]
-            else:
+            if 'All' in inst:
                 data = data
+            else:
+                data = data[data.Hosp_name == inst]
+             
+            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
+            if 'All' in diag:
+                data = data
+            else:
+                data = data[data.DX_Main_Category.isin(diag)]
+                
+            if 'All' in site:
+                data = data
+            else:
+                data = data[data.Procedure_site == site]
+                
+            if 'All' in proc:
+                data = data
+            else:
+                data = data[data.Main_CPT_category.isin(proc)]   
+                
+            #Filter by date range
+            data.Surg_date = pd.to_datetime(data.Surg_date)
+            data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
+            
             
             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
 
             AJRRPat_total_output = '{}'.format(AJRRPat_total)
             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
-            avg_stay_output = '{}'.format(avg_length_of_stay)
+            avg_stay_output = '{} hours'.format(avg_length_of_stay)
             avg_BMI_output = '{}'.format(avg_BMI)
             avg_age_output = '{}'.format(avg_pat_age)
             med_CCI_output = '{}'.format(med_CCI)
@@ -608,9 +672,18 @@ def update_sur_spec_info(username, provider, inst, diag):
             else:
                 data = df
                 
-            data = data[data.Hosp_name == inst]
-            data = data[data.DX_Main_Category == diag]
+                
+            if 'All' in inst:
+                data = data
+            else:
+                data = data[data.Hosp_name == inst]
+                
+            if 'All' in diag:
+                data = data
+            else:
+                data = data[data.DX_Main_Category == diag]
             
+            #CREATE GRAPHS
             (proc_distr_pie) = create_current_graphs(data)
         
             return (proc_distr_pie)
