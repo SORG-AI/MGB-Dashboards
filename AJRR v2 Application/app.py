@@ -208,13 +208,13 @@ index_page = html.Div([
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
-row1 =html.Div([
-        dbc.Row([
+row1 = html.Div([
+        html.Div([
 
-                            dbc.Col([
-
-                                dbc.Card([
-
+                            html.Div([
+                                   
+                                dbc.Card(
+                                     html.Div([
                                         dbc.CardBody([
 
                                                 html.H4(id='card-title-1', children= ['Total procedures'], className = 'card-title',
@@ -227,28 +227,30 @@ row1 =html.Div([
 
                                                     ])
 
-                                        ], style={'width':'400px', 'height':'200px', 'display': 'inline-block', 'background-color': 'white'})
-
-                                    ], width={'size':1,'offset':0,'order':'1'}), 
+                                        ], style={'width':'400px', 'height':'200px', 'background-color': 'white'})
+                                        )
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
                             
-                            dbc.Col(children=[
-                                
+                            html.Div([
+                                html.Div([
                                  dbc.Card(
-                                        children=[
+                                        [
                                         dbc.CardBody([
                                                         html.H4('Sex Distribution', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph(figure= gender_graph)
-                                                 ], body=True, style={'width':'400px', 'height':'400px', 'backgroundColor': 'white'}
+                                                 ], body=True, style={'width':'400px', 'height':'500px', 'backgroundColor': 'white'}
                                          )
-                                    
-                                             ], width={'size':1,'offset':0,'order':2}
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
                                     )
                             
-                ]), 
+                ], style={'display' : 'flex'}), 
         html.Br()
-], style={'display': 'inline-block'})
+        ])
+
 
 
 surg_info_header = html.Div([
@@ -349,6 +351,7 @@ page_1_layout = html.Div([
                                                           html.Br(),
                     
                                                           row1,
+                                                          
                                                                                                                         
                                                           html.Br(),
                                                           
