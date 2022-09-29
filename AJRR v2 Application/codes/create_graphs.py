@@ -8,7 +8,7 @@ Created on Fri Aug  5 09:58:07 2022
 from dash import dash_table
 import pandas as pd
 import plotly.express as px
-
+import statistics
 
 def nongraph(all_data):
     
@@ -43,9 +43,12 @@ def create_current_graphs(all_data):
     # pat_eth_bar = px.bar(df_eth.head(10), y = 'Number of patients', title = 'Ethnical Distribution of Patients: Top 10', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
     #                  color_discrete_sequence=(['darkturquoise']))
     # #Patient's Age
-    # df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
-    # pat_age_bar = px.bar(df_age, y = "Number of patients", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Number of patients": "Number of patients"},
-    #                      color_discrete_sequence=(['Blue']))
+    df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
+    # avg_pat_age = round(all_data.Pat_age.mean())
+    # std_age= statistics.stdev(df_age)
+    pat_age_bar = px.bar(df_age, y = "Number of patients", title = ' ',
+                            labels = {'index':'Age', "Number of patients": "Number of patients"},
+                            color_discrete_sequence=(['Crimson']))
     #gender distribution graph
     AJRRPat_total = len(all_data) 
     male_patients = all_data[all_data.PatSex == 'Male']
@@ -207,5 +210,5 @@ def create_current_graphs(all_data):
     #                      color_discrete_sequence=(['#966fd6']))
     
     
-    return (proc_distr_pie , gender_graph)
+    return (proc_distr_pie , gender_graph, pat_age_bar)
     

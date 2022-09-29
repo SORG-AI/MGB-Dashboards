@@ -204,13 +204,14 @@ index_page = html.Div([
 
 (total_proc, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst) = nongraph(df)
 
-(proc_distr_pie , gender_graph) = create_current_graphs(df)
+(proc_distr_pie , gender_graph, pat_age_bar) = create_current_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
-
+#THIS IS REALLY THE CONTAINER
 row1 = html.Div([
+    #ROW
         html.Div([
-
+                #COLUMN
                             html.Div([
                                    
                                 dbc.Card(
@@ -229,9 +230,9 @@ row1 = html.Div([
 
                                         ], style={'width':'400px', 'height':'200px', 'background-color': 'white'})
                                         )
-                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
                                     ), 
-                            
+                    #COLUMN
                             html.Div([
                                 html.Div([
                                  dbc.Card(
@@ -245,11 +246,40 @@ row1 = html.Div([
                                          )
                                         ])
                                     ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ),
+                    #COLUMN
+                            html.Div([
+                                html.Div([
+                                 dbc.Card(
+                                        [
+                                        dbc.CardBody([
+                                                        html.H4('Age Distribution', className = 'card-title',
+                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         dcc.Graph(figure= pat_age_bar)
+                                                 ], body=True, style={'width':'600px', 'height':'500px', 'backgroundColor': 'white'}
+                                         )
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                html.Div([
+                                 dbc.Card(
+                                        [
+                                        dbc.CardBody([
+                                                        html.H4('Patient Location Distribution', className = 'card-title',
+                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         html.Img(src ='https://media.istockphoto.com/vectors/map-of-massachusetts-vector-id1048768466?k=6&m=1048768466&s=170667a&w=0&h=732KyrYHStgD9fq1G6PbKzd1m9LzMpK1AlffIdavnkA=')
+                                                 ], body=True, style={'width':'800px', 'height':'500px', 'backgroundColor': 'white'}
+                                         )
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-right': '100px'}
                                     )
-                            
                 ], style={'display' : 'flex'}), 
         html.Br()
-        ])
+        ], style={'textAlign' : 'center'})
 
 
 
@@ -571,7 +601,7 @@ def update_sur_spec_info(username, provider, inst, diag):
                 data = data[data.DX_Main_Category == diag]
             
             #CREATE GRAPHS
-            (proc_distr_pie, gender_graph) = create_current_graphs(data)
+            (proc_distr_pie, gender_graph, pat_age_bar) = create_current_graphs(data)
         
             return (proc_distr_pie)
         
