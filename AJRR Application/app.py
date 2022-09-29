@@ -1414,7 +1414,7 @@ def update_output_div(username):
 
 #Surgeon specific patient info at a glance
 @app.callback(
-    Output('num_patients','children'), 
+    Output('num_patients','children'),
     Output('sex_ratio','children'),
     Output('avg_stay', 'children'),
     Output('avgBMI', 'children'),

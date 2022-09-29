@@ -10,15 +10,9 @@ import pandas as pd
 import plotly.express as px
 
 
-def pat_glance_info(all_data):
+def nongraph(all_data):
     
-    AJRRPat_total = len(all_data) # int of total patients on the spreadsheet
-
-    male_patients = all_data[all_data.PatSex == 'Male']
-
-    male_ratio = round((len(male_patients) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-
-    female_ratio = (100 - male_ratio)
+    total_proc = all_data['CPT_description'].count()
 
     BMI_total = round(all_data.Pat_bmi.mean())
 
@@ -32,7 +26,7 @@ def pat_glance_info(all_data):
     inst = all_data.Hosp_name.values[0]
 
     
-    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
+    return (total_proc, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
 
 
 
@@ -52,9 +46,17 @@ def create_current_graphs(all_data):
     # df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
     # pat_age_bar = px.bar(df_age, y = "Number of patients", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Number of patients": "Number of patients"},
     #                      color_discrete_sequence=(['Blue']))
-
+    #gender distribution graph
+    AJRRPat_total = len(all_data) 
+    male_patients = all_data[all_data.PatSex == 'Male']
+    male_ratio = round((len(male_patients) / (AJRRPat_total) *100)) #% of men on the spreadsheet
+    female_ratio = (100 - male_ratio)
+    gender_ratio = {'Male' : [male_ratio], 'Female' : [female_ratio]}
+    gender_ratio_df = pd.DataFrame(gender_ratio)
+    gender_graph = px.pie(gender_ratio_df, names=['Male', 'Female'] , title = ' ',
+                          color_discrete_sequence=(['#ff9999', '#dc143c']))
     #Distribution of procedures
-    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, title = "Distribution of Procedures", color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
                                         '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
       
     #Diagnoses
@@ -205,5 +207,5 @@ def create_current_graphs(all_data):
     #                      color_discrete_sequence=(['#966fd6']))
     
     
-    return (proc_distr_pie)
+    return (proc_distr_pie , gender_graph)
     

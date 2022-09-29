@@ -25,7 +25,7 @@ import base64
 import pickle
 from datetime import date
 
-from codes.create_graphs import create_current_graphs, pat_glance_info
+from codes.create_graphs import create_current_graphs, nongraph
 
 
 #### FIXUS BEGINS
@@ -117,13 +117,13 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   html.Div(children='', id='output-state'),
                   html.Br(),
                   dcc.Link('Home', href='/')], 
-                  style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})
+                  style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})
 # Successful login screen
 success = html.Div([html.Div([html.H2('Login successful.'),
                               html.Br(),
-                              dcc.Link('Home', href='/')], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})  # end div
+                              dcc.Link('Home', href='/')], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})  # end div
                     ], 
-                   style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})  # end div
+                   style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%', 'text-align': 'center'})  # end div
 # Failed Login
 failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
                              html.Br(),
@@ -135,7 +135,7 @@ failed = html.Div([html.Div([html.H2('Log in Failed. Please try again.'),
 logout = html.Div([html.Div(html.H2('You are securely logged out - Please login to access your data!')),
                    html.Br(),
                    dcc.Link('Home', href='/')
-                   ], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})  # end div
+                   ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})  # end div
 
 
 
@@ -180,7 +180,7 @@ index_page = html.Div([
     html.H1('FIXUS', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
                        'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
-                                'backgroundColor': 'rgb(240,240,241)', 'text-align': 'center'}),
+                                'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
     html.Div([
         dcc.Link('MGB Dashboard', href='/page-1', style={'font-family' : 'Helvetica', 'font-size' : '25px', 'text-decoration': 'bold', 'text-align':'center', 'padding' : '30px 10px'}),
         html.Br(), 
@@ -199,51 +199,56 @@ index_page = html.Div([
     
     html.Img(src = 'https://static.vecteezy.com/system/resources/previews/000/543/821/original/white-abstract-background-vector-gray-abstract-modern-design-background-for-report-and-project-presentation-template-vector-illustration-graphic-futuristic-and-circular-curve-shape.jpg',
              width = '100%', height='600px')
-], style={ 'width':'100%','backgroundColor': 'rgb(240,240,241)' })
+], style={ 'width':'100%','backgroundColor': 'rgb(248,244,244)' })
 
 
+(total_proc, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst) = nongraph(df)
+
+(proc_distr_pie , gender_graph) = create_current_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 
-pat_info_at_glance =  html.Div([
+row1 =html.Div([
+        dbc.Row([
 
-                            html.H4(children ='Patient Information At A Glance', style={'text-align': 'center', 'font-family': 'sans-serif', 'background-color': 'white'}),
-
-                            html.Div([
+                            dbc.Col([
 
                                 dbc.Card([
 
                                         dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Total patients'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['Total procedures'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': 'crimson', 'font-family':'sans-serif'}),
+                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
-                                                html.P(id = 'num_patients', className = 'card-content',
+                                                html.P(total_proc, className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'helvetica', 'font-size': '20px'})
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'})
 
-                                            ])
+                                                    ])
 
-                                    ], style={'width':'350px', 'height':'100px', 'display': 'inline-block'})
+                                        ], style={'width':'400px', 'height':'200px', 'display': 'inline-block', 'background-color': 'white'})
 
-                                ], style={'display': 'inline-block', 'padding':'10px, 10px', 'background-color': 'rgb(240, 240, 241)'})
-                            ])
-
-
-pat_info_header = html.Div([
-
-                              html.Div([
-
-                                      html.H2([
-
-                                          "Patient Related Data"
-
-                                              ])
-
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
-
-                              ], style={'backgroundColor': 'rgb(250, 250, 250)', 'display': 'inline-block','width':'100%'})
+                                    ], width={'size':1,'offset':0,'order':'1'}), 
+                            
+                            dbc.Col(children=[
+                                
+                                 dbc.Card(
+                                        children=[
+                                        dbc.CardBody([
+                                                        html.H4('Sex Distribution', className = 'card-title',
+                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         dcc.Graph(figure= gender_graph)
+                                                 ], body=True, style={'width':'400px', 'height':'400px', 'backgroundColor': 'white'}
+                                         )
+                                    
+                                             ], width={'size':1,'offset':0,'order':2}
+                                    )
+                            
+                ]), 
+        html.Br()
+], style={'display': 'inline-block'})
 
 
 surg_info_header = html.Div([
@@ -258,7 +263,7 @@ surg_info_header = html.Div([
 
                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                              ], style={'backgroundColor': 'rgb(240, 240, 241)', 'display': 'inline-block','width':'100%'})
+                              ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
 
 
 ## Procedures and conditions
@@ -324,10 +329,10 @@ filter_dropdowns = html.Div([
     html.Div([site_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
     html.Div([type_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
     html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
-    ])
+    ], style={'text-align': 'center'})
 
 
-#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT: please don't clutter
+#####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
 
 page_1_layout = html.Div([
 
@@ -343,7 +348,7 @@ page_1_layout = html.Div([
                                                           
                                                           html.Br(),
                     
-                                                          pat_info_at_glance,
+                                                          row1,
                                                                                                                         
                                                           html.Br(),
                                                           
@@ -356,7 +361,7 @@ page_1_layout = html.Div([
                                                         ])
                        
                 ])
-            ])
+            ], style={'background-color': 'rgb(248,244,244)'})
 
 
 
@@ -457,8 +462,7 @@ def set_type_dd_value(available_options):
     return available_options[0]['value']
 
 
-#Patient info at a glance
-# @app.callback(
+#@app.callback(
 #     Output('num_patients','children'), 
 #     Output('sex_ratio','children'),
 #     Output('avg_stay', 'children'),
@@ -534,6 +538,7 @@ def set_type_dd_value(available_options):
 #Charts and graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
+    #Output('gender_graph', 'figure')
     Input('login-status','data'),
     Input('provider_dd' ,'value'),
     Input('inst_dd','value'),
@@ -563,7 +568,7 @@ def update_sur_spec_info(username, provider, inst, diag):
                 data = data[data.DX_Main_Category == diag]
             
             #CREATE GRAPHS
-            (proc_distr_pie) = create_current_graphs(data)
+            (proc_distr_pie, gender_graph) = create_current_graphs(data)
         
             return (proc_distr_pie)
         
