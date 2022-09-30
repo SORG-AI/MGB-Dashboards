@@ -204,7 +204,7 @@ index_page = html.Div([
 
 (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, med_CCI, inst) = nongraph(df)
 
-(proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw) = create_current_graphs(df)
+(proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 #THIS IS REALLY THE CONTAINER
@@ -362,8 +362,121 @@ row2 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
+#row3
+row3 = html.Div([
+    #ROW
+        html.Div([
+                #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
 
+                                                html.H4(id='card-title-1', children= ['Revision'], className = 'card-title',
 
+                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(figure= proc_revision_pie)
+                                        ], style={'width':'600px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Alcohol Use'], className = 'card-title',
+
+                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(figure= alc_use_bar)
+                                        ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                html.Div([
+                                 dbc.Card(
+                                        [
+                                        dbc.CardBody([
+                                                        html.H4('Type of Alcohol Used', className = 'card-title',
+                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         dcc.Graph(figure= alc_use_type_pie)
+                                                 ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
+                                         )
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
+
+#row4
+row4 = html.Div([
+    #ROW
+        html.Div([
+                #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Tobacco Use'], className = 'card-title',
+
+                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(figure= tob_use_bar)
+                                        ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'900px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Graph loading'], className = 'card-title',
+
+                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph()
+                                        ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                html.Div([
+                                 dbc.Card(
+                                        [
+                                        dbc.CardBody([
+                                                        html.H4('Graph loading', className = 'card-title',
+                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         dcc.Graph()
+                                                 ], body=True, style={'width':'615px', 'height':'550px', 'backgroundColor': 'white'}
+                                         )
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
 
 surg_info_header = html.Div([
 
@@ -465,7 +578,11 @@ page_1_layout = html.Div([
                                                           row1,
                                                           
                                                           row2,
-                                                                                                                        
+                                                          
+                                                          row3,
+                                                                                                        
+                                                          row4,
+                                                            
                                                           html.Br(),
                                                           
                                                           surg_info_header,
@@ -684,7 +801,7 @@ def update_sur_spec_info(username, provider, inst, diag):
                 data = data[data.DX_Main_Category == diag]
             
             #CREATE GRAPHS
-            (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw) = create_current_graphs(data)
+            (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(data)
         
             return (proc_distr_pie)
         

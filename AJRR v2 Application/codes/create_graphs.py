@@ -80,9 +80,10 @@ def create_current_graphs(all_data):
     #CCI plot
     #Adding a CCI box and whiskers plot
     CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#ff9999', '#dc143c'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
-    # #Parse only revision data
-    # rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
-    # proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna','maroon'))
+   
+    #Parse only revision data
+    rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
+    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=(['Crimson']))
     
 
     # tableBMI = dash_table.DataTable(
@@ -96,18 +97,18 @@ def create_current_graphs(all_data):
     #                       color_discrete_sequence = (["DarkOliveGreen"]))
     # """
     
-    # df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
-    # alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'}, title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
-    #                      color_discrete_sequence=(['#966fd6']), range_x = [0, 15])
+    df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
+    alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'}, title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
+                         color_discrete_sequence=(['#ff6961']), range_x = [0, 15])
     
     # """
-    # alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',
-    #                           color_discrete_sequence=(['#93ccea', '#e0ffff', '#acace6', '#b768a2']))
+    alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',
+                               color_discrete_sequence=(['#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#ea3c53']))
     # """
     
-    # tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
-    # tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
-    #                      color_discrete_sequence=(['#966fd6']))
+    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
+    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
+                          color_discrete_sequence=(['#8b0000']))
     
-    return (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw)
+    return (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar)
     
