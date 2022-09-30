@@ -202,7 +202,7 @@ index_page = html.Div([
 ], style={ 'width':'100%','backgroundColor': 'rgb(248,244,244)' })
 
 
-(total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, med_CCI, inst) = nongraph(df)
+(total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age) = nongraph(df)
 
 (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(df)
 

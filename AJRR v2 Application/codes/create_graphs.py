@@ -24,13 +24,9 @@ def nongraph(all_data):
     avg_pat_age = round(all_data.Pat_age.mean())
     
     stdev_age = round(statistics.stdev(all_data.Pat_age))
-    
-    med_CCI = round(all_data.CCI.mean(),2)
-    
-    inst = all_data.Hosp_name.values[0]
 
     
-    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, med_CCI, inst)
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age)
 
 
 
