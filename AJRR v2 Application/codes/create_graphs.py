@@ -76,6 +76,10 @@ def create_current_graphs(all_data):
     df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of patients')
     proc_bar = px.bar(df_proc, y =  'Number of patients', title = ' ', labels={'index': 'Type of Procedure- based on CPT'}, 
                       color_discrete_sequence=(['Crimson']))
+    
+    #CCI plot
+    #Adding a CCI box and whiskers plot
+    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#ff9999', '#dc143c'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
     # #Parse only revision data
     # rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
     # proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna','maroon'))
@@ -105,5 +109,5 @@ def create_current_graphs(all_data):
     # tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
     #                      color_discrete_sequence=(['#966fd6']))
     
-    return (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar)
+    return (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw)
     

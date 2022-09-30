@@ -204,7 +204,7 @@ index_page = html.Div([
 
 (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, med_CCI, inst) = nongraph(df)
 
-(proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar) = create_current_graphs(df)
+(proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw) = create_current_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 #THIS IS REALLY THE CONTAINER
@@ -241,7 +241,7 @@ row1 = html.Div([
                                                 html.P(avg_length_of_stay, className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'}), 
-                                                html.P(children = ['+/- ' ,stdev_len_of_stay, ' days'], className = 'card-content',
+                                                html.P(children = ['+/- ' ,stdev_len_of_stay, ' hours'], className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal'})
 
@@ -348,10 +348,10 @@ row2 = html.Div([
                                  dbc.Card(
                                         [
                                         dbc.CardBody([
-                                                        html.H4('Graph loading...', className = 'card-title',
+                                                        html.H4('Charlson Comorbidity Index', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         dcc.Graph()
+                                         dcc.Graph(figure= CCI_bw)
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -684,7 +684,7 @@ def update_sur_spec_info(username, provider, inst, diag):
                 data = data[data.DX_Main_Category == diag]
             
             #CREATE GRAPHS
-            (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar) = create_current_graphs(data)
+            (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw) = create_current_graphs(data)
         
             return (proc_distr_pie)
         
