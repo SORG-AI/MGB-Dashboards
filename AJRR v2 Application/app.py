@@ -771,7 +771,7 @@ def set_type_dd_value(available_options):
 #Charts and graphs
 @app.callback(
     Output('proc_distr_pie','figure'),
-    #Output('gender_graph', 'figure')
+    
     Input('login-status','data'),
     Input('provider_dd' ,'value'),
     Input('inst_dd','value'),
