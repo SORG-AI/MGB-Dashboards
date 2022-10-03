@@ -747,7 +747,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             
             (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age) = nongraph(data)
 
-            mean_age_output = 'Mean age {} +/1 {}'.format(avg_pat_age, stdev_age)
+            mean_age_output = 'Mean age {} +/- {}'.format(avg_pat_age, stdev_age)
             stdev_len_of_stay_output = '+/- {} hours'.format(stdev_len_of_stay)
             
             return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output)

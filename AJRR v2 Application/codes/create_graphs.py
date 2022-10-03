@@ -49,14 +49,9 @@ def create_current_graphs(all_data):
     pat_age_bar = px.bar(df_age, y = "Number of patients", title = ' ',
                             labels = {'index':'Age', "Number of patients": "Number of patients"},
                             color_discrete_sequence=(['Crimson']))
+   
     #gender distribution graph
-    AJRRPat_total = len(all_data) 
-    male_patients = all_data[all_data.PatSex == 'Male']
-    male_ratio = round((len(male_patients) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-    female_ratio = (100 - male_ratio)
-    gender_ratio = {'Male' : [male_ratio], 'Female' : [female_ratio]}
-    gender_ratio_df = pd.DataFrame(gender_ratio)
-    gender_graph = px.pie(gender_ratio_df, names=['Male', 'Female'] , title = ' ',
+    gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, title = ' ',
                           color_discrete_sequence=(['#ff9999', '#dc143c']))
     #Distribution of procedures
     proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
