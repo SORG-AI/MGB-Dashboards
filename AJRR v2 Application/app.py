@@ -202,10 +202,6 @@ index_page = html.Div([
 ], style={ 'width':'100%','backgroundColor': 'rgb(248,244,244)' })
 
 
-(total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age) = nongraph(df)
-
-(proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(df)
-
 # the whole blue row on the dashboard that gives patient info at a glance
 #THIS IS REALLY THE CONTAINER
 row1 = html.Div([
@@ -224,7 +220,7 @@ row1 = html.Div([
 
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
-                                                html.P(total_proc, className = 'card-content',
+                                                html.P(id = 'total_proc', className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'})
 
@@ -238,10 +234,10 @@ row1 = html.Div([
 
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
-                                                html.P(avg_length_of_stay, className = 'card-content',
+                                                html.P(id = 'avg_length_of_stay', className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'}), 
-                                                html.P(children = ['+/- ' ,stdev_len_of_stay, ' hours'], className = 'card-content',
+                                                html.P(id = 'stdev_len_of_stay', className = 'card-content',
 
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal'})
 
@@ -260,7 +256,7 @@ row1 = html.Div([
                                                         html.H4('Sex Distribution', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         dcc.Graph(figure= gender_graph)
+                                         dcc.Graph(id = 'gender_graph')
                                                  ], body=True, style={'width':'400px', 'height':'565px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -275,11 +271,11 @@ row1 = html.Div([
                                                         html.H4('Age Distribution', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}), 
                                                         
-                                                        html.P(children= ['Mean age ', avg_pat_age, '+/- ', stdev_age], className = 'card-content',
+                                                        html.P(id = 'mean_age', className = 'card-content',
                                                                 style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal'} 
                                                                 )
                                                     ]),
-                                         dcc.Graph(figure= pat_age_bar)
+                                         dcc.Graph(id = 'pat_age_bar')
                                                  ], body=True, style={'width':'600px', 'height':'565', 'backgroundColor': 'white'},
                                          )
                                         ])
@@ -320,7 +316,7 @@ row2 = html.Div([
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(figure= diag_bar)
+                                        dcc.Graph(id = 'diag_bar')
                                         ], style={'width':'600px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
@@ -337,7 +333,7 @@ row2 = html.Div([
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(figure= proc_bar)
+                                        dcc.Graph(id = 'proc_bar')
                                         ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -351,7 +347,7 @@ row2 = html.Div([
                                                         html.H4('Charlson Comorbidity Index', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         dcc.Graph(figure= CCI_bw)
+                                         dcc.Graph(id = 'CCI_bw')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -378,7 +374,7 @@ row3 = html.Div([
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(figure= proc_revision_pie)
+                                        dcc.Graph(id = 'proc_revision_pie')
                                         ], style={'width':'600px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
@@ -395,7 +391,7 @@ row3 = html.Div([
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(figure= alc_use_bar)
+                                        dcc.Graph(id = 'alc_use_bar')
                                         ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -409,7 +405,7 @@ row3 = html.Div([
                                                         html.H4('Type of Alcohol Used', className = 'card-title',
                                                                 style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         dcc.Graph(figure= alc_use_type_pie)
+                                         dcc.Graph(id = 'alc_use_type_pie')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -436,7 +432,7 @@ row4 = html.Div([
                                                         style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(figure= tob_use_bar)
+                                        dcc.Graph(id = 'tob_use_bar')
                                         ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'900px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
@@ -544,6 +540,7 @@ enc_daterange = dcc.DatePickerRange(id='enc_daterange',
                                     min_date_allowed = date(2015,1,1),
                                     max_date_allowed = date(2021,12,31),
                                     initial_visible_month = date(2021,1,1),
+                                    start_date = date(2021,1,1),
                                     end_date = date(2021,12,31))
 
 
@@ -695,91 +692,22 @@ def set_type_dd_value(available_options):
     return available_options[0]['value']
 
 
-#@app.callback(
-#     Output('num_patients','children'), 
-#     Output('sex_ratio','children'),
-#     Output('avg_stay', 'children'),
-#     Output('avgBMI', 'children'),
-#     Output('avgAge', 'children'),
-#     Output('med_CCI', 'children'),
-#     Output('inst', 'children'),
-#     Input('login-status','data'),
-#     Input('provider_dd','value'),
-#     Input('inst_dd','value'),
-#     Input('diag_dd','value'),
-#     Input('site_dd','value'),
-#     Input('type_dd','value'),
-#     Input('enc_daterange','start_date'),
-#     Input('enc_daterange','end_date'))
-# def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
-#     if username in USER_TO_NAME.keys():
-#         try: 
-#             if provider == 'Surgeon':
-#                 #USER_TO_NAME mapped to surgeon first and last name
-#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-#                 cond1 = df.SurFirstName == sur_first_last[0]
-#                 cond2 = df.SurLastName == sur_first_last[1]
-#                 data = df.loc[cond1 & cond2]
-#             else:
-#                 data = df
-            
-
-            
-#             if 'All' in inst:
-#                 data = data
-#             else:
-#                 data = data[data.Hosp_name == inst]
-             
-#             #TODO: this errors just once when trying to delete the all diagnoses option --> why?
-#             if 'All' in diag:
-#                 data = data
-#             else:
-#                 data = data[data.DX_Main_Category.isin(diag)]
-                
-#             if 'All' in site:
-#                 data = data
-#             else:
-#                 data = data[data.Procedure_site == site]
-                
-#             if 'All' in proc:
-#                 data = data
-#             else:
-#                 data = data[data.Main_CPT_category.isin(proc)]   
-                
-#             #Filter by date range
-#             data.Surg_date = pd.to_datetime(data.Surg_date)
-#             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
-            
-            
-#             (AJRRPat_total, males_ratio, female_ratio, avg_length_of_stay, avg_BMI, avg_pat_age, med_CCI, inst) = pat_glance_info(data)
-
-#             AJRRPat_total_output = '{}'.format(AJRRPat_total)
-#             sex_ratio_output = '{}% male and {}% female'.format(males_ratio, female_ratio)           
-#             avg_stay_output = '{} hours'.format(avg_length_of_stay)
-#             avg_BMI_output = '{}'.format(avg_BMI)
-#             avg_age_output = '{}'.format(avg_pat_age)
-#             med_CCI_output = '{}'.format(med_CCI)
-#             inst_output = '{}'.format(inst)
-            
-#             return (AJRRPat_total_output, sex_ratio_output, avg_stay_output, avg_BMI_output, avg_age_output, med_CCI_output, inst_output)
-#         except:  
-#             return ('', '','', '', '','','')
-#     else:
-#         return ('','','', '', '', '', '')
-
-
-#Charts and graphs
 @app.callback(
-    Output('proc_distr_pie','figure'),
-    
+    Output('total_proc','children'), 
+    Output('avg_length_of_stay','children'),
+    Output('stdev_len_of_stay', 'children'),
+    Output('mean_age', 'children'),
     Input('login-status','data'),
-    Input('provider_dd' ,'value'),
+    Input('provider_dd','value'),
     Input('inst_dd','value'),
-    Input('diag_dd','value'))
-def update_sur_spec_info(username, provider, inst, diag):
-
+    Input('diag_dd','value'),
+    Input('site_dd','value'),
+    Input('type_dd','value'),
+    Input('enc_daterange','start_date'),
+    Input('enc_daterange','end_date'))
+def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
     if username in USER_TO_NAME.keys():
-        try:
+        try: 
             if provider == 'Surgeon':
                 #USER_TO_NAME mapped to surgeon first and last name
                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
@@ -788,27 +716,116 @@ def update_sur_spec_info(username, provider, inst, diag):
                 data = df.loc[cond1 & cond2]
             else:
                 data = df
-                
-                
+            
+
+            
             if 'All' in inst:
                 data = data
             else:
                 data = data[data.Hosp_name == inst]
-                
+             
+            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
             if 'All' in diag:
                 data = data
             else:
-                data = data[data.DX_Main_Category == diag]
+                data = data[data.DX_Main_Category.isin(diag)]
+                
+            if 'All' in site:
+                data = data
+            else:
+                data = data[data.Procedure_site == site]
+                
+            if 'All' in proc:
+                data = data
+            else:
+                data = data[data.Main_CPT_category.isin(proc)]   
+                
+            #Filter by date range
+            data.Surg_date = pd.to_datetime(data.Surg_date)
+            data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
+            
+            
+            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age) = nongraph(data)
+
+            mean_age_output = 'Mean age {} +/1 {}'.format(avg_pat_age, stdev_age)
+            stdev_len_of_stay_output = '+/- {} hours'.format(stdev_len_of_stay)
+            
+            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output)
+        except:  
+            return ('', '','', '')
+    else:
+        return ('','','', '')
+
+
+#Charts and graphs
+@app.callback(
+    Output('proc_distr_pie','figure'),
+    Output('gender_graph','figure'),
+    Output('pat_age_bar','figure'),
+    Output('diag_bar','figure'),
+    Output('proc_bar','figure'),
+    Output('CCI_bw','figure'),
+    Output('proc_revision_pie','figure'),
+    Output('alc_use_bar','figure'),
+    Output('alc_use_type_pie','figure'),
+    Output('tob_use_bar','figure'),
+    Input('login-status','data'),
+    Input('provider_dd','value'),
+    Input('inst_dd','value'),
+    Input('diag_dd','value'),
+    Input('site_dd','value'),
+    Input('type_dd','value'),
+    Input('enc_daterange','start_date'),
+    Input('enc_daterange','end_date'))
+def update_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
+    if username in USER_TO_NAME.keys():
+        try: 
+            if provider == 'Surgeon':
+                #USER_TO_NAME mapped to surgeon first and last name
+                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+                cond1 = df.SurFirstName == sur_first_last[0]
+                cond2 = df.SurLastName == sur_first_last[1]
+                data = df.loc[cond1 & cond2]
+            else:
+                data = df
+            
+
+            
+            if 'All' in inst:
+                data = data
+            else:
+                data = data[data.Hosp_name == inst]
+             
+            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
+            if 'All' in diag:
+                data = data
+            else:
+                data = data[data.DX_Main_Category.isin(diag)]
+                
+            if 'All' in site:
+                data = data
+            else:
+                data = data[data.Procedure_site == site]
+                
+            if 'All' in proc:
+                data = data
+            else:
+                data = data[data.Main_CPT_category.isin(proc)]   
+                
+            #Filter by date range
+            data.Surg_date = pd.to_datetime(data.Surg_date)
+            data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(data)
-        
-            return (proc_distr_pie)
+            (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(data)
+            
+          
+            return (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar)
         
         except:
-            return ('')
+            return ('', '','','','','','','','','')
     else:
-        return ('')
+        return ('', '','','','','','','','','')
         
 
 # Main router
