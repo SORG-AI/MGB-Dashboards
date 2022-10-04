@@ -100,6 +100,9 @@ def create_current_graphs(all_data):
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
     tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
                           color_discrete_sequence=(['#8b0000']))
+
+
+    
     
     return (proc_distr_pie, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar)
     

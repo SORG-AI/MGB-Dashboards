@@ -218,7 +218,7 @@ row1 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Total procedures'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                 html.P(id = 'total_proc', className = 'card-content',
 
@@ -232,7 +232,7 @@ row1 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Average length of stay'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                 html.P(id = 'avg_length_of_stay', className = 'card-content',
 
@@ -254,7 +254,7 @@ row1 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Sex Distribution', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph(id = 'gender_graph')
                                                  ], body=True, style={'width':'400px', 'height':'565px', 'backgroundColor': 'white'}
@@ -269,7 +269,7 @@ row1 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Age Distribution', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}), 
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}), 
                                                         
                                                         html.P(id = 'mean_age', className = 'card-content',
                                                                 style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal'} 
@@ -288,7 +288,7 @@ row1 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Patient Location Distribution', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          html.Img(src ='https://media.istockphoto.com/vectors/map-of-massachusetts-vector-id1048768466?k=6&m=1048768466&s=170667a&w=0&h=732KyrYHStgD9fq1G6PbKzd1m9LzMpK1AlffIdavnkA=')
                                                  ], body=True, style={'width':'800px', 'height':'565px', 'backgroundColor': 'white'}
@@ -313,7 +313,7 @@ row2 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Top 10 Diagnoses - based on ICD10-DX'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'diag_bar')
@@ -330,7 +330,7 @@ row2 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Procedures - based on CPTs'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'proc_bar')
@@ -345,7 +345,7 @@ row2 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Charlson Comorbidity Index', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph(id = 'CCI_bw')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
@@ -371,7 +371,7 @@ row3 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Revision'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'proc_revision_pie')
@@ -388,7 +388,7 @@ row3 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Alcohol Use'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'alc_use_bar')
@@ -403,7 +403,7 @@ row3 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Type of Alcohol Used', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph(id = 'alc_use_type_pie')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
@@ -429,7 +429,7 @@ row4 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Tobacco Use'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'tob_use_bar')
@@ -446,7 +446,7 @@ row4 = html.Div([
 
                                                 html.H4(id='card-title-1', children= ['Graph loading'], className = 'card-title',
 
-                                                        style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph()
@@ -461,7 +461,7 @@ row4 = html.Div([
                                         [
                                         dbc.CardBody([
                                                         html.H4('Graph loading', className = 'card-title',
-                                                                style ={'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph()
                                                  ], body=True, style={'width':'615px', 'height':'550px', 'backgroundColor': 'white'}
@@ -546,12 +546,12 @@ enc_daterange = dcc.DatePickerRange(id='enc_daterange',
 
 
 filter_dropdowns = html.Div([
-    html.Div([provider_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
-    html.Div([div_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([inst_dropdown], style={'width':'200px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([diag_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-    html.Div([site_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-    html.Div([type_dropdown], style={'width':'350px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([provider_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
+    html.Div([div_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
+    html.Div([inst_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
+    html.Div([diag_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([site_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+    html.Div([type_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
     html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
     ], style={'text-align': 'center'})
 
@@ -818,6 +818,15 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             
             #CREATE GRAPHS
             (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(data)
+            
+            # df2 = px.data.election() # replace with your own data source
+            # geojson = px.data.election_geojson()
+            # fig = px.choropleth(
+            #     df2, geojson=geojson, 
+            #     locations="district", featureidkey="properties.district",
+            #     projection="mercator", range_color=[0, 6500])
+            # fig.update_geos(fitbounds="locations", visible=False)
+            # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             
           
             return (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar)
