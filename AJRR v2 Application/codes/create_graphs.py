@@ -24,9 +24,13 @@ def nongraph(all_data):
     avg_pat_age = round(all_data.Pat_age.mean())
     
     stdev_age = round(statistics.stdev(all_data.Pat_age))
+    
+    preop_proms_pts = round(all_data.AnyPROM_pre.values.sum() / len(all_data.AnyPROM_pre) * 100)
+    
+    postop_proms_pts = round(all_data.AnyPROM_post.values.sum() / len(all_data.AnyPROM_post) * 100)
 
     
-    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age)
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts)
 
 
 
