@@ -469,13 +469,17 @@ row4 = html.Div([
                                     html.Div([
                                        dbc.CardBody([
 
-                                               html.H4(id='card-title-1', children= ['PROMS'], className = 'card-title',
+                                               html.H4(id='card-title-1', children= ['PROMS filled out per patient'], className = 'card-title',
 
-                                                       style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                       style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
-                                               # html.P(id = 'postop_proms', className = 'card-content',
+                                                html.P(id = 'preop_proms_perpt', className = 'card-content',
 
-                                               #        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'})
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding':'50px'}),
+                                                
+                                                html.P(id = 'postop_proms_perpt', className = 'card-content',
+
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'})
 
                                                    ]), 
                                        ])
@@ -712,6 +716,8 @@ def set_type_dd_value(available_options):
     Output('mean_age', 'children'),
     Output('preop_proms','children'),
     Output('postop_proms','children'),
+    Output('preop_proms_perpt','children'),
+    Output('postop_proms_perpt','children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -760,7 +766,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             
-            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts) = nongraph(data)
+            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt) = nongraph(data)
 
             mean_age_output = 'Mean age {} +/- {}'.format(avg_pat_age, stdev_age)
             stdev_len_of_stay_output = '+/- {} hours'.format(stdev_len_of_stay)
@@ -768,7 +774,10 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             preop_proms_output = '{}% Pre-op'.format(preop_proms_pts)
             postop_proms_output = '{}% Post-op'.format(postop_proms_pts)
             
-            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output)
+            preop_proms_perpt_output = '{} Pre-op PROMS'.format(preop_proms_perpt)
+            postop_proms_perpt_output = '{} Post-op PROMS'.format(postop_proms_perpt)
+            
+            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output, postop_proms_perpt_output)
         except:  
             return ('', '','', '', '', '')
     else:
