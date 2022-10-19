@@ -36,7 +36,7 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'AJRR_General_2021Q1-2021Q4_app_data.pkl')
+file_name = os.path.join(PATHS['app_data'], 'app_data_final.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
