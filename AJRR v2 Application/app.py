@@ -777,9 +777,9 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             
             return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output, postop_proms_perpt_output)
         except:  
-            return ('', '','', '', '', '')
+            return ('', '','', '', '', '', '', '')
     else:
-        return ('','','', '', '', '')
+        return ('','','', '', '', '', '', '')
 
 
 #Charts and graphs
