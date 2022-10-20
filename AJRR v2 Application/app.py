@@ -360,7 +360,7 @@ row2 = html.Div([
         ], style={'textAlign' : 'center'})
 
 #row3
-row3 = html.Div([
+row4 = html.Div([
     #ROW
         html.Div([
                 #COLUMN
@@ -418,7 +418,7 @@ row3 = html.Div([
         ], style={'textAlign' : 'center'})
 
 #row4
-row4 = html.Div([
+row3 = html.Div([
     #ROW
         html.Div([
                 #COLUMN
