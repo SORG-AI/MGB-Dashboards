@@ -387,12 +387,12 @@ row3 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Alcohol Use'], className = 'card-title',
+                                                #html.H4(id='card-title-1', children= ['Alcohol Use'], className = 'card-title',
 
-                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        #style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
-                                        dcc.Graph(id = 'alc_use_bar')
+                                        #dcc.Graph(id = 'alc_use_bar')
                                         ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -403,10 +403,10 @@ row3 = html.Div([
                                  dbc.Card(
                                         [
                                         dbc.CardBody([
-                                                        html.H4('Type of Alcohol Used', className = 'card-title',
-                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                        #html.H4('Type of Alcohol Used', className = 'card-title',
+                                                        #        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         dcc.Graph(id = 'alc_use_type_pie')
+                                         #dcc.Graph(id = 'alc_use_type_pie')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -491,47 +491,47 @@ row4 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
-surg_info_header = html.Div([
+# surg_info_header = html.Div([
 
-                              html.Div([
+#                               html.Div([
 
-                                      html.H2([
+#                                       html.H2([
 
-                                          "Surgeon Related Data"
+#                                           "Surgeon Related Data"
 
-                                              ])
+#                                               ])
 
-                                      ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
+#                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                              ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
+#                               ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
 
 
 ## Procedures and conditions
 
-proc_info = html.Div([
+# proc_info = html.Div([
 
-                        html.Div([
+#                         html.Div([
 
-                                html.H5([
+#                                 html.H5([
 
-                                        "Procedures and condition related information"
+#                                         "Procedures and condition related information"
 
-                                        ])
+#                                         ])
 
-                                ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
+#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
 
-                        ], style={'backgroundColor': 'white', 'display': 'inline-block', 'width': '100%'})
+#                         ], style={'backgroundColor': 'white', 'display': 'inline-block', 'width': '100%'})
 
 
-proc_total = html.Div([
+# proc_total = html.Div([
 
-                 html.Div([
+#                  html.Div([
 
-                          dcc.Graph(id = 'proc_distr_pie')
+#                           dcc.Graph(id = 'proc_distr_pie')
 
-                          ], style={'width': '100%','display': 'inline-block'})
+#                           ], style={'width': '100%','display': 'inline-block'})
 
-                ])
+#                 ])
 
 
 ### DROPDOWNS
@@ -595,15 +595,13 @@ page_1_layout = html.Div([
                                                           
                                                           row3,
                                                                                                         
-                                                          row4,
-                                                            
-                                                          html.Br(),
-                                                          
-                                                          surg_info_header,
+                                                          row4
+                                                                                                                      
+                                                          #surg_info_header,
     
-                                                          proc_info,
+                                                          #proc_info,
     
-                                                          proc_total
+                                                          #proc_total
                                                           
                                                         ])
                        
@@ -786,15 +784,14 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 
 #Charts and graphs
 @app.callback(
-    Output('proc_distr_pie','figure'),
     Output('gender_graph','figure'),
     Output('pat_age_bar','figure'),
     Output('diag_bar','figure'),
     Output('proc_bar','figure'),
     Output('CCI_bw','figure'),
     Output('proc_revision_pie','figure'),
-    Output('alc_use_bar','figure'),
-    Output('alc_use_type_pie','figure'),
+    #Output('alc_use_bar','figure'),
+    #Output('alc_use_type_pie','figure'),
     Output('tob_use_bar','figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
@@ -844,7 +841,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar) = create_current_graphs(data)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar) = create_current_graphs(data)
             
             # df2 = px.data.election() # replace with your own data source
             # geojson = px.data.election_geojson()
@@ -856,12 +853,12 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             
           
-            return (proc_distr_pie , gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, alc_use_bar, alc_use_type_pie, tob_use_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar)
         
         except:
-            return ('', '','','','','','','','','')
+            return ('', '','','','','','')
     else:
-        return ('', '','','','','','','','','')
+        return ('', '','','','','','')
         
 
 # Main router
