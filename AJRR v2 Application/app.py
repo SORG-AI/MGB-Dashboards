@@ -458,9 +458,13 @@ row3 = html.Div([
                                                 
                                                 html.P(id = 'postop_proms', className = 'card-content',
 
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'}),
+                                                html.P(id = 'bothproms_final', className = 'card-content',
+
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'})
 
                                                     ]), 
+                            
                                         ])
                                         ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -721,6 +725,7 @@ def set_type_dd_value(available_options):
     Output('postop_proms_perpt','children'),
     Output('day90read', 'children'),
     Output('day90readtotal', 'children'),
+    Output('bothproms_final', 'children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -769,7 +774,8 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             
-            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal) = nongraph(data)
+            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt,
+             postop_proms_perpt, day90read, day90readtotal, bothproms_final) = nongraph(data)
 
             mean_age_output = 'Mean age {} ± {}'.format(avg_pat_age, stdev_age)
             stdev_len_of_stay_output = '± {} hours'.format(stdev_len_of_stay)
@@ -779,15 +785,17 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             
             preop_proms_perpt_output = '{} Pre-op PROMS'.format(preop_proms_perpt)
             postop_proms_perpt_output = '{} Post-op PROMS'.format(postop_proms_perpt)
+            bothproms_final_output = '{} patients who filled out at least one pre-op and one post-op PROMs questionnaire'.format(bothproms_final)
             
             day90read_output = '{} readmitted patients'.format(day90read)
             day90readtotal_output = 'out of {} reported'.format(day90readtotal)
             
-            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output, postop_proms_perpt_output, day90read_output, day90readtotal_output)
+            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output,
+                    postop_proms_perpt_output, day90read_output, day90readtotal_output, bothproms_final_output)
         except:  
-            return ('', '','', '', '', '', '', '', '', '')
+            return ('', '','', '', '', '', '', '', '', '', '')
     else:
-        return ('','','', '', '', '', '', '', '', '')
+        return ('','','', '', '', '', '', '', '', '', '')
 
 
 #Charts and graphs

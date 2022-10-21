@@ -36,7 +36,11 @@ def nongraph(all_data):
     day90readtotal = all_data.Readmit_90days.value_counts().sum()
     day90read =  all_data.Readmit_90days.value_counts()[True]
     
-    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal)
+    bothproms = all_data['Preop_num'] + all_data['Postop_num']
+    bothproms_final = bothproms[bothproms == 0].count()
+    
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts,
+            preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final)
 
 
 def create_current_graphs(all_data):
