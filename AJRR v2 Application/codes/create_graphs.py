@@ -179,7 +179,7 @@ def create_current_graphs(all_data):
 
     df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
     comorb = df_ICD.head(10)
-    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities'},title = 'Most Common 10 Comorbidities',
+    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Acute_MI_ICD10': 'Acute MI'},title = 'Most Common 10 Comorbidities',
                           color_discrete_sequence=(['#8b0000']))
     
     return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar)
