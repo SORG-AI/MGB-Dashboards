@@ -543,6 +543,67 @@ row3 = html.Div([
 
 #                               ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
 
+#row5
+row5 = html.Div([
+    #ROW
+        html.Div([
+                #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Top 10 Comorbidities - based on ICD10 DX'], className = 'card-title',
+
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(id = 'comorb_bar')
+                                        ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'900px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
+                                    ), 
+                    #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                               # html.H4(id='card-title-1', children= ['Percentage of Patients Filling Out PROMs'], className = 'card-title',
+
+                                                #        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                               
+
+                                                    ]), 
+                            
+                                        ])
+                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                    #COLUMN
+                           html.Div([
+                                  
+                               dbc.Card([
+                                    html.Div([
+                                       dbc.CardBody([
+
+                                              # html.H4(id='card-title-1', children= ['PROMs Filled Out per Patient'], className = 'card-title',
+#
+                                                       #style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                 ]), 
+                                       ])
+                                       ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                   ], style={'display': 'inline-block', 'padding': '5px'}
+                                   ), 
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
+
 
 ## Procedures and conditions
 
@@ -633,7 +694,9 @@ page_1_layout = html.Div([
                                                           
                                                           row3,
                                                                                                         
-                                                          row4
+                                                          row4, 
+                                                          
+                                                          row5
                                                                                                                       
                                                           #surg_info_header,
     
@@ -842,6 +905,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     #Output('alc_use_type_pie','figure'),
     Output('tob_use_bar','figure'),
     Output('discharge_distr_pie', 'figure'),
+    Output('comorb_bar', 'figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -888,7 +952,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie) = create_current_graphs(data)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar) = create_current_graphs(data)
             
             # df2 = px.data.election() # replace with your own data source
             # geojson = px.data.election_geojson()
@@ -900,12 +964,12 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar)
         
         except:
-            return ('', '','','','','','', '')
+            return ('', '','','','','','', '', '')
     else:
-        return ('', '','','','','','', '')
+        return ('', '','','','','','', '', '')
         
 
 # Main router
