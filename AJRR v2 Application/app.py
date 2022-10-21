@@ -406,10 +406,10 @@ row4 = html.Div([
                                  dbc.Card(
                                         [
                                         dbc.CardBody([
-                                                        #html.H4('Type of Alcohol Used', className = 'card-title',
-                                                        #        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                        html.H4('Discharge Distribution', className = 'card-title',
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         #dcc.Graph(id = 'alc_use_type_pie')
+                                         dcc.Graph(id = 'discharge_distr_pie')
                                                  ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -501,11 +501,23 @@ row3 = html.Div([
 
                                                 html.P(id = 'preop_proms_perpt', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding':'50px'}),
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding':'20px'}),
+                                                
+                                                 html.P('pre-op questionnaires', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
                                                 
                                                 html.P(id = 'postop_proms_perpt', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'})
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'}),
+                                                
+                                                 html.P('post-op questionnaires', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
+                                                 
+                                                 html.P('*The questionnaires included in our measurements are PROMIS-10, PROMIS physical function, PROMS KOOS, PROMS HOOS, MSK CUSTOM, JOINT FUNCTION & PAIN, PROMIS PAIN INTERFERENCE, MSK BCTI,PROMS RISK ASSESSMENT AND PREDICTION TOOL, MSK QUICK DASH, ANXIETY, DEPRESSION, PROMS MSK LOW BACK PAIN,SUBSTANCE USE DISORDER QUESTIONNAIRE, FALLS SCREENING, PROMIS UPPER EXTREMITY FUNCTION, PROMS MOOR POST-OP CARE GOAL ACHIEVEMENT, PROMS MOOR PRE-OP EXPECTATION CARE GOAL ACHIEVEMENT, PROMS MOOR PRE-OP IMPORTANCE CARE GOAL ACHIEVEMENT', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '10px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'})
 
                                                    ]), 
                                        ])
@@ -690,7 +702,7 @@ def set_diag_dd_option(username, value):
     
     #setting diagnosis dropdown options
     main_diag = data.DX_Main_Category.unique()
-    diag_dd_options = [{'label':'All Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
+    diag_dd_options = [{'label':'Primary Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
     #setting procedure site dropdown options
     site_dd_options =  [{'label':'All Sites', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Procedure_site.unique()]
@@ -803,8 +815,8 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             preop_proms_output = '{}%'.format(preop_proms_pts)
             postop_proms_output = '{}%'.format(postop_proms_pts)
             
-            preop_proms_perpt_output = '{} Pre-op PROMS'.format(preop_proms_perpt)
-            postop_proms_perpt_output = '{} Post-op PROMS'.format(postop_proms_perpt)
+            preop_proms_perpt_output = '{}'.format(preop_proms_perpt)
+            postop_proms_perpt_output = '{}'.format(postop_proms_perpt)
             bothproms_final_output = '{}% ({} patients)'.format(bothproms_final, numbothproms)
             
             day90read_output = '{} readmitted patients'.format(day90read)
@@ -829,6 +841,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     #Output('alc_use_bar','figure'),
     #Output('alc_use_type_pie','figure'),
     Output('tob_use_bar','figure'),
+    Output('discharge_distr_pie', 'figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -848,8 +861,6 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
                 data = df.loc[cond1 & cond2]
             else:
                 data = df
-            
-
             
             if 'All' in inst:
                 data = data
@@ -877,7 +888,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar) = create_current_graphs(data)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie) = create_current_graphs(data)
             
             # df2 = px.data.election() # replace with your own data source
             # geojson = px.data.election_geojson()
@@ -889,12 +900,12 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie)
         
         except:
-            return ('', '','','','','','')
+            return ('', '','','','','','', '')
     else:
-        return ('', '','','','','','')
+        return ('', '','','','','','', '')
         
 
 # Main router

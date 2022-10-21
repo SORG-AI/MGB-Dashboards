@@ -101,21 +101,16 @@ def create_current_graphs(all_data):
     #                       color_discrete_sequence = (["DarkOliveGreen"]))
     # """
     
-    #df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
-    #alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'}, title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
-    #                     color_discrete_sequence=(['#ff6961']), range_x = [0, 15])
     
-    # """
-    #alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',
-    #                           color_discrete_sequence=(['#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#ea3c53']))
-    # """
     
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
     tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Distribution of Patient Tobacco Use',
                           color_discrete_sequence=(['#8b0000']))
 
     #
+    discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr, title = "Discharge Disposition Distribution",
+                     color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+                                        '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
     
-    
-    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar)
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie)
     
