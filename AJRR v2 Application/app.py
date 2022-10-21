@@ -454,14 +454,33 @@ row3 = html.Div([
 
                                                 html.P(id = 'preop_proms', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding':'50px'}),
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'black', 'text-decoration': 'bold', 'padding':'10px'}),
+                                                
+                                                html.P('patients who filled out at least one pre-op questionnaire', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '10px'}),
                                                 
                                                 html.P(id = 'postop_proms', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'}),
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'black', 'text-decoration': 'bold'}),
+                                                
+                                                html.P('patients who filled out at least one post-op questionnaire', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '10px'}),
+                                                
                                                 html.P(id = 'bothproms_final', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold'})
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'black', 'text-decoration': 'bold'}),
+                                                
+                                                html.P('patients who filled out at least one pre-op and one post-op PROMs questionnaire', className = 'card-content',
+
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
+                                                
+                                                html.P(id = 'numbothproms', className = 'card-content',
+
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'white', 'text-decoration': 'bold'})
+                                                
+                                                
 
                                                     ]), 
                             
@@ -726,6 +745,7 @@ def set_type_dd_value(available_options):
     Output('day90read', 'children'),
     Output('day90readtotal', 'children'),
     Output('bothproms_final', 'children'),
+    Output('numbothproms', 'children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -775,27 +795,27 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             
             
             (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt,
-             postop_proms_perpt, day90read, day90readtotal, bothproms_final) = nongraph(data)
+             postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms) = nongraph(data)
 
             mean_age_output = 'Mean age {} ± {}'.format(avg_pat_age, stdev_age)
             stdev_len_of_stay_output = '± {} hours'.format(stdev_len_of_stay)
             
-            preop_proms_output = '{}% Pre-op'.format(preop_proms_pts)
-            postop_proms_output = '{}% Post-op'.format(postop_proms_pts)
+            preop_proms_output = '{}%'.format(preop_proms_pts)
+            postop_proms_output = '{}%'.format(postop_proms_pts)
             
             preop_proms_perpt_output = '{} Pre-op PROMS'.format(preop_proms_perpt)
             postop_proms_perpt_output = '{} Post-op PROMS'.format(postop_proms_perpt)
-            bothproms_final_output = '{} patients who filled out at least one pre-op and one post-op PROMs questionnaire'.format(bothproms_final)
+            bothproms_final_output = '{}% ({} patients)'.format(bothproms_final, numbothproms)
             
             day90read_output = '{} readmitted patients'.format(day90read)
             day90readtotal_output = 'out of {} reported'.format(day90readtotal)
             
             return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output,
-                    postop_proms_perpt_output, day90read_output, day90readtotal_output, bothproms_final_output)
+                    postop_proms_perpt_output, day90read_output, day90readtotal_output, bothproms_final_output, numbothproms)
         except:  
-            return ('', '','', '', '', '', '', '', '', '', '')
+            return ('', '','', '', '', '', '', '', '', '', '', '')
     else:
-        return ('','','', '', '', '', '', '', '', '', '')
+        return ('','','', '', '', '', '', '', '', '', '', '')
 
 
 #Charts and graphs
