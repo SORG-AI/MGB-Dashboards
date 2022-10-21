@@ -9,6 +9,7 @@ from dash import dash_table
 import pandas as pd
 import plotly.express as px
 import statistics
+import numpy as np
 
 def nongraph(all_data):
     
@@ -30,11 +31,12 @@ def nongraph(all_data):
     
     preop_proms_perpt = round(all_data.Preop_num.mean(),1)
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
-
     
-    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt)
 
-
+    day90readtotal = all_data.Readmit_90days.value_counts().sum()
+    day90read =  all_data.Readmit_90days.value_counts()[True]
+    
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal)
 
 
 def create_current_graphs(all_data):
@@ -104,10 +106,10 @@ def create_current_graphs(all_data):
     # """
     
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
-    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
+    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Distribution of Patient Tobacco Use',
                           color_discrete_sequence=(['#8b0000']))
 
-
+    #
     
     
     return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar)

@@ -106,6 +106,7 @@ login = html.Div([dcc.Location(id='url_login', refresh=True),
                   dcc.Input(placeholder='Enter your username',
                             type='text', id='uname-box'),
                   html.Br(),                  
+                  
                   html.Br(),
                   dcc.Input(placeholder='Enter your password',
                             type='password', id='pwd-box'),
@@ -359,7 +360,7 @@ row2 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
-#row3
+#row4
 row4 = html.Div([
     #ROW
         html.Div([
@@ -387,12 +388,14 @@ row4 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
-                                                #html.H4(id='card-title-1', children= ['Alcohol Use'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['90-Days Patient Readmission Rate'], className = 'card-title',
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                 html.P(id = 'day90read', className = 'card-content',
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding' : '100px'}),
+                                                 html.P(id = 'day90readtotal', className = 'card-content',
+                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '50px'})
 
-                                                        #style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-
-                                                    ]), 
-                                        #dcc.Graph(id = 'alc_use_bar')
+                                                    ])
                                         ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -417,7 +420,7 @@ row4 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
-#row4
+#row3
 row3 = html.Div([
     #ROW
         html.Div([
@@ -445,7 +448,7 @@ row3 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Percentage of Patients filling out PROMS'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['Percentage of Patients Filling Out PROMs'], className = 'card-title',
 
                                                         style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
@@ -469,7 +472,7 @@ row3 = html.Div([
                                     html.Div([
                                        dbc.CardBody([
 
-                                               html.H4(id='card-title-1', children= ['PROMS filled out per patient'], className = 'card-title',
+                                               html.H4(id='card-title-1', children= ['PROMs Filled Out per Patient'], className = 'card-title',
 
                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
@@ -716,6 +719,8 @@ def set_type_dd_value(available_options):
     Output('postop_proms','children'),
     Output('preop_proms_perpt','children'),
     Output('postop_proms_perpt','children'),
+    Output('day90read', 'children'),
+    Output('day90readtotal', 'children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -764,10 +769,10 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             
-            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt) = nongraph(data)
+            (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts, preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal) = nongraph(data)
 
-            mean_age_output = 'Mean age {} +/- {}'.format(avg_pat_age, stdev_age)
-            stdev_len_of_stay_output = '+/- {} hours'.format(stdev_len_of_stay)
+            mean_age_output = 'Mean age {} ± {}'.format(avg_pat_age, stdev_age)
+            stdev_len_of_stay_output = '± {} hours'.format(stdev_len_of_stay)
             
             preop_proms_output = '{}% Pre-op'.format(preop_proms_pts)
             postop_proms_output = '{}% Post-op'.format(postop_proms_pts)
@@ -775,11 +780,14 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             preop_proms_perpt_output = '{} Pre-op PROMS'.format(preop_proms_perpt)
             postop_proms_perpt_output = '{} Post-op PROMS'.format(postop_proms_perpt)
             
-            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output, postop_proms_perpt_output)
+            day90read_output = '{} readmitted patients'.format(day90read)
+            day90readtotal_output = 'out of {} reported'.format(day90readtotal)
+            
+            return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output, postop_proms_perpt_output, day90read_output, day90readtotal_output)
         except:  
-            return ('', '','', '', '', '', '', '')
+            return ('', '','', '', '', '', '', '', '', '')
     else:
-        return ('','','', '', '', '', '', '')
+        return ('','','', '', '', '', '', '', '', '')
 
 
 #Charts and graphs
