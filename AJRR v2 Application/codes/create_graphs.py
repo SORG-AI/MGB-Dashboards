@@ -54,7 +54,7 @@ def create_time_ind_graphs(all_data):
     df_rev = df_rev.assign(year=year)
     df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
     
-    rev_count_line = px.line(df_rev_count, x='index', y='Number of Revisions')
+    rev_count_line = px.line(df_rev_count, x= [2019, 2020, 2021], y='Number of Revisions')
     
     return (rev_count_line)
 
