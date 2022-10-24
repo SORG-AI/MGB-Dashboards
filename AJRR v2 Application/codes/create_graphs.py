@@ -136,47 +136,47 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
 
                'Diabetes' : [sum(all_data.Diabetes_ICD10.value_counts())],
 
-               'Diabetes_complications_ICD10' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
+               'Diabetes Complications' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
 
-               'Paraplegia_ICD10' : [sum(all_data.Paraplegia_ICD10.value_counts())],
+               'Paraplegia' : [sum(all_data.Paraplegia_ICD10.value_counts())],
 
-               'Renal_disease_ICD10':[ sum(all_data.Renal_disease_ICD10.value_counts())],
+               'Renal Disease':[ sum(all_data.Renal_disease_ICD10.value_counts())],
 
-               'Cancer_ICD10' : [sum(all_data.Cancer_ICD10.value_counts())],
+               'Cancer' : [sum(all_data.Cancer_ICD10.value_counts())],
 
-               'Metastatic_cancer_ICD10' : [sum(all_data.Metastatic_cancer_ICD10.value_counts())],
+               'Metastatic Cancer' : [sum(all_data.Metastatic_cancer_ICD10.value_counts())],
 
-               'Severe_liver_disease_ICD10' : [sum(all_data.Severe_liver_disease_ICD10.value_counts())],
+               'Severe Liver Disease' : [sum(all_data.Severe_liver_disease_ICD10.value_counts())],
 
-               'HIV_ICD10' : [sum(all_data.HIV_ICD10.value_counts())],
+               'HIV' : [sum(all_data.HIV_ICD10.value_counts())],
 
-               'Osteoporosis_ICD10' : [sum(all_data.Osteoporosis_ICD10.value_counts())],
+               'Osteoporosis' : [sum(all_data.Osteoporosis_ICD10.value_counts())],
 
-               'Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10' : [sum(all_data.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10.value_counts())],
+               'Mental and Behavioral Disorders due to Psychoactive Substance Abuse' : [sum(all_data.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10.value_counts())],
 
-               'Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10' : [sum(all_data.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10.value_counts())],
+               'Schizophrenia Schizotypal Delusional and Other Nonmood Disorders' : [sum(all_data.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10.value_counts())],
 
-               'Mood_affective_disorders_ICD10' :[ sum(all_data.Mood_affective_disorders_ICD10.value_counts())],
+               'Mood Affective Disorders' :[ sum(all_data.Mood_affective_disorders_ICD10.value_counts())],
 
-               'Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10' : [sum(all_data.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10.value_counts())],
+               'Anxiety Dissociative Stress Related Somatoform and Other Nonpsychotic Mental Disorders' : [sum(all_data.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10.value_counts())],
 
-               'PULMONARY_EMBOLISM_ACUTE_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_ACUTE_ICD10.value_counts())],
+               'PULMONARY EMBOLISM ACUTE' : [sum(all_data.PULMONARY_EMBOLISM_ACUTE_ICD10.value_counts())],
 
-               'PULMONARY_EMBOLISM_CHRONIC_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_CHRONIC_ICD10.value_counts())],
+               'PULMONARY EMBOLISM CHRONIC' : [sum(all_data.PULMONARY_EMBOLISM_CHRONIC_ICD10.value_counts())],
 
-               'ACUTE_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
+               'ACUTE DVT LOWER EXTREMITY' :[ sum(all_data.ACUTE_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'CHRONIC_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.CHRONIC_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
+               'CHRONIC DVT LOWER EXTREMITY' :[ sum(all_data.CHRONIC_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'ACUTE_DVT_UPPER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
+               'ACUTE DVT UPPER EXTREMITY' :[ sum(all_data.ACUTE_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
 
-               'CHRONIC_DVT_UPPER_EXTREMITY_ICD10' : [sum(all_data.CHRONIC_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
+               'CHRONIC DVT UPPER EXTREMITY' : [sum(all_data.CHRONIC_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
 
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10.value_counts())],
+               'PHLEBITIS AND THROMBOPHLEBITIS OF LOWER EXTREMITY' : [sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10.value_counts())],
 
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10.value_counts())],
+               'PHLEBITIS AND THROMBOPHLEBITIS OF UPPER BODY OR EXTREMITY' :[ sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10.value_counts())],
 
-               'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
+               'UNSPECIFIED PHLEBITIS AND THROMBOPHLEBITIS' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
     
     
     
