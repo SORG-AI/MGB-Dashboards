@@ -46,6 +46,21 @@ def nongraph(all_data):
             preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
 
 
+def create_time_ind_graphs(all_data):
+    
+    df_his = all_data[['Surg_date', 'Main_CPT_category']]
+    df_rev = df_his[df_his.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+    year = df_rev.Surg_date.str[: 4]
+    df_rev = df_rev.assign(year=year)
+    df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
+    
+    rev_count_line = px.line(df_rev_count, x='index', y='Number of Revisions')
+    
+    return (rev_count_line)
+
+
+
+
 def create_current_graphs(all_data, dateless_data, start_date, end_date):
 
     # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])

@@ -25,7 +25,7 @@ import base64
 import pickle
 from datetime import date
 
-from codes.create_graphs import create_current_graphs, nongraph
+from codes.create_graphs import create_current_graphs, nongraph, create_time_ind_graphs
 
 
 #### FIXUS BEGINS
@@ -560,8 +560,8 @@ row5 = html.Div([
 
                                                     ]), 
                                         dcc.Graph(id = 'comorb_bar')
-                                        ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'900px', 'height':'550px', 'backgroundColor': 'white'})
+                                        ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
                                     ), 
                     #COLUMN
@@ -577,7 +577,7 @@ row5 = html.Div([
 
                                                    ]), 
                                        dcc.Graph(id = 'linked_bar')
-                                       ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
+                                       ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
                                     ), 
@@ -588,11 +588,11 @@ row5 = html.Div([
                                     html.Div([
                                        dbc.CardBody([
 
-                                              # html.H4(id='card-title-1', children= ['PROMs Filled Out per Patient'], className = 'card-title',
-#
-                                                       #style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                              html.H4(id='card-title-1', children= ['Revision Burden by Year'], className = 'card-title',
+                                                      style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                  ]), 
+                                       dcc.Graph(id='rev_count_line')
                                        ])
                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
                                    ], style={'display': 'inline-block', 'padding': '5px'}
@@ -893,6 +893,57 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 
 #Charts and graphs
 @app.callback(
+    Output('rev_count_line', 'figure'),
+    Input('login-status','data'),
+    Input('provider_dd','value'),
+    Input('inst_dd','value'),
+    Input('diag_dd','value'),
+    Input('site_dd','value'),
+    Input('type_dd','value'),
+    Input('enc_daterange','start_date'),
+    Input('enc_daterange','end_date'))
+def update_ind_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
+    if username in USER_TO_NAME.keys():
+        try: 
+            if provider == 'Surgeon':
+                #USER_TO_NAME mapped to surgeon first and last name
+                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+                cond1 = df.SurFirstName == sur_first_last[0]
+                cond2 = df.SurLastName == sur_first_last[1]
+                data = df.loc[cond1 & cond2]
+            else:
+                data = df
+                
+                
+            if 'All' in inst:
+                data = data
+            else:
+                data = data[data.Hosp_name == inst]
+             
+            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
+            if 'All' in diag:
+                data = data
+            else:
+                data = data[data.DX_Main_Category.isin(diag)]
+                
+            if 'All' in site:
+                data = data
+            else:
+                data = data[data.Procedure_site == site]
+                
+            if 'All' in proc:
+                data = data
+            else:
+                data = data[data.Main_CPT_category.isin(proc)]   
+            (rev_count_line) = create_time_ind_graphs(data)
+            return rev_count_line
+        except:
+            return ''
+    else:
+        return ''
+
+
+@app.callback(
     Output('gender_graph','figure'),
     Output('pat_age_bar','figure'),
     Output('diag_bar','figure'),
@@ -955,7 +1006,6 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             
             #CREATE GRAPHS
             (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
-            
             # df2 = px.data.election() # replace with your own data source
             # geojson = px.data.election_geojson()
             # fig = px.choropleth(
