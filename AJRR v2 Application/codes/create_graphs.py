@@ -113,25 +113,25 @@ def create_current_graphs(all_data):
                                         '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
     
     
-    ICD_data = {'Acute_MI_ICD10': [sum(all_data.Acute_MI_ICD10.value_counts())],
+    ICD_data = {'Acute MI': [sum(all_data.Acute_MI_ICD10.value_counts())],
 
-               'CHF_ICD10' : [sum(all_data.CHF_ICD10.value_counts())],
+               'CHF' : [sum(all_data.CHF_ICD10.value_counts())],
 
-               'Peripheral_vascular_disease_ICD10': [sum(all_data.Peripheral_vascular_disease_ICD10.value_counts())],
+               'Peripheral Vascular Disease': [sum(all_data.Peripheral_vascular_disease_ICD10.value_counts())],
 
-               'CVA_ICD10' : [sum(all_data.CVA_ICD10.value_counts())],
+               'CVA' : [sum(all_data.CVA_ICD10.value_counts())],
 
-               'Dementia_ICD10' :[sum(all_data.Dementia_ICD10.value_counts())],
+               'Dementia' :[sum(all_data.Dementia_ICD10.value_counts())],
 
-               'Pulmonary_disease_ICD10' :[ sum(all_data.Pulmonary_disease_ICD10.value_counts())],
+               'Pulmonary Disease' :[ sum(all_data.Pulmonary_disease_ICD10.value_counts())],
 
-               'Connective_tissue_disorder_ICD10' :[ sum(all_data.Connective_tissue_disorder_ICD10.value_counts())],
+               'Connective Tissue Disorder' :[ sum(all_data.Connective_tissue_disorder_ICD10.value_counts())],
 
-               'Peptic_ulcer_ICD10' : [sum(all_data.Peptic_ulcer_ICD10.value_counts())],
+               'Peptic Ulcer' : [sum(all_data.Peptic_ulcer_ICD10.value_counts())],
 
-               'Liver_disease_ICD10' : [sum(all_data.Liver_disease_ICD10.value_counts())],
+               'Liver Disease' : [sum(all_data.Liver_disease_ICD10.value_counts())],
 
-               'Diabetes_ICD10' : [sum(all_data.Diabetes_ICD10.value_counts())],
+               'Diabetes' : [sum(all_data.Diabetes_ICD10.value_counts())],
 
                'Diabetes_complications_ICD10' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
 
@@ -176,10 +176,10 @@ def create_current_graphs(all_data):
                'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
     
     
-
+    
     df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
     comorb = df_ICD.head(10)
-    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Acute_MI_ICD10': 'Acute MI'},title = 'Most Common 10 Comorbidities',
+    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Cases'},title = 'Most Common 10 Comorbidities',
                           color_discrete_sequence=(['#8b0000']))
     
     return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar)
