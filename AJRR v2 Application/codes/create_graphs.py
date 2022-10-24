@@ -13,6 +13,8 @@ import numpy as np
 
 def nongraph(all_data):
     
+    # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
+    
     total_proc = all_data['CPT_description'].count()
 
     BMI_total = round(all_data.Pat_bmi.mean())
@@ -44,8 +46,9 @@ def nongraph(all_data):
             preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
 
 
-def create_current_graphs(all_data):
+def create_current_graphs(all_data, dateless_data, start_date, end_date):
 
+    # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
 
     # #Race data and graph
     # df_race = all_data.PatRace.value_counts().to_frame(name='Number of patients')
@@ -86,7 +89,7 @@ def create_current_graphs(all_data):
     CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#ff9999', '#dc143c'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
    
     #Parse only revision data
-    rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
+    rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
     proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=(['Crimson']))
     
 
@@ -182,5 +185,33 @@ def create_current_graphs(all_data):
     comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Cases'},title = 'Most Common 10 Comorbidities',
                           color_discrete_sequence=(['#8b0000']))
     
-    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar)
+    
+    #FIND LINKED CASES
+    linked_df = dateless_data[dateless_data.duplicated('PatientID',keep=False)]
+    grp = linked_df.groupby('PatientID')
+    linked_revisions = pd.DataFrame()
+
+    for PatientID, group in grp:
+        
+        temp = group  
+        primary = temp.Main_CPT_category.str.contains('Primary').any()  
+        revision = temp.Main_CPT_category.str.contains('|'.join(['Revision','Explantation'])).any()
+        linked = all([primary, revision])
+        
+        if linked == True:
+            linked_case = group[group.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+            linked_revisions = linked_revisions.append(linked_case)
+    
+    #Filter by date range
+    # linked_revisions.Surg_date = pd.to_datetime(linked_revisions.Surg_date)
+    # linked_revisions = linked_revisions[(linked_revisions.Surg_date > start_date) & (linked_revisions.Surg_date < end_date)] 
+    
+    #Graph linked cases
+    # linked_pie = px.pie(linked_revisions.DX_Main_Category, names = linked_revisions.DX_Main_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
+    linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of patients')
+    linked_bar = px.bar(linked_revision_counts, y = 'Number of patients', labels = {'index': 'DX_Main_Category'},title = 'Linked Revision Burden by Diagnosis',
+                          color_discrete_sequence=(['#8b0000']))
+    
+    
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar)
     
