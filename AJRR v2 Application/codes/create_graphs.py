@@ -48,16 +48,17 @@ def nongraph(all_data):
 
 def create_time_ind_graphs(all_data):
     
-    df_his = all_data[['Surg_date', 'Main_CPT_category']]
+    df_his = all_data[['Surg_date', 'Main_CPT_category', 'SurName']]
     df_rev = df_his[df_his.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
     year = df_rev.Surg_date.str[: 4]
     df_rev = df_rev.assign(year=year)
     df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
+    rev_count_line = px.line(df_rev_count, x= df_rev_count.index, y='Number of Revisions',
+                             title= 'Revision Cases by Year', color_discrete_sequence=(['crimson']),
+                             markers=True, labels={'index': 'Year'})
     
-    rev_count_line = px.line(df_rev_count, x= [2019, 2020, 2021], y='Number of Revisions')
     
     return (rev_count_line)
-
 
 
 
@@ -122,7 +123,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
-    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Distribution of Patient Tobacco Use',
+    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Smoking History - Tobacco Use',
                           color_discrete_sequence=(['#8b0000']))
 
     #
@@ -224,7 +225,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     #Graph linked cases
     # linked_pie = px.pie(linked_revisions.DX_Main_Category, names = linked_revisions.DX_Main_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
     linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of patients')
-    linked_bar = px.bar(linked_revision_counts, y = 'Number of patients', labels = {'index': 'DX_Main_Category'},title = 'Linked Revision Burden by Diagnosis',
+    linked_bar = px.bar(linked_revision_counts, y = 'Number of patients', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},title = 'Linked Revision Burden by Diagnosis',
                           color_discrete_sequence=(['#8b0000']))
     
     

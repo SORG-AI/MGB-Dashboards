@@ -41,6 +41,7 @@ fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 
+
 #try creating surgeon list here
 surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
 surgeons = surgeons.drop_duplicates()
@@ -202,6 +203,8 @@ index_page = html.Div([
              width = '100%', height='600px')
 ], style={ 'width':'100%','backgroundColor': 'rgb(248,244,244)' })
 
+
+(rev_count_line) = create_time_ind_graphs(df)
 
 # the whole blue row on the dashboard that gives patient info at a glance
 #THIS IS REALLY THE CONTAINER
@@ -431,7 +434,7 @@ row3 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Tobacco Use'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['Patient Smoking History'], className = 'card-title',
 
                                                         style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
@@ -592,8 +595,8 @@ row5 = html.Div([
                                                       style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                  ]), 
-                                       dcc.Graph(id='rev_count_line')
-                                       ])
+                                       dcc.Graph(figure=rev_count_line)
+                                       ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
                                    ], style={'display': 'inline-block', 'padding': '5px'}
                                    ), 
@@ -763,7 +766,7 @@ def set_diag_dd_option(username, value):
     
     #setting diagnosis dropdown options
     main_diag = data.DX_Main_Category.unique()
-    diag_dd_options = [{'label':'Primary Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
+    diag_dd_options = [{'label':'All Primary Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
     #setting procedure site dropdown options
     site_dd_options =  [{'label':'All Sites', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Procedure_site.unique()]
@@ -892,55 +895,33 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 
 
 #Charts and graphs
-@app.callback(
-    Output('rev_count_line', 'figure'),
-    Input('login-status','data'),
-    Input('provider_dd','value'),
-    Input('inst_dd','value'),
-    Input('diag_dd','value'),
-    Input('site_dd','value'),
-    Input('type_dd','value'),
-    Input('enc_daterange','start_date'),
-    Input('enc_daterange','end_date'))
-def update_ind_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
-    if username in USER_TO_NAME.keys():
-        try: 
-            if provider == 'Surgeon':
-                #USER_TO_NAME mapped to surgeon first and last name
-                sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-                cond1 = df.SurFirstName == sur_first_last[0]
-                cond2 = df.SurLastName == sur_first_last[1]
-                data = df.loc[cond1 & cond2]
-            else:
-                data = df
-                
-                
-            if 'All' in inst:
-                data = data
-            else:
-                data = data[data.Hosp_name == inst]
-             
-            #TODO: this errors just once when trying to delete the all diagnoses option --> why?
-            if 'All' in diag:
-                data = data
-            else:
-                data = data[data.DX_Main_Category.isin(diag)]
-                
-            if 'All' in site:
-                data = data
-            else:
-                data = data[data.Procedure_site == site]
-                
-            if 'All' in proc:
-                data = data
-            else:
-                data = data[data.Main_CPT_category.isin(proc)]   
-            (rev_count_line) = create_time_ind_graphs(data)
-            return rev_count_line
-        except:
-            return ''
-    else:
-        return ''
+# @app.callback(
+#     Output('rev_count_line', 'figure'),
+#     Input('login-status','data'),
+#     Input('provider_dd','value'),
+#     Input('inst_dd','value'),
+#     Input('diag_dd','value'),
+#     Input('site_dd','value'),
+#     Input('type_dd','value'),
+#     Input('enc_daterange','start_date'),
+#     Input('enc_daterange','end_date'))
+# def update_ind_graphs(df):
+#     if username in USER_TO_NAME.keys():
+#         try: 
+#             if provider == 'Surgeon':
+#                 #USER_TO_NAME mapped to surgeon first and last name
+#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+#                 cond1 = df.SurFirstName == sur_first_last[0]
+#                 cond2 = df.SurLastName == sur_first_last[1]
+#                 data = df.loc[cond1 & cond2]
+#             else:
+#                 data = df
+#(rev_count_line) = create_time_ind_graphs(data)
+#             return rev_count_line
+#         except:
+#             return ''
+#         else:
+#             return ''
 
 
 @app.callback(
@@ -950,8 +931,6 @@ def update_ind_graphs(username, provider, inst, diag, site, proc, start_date, en
     Output('proc_bar','figure'),
     Output('CCI_bw','figure'),
     Output('proc_revision_pie','figure'),
-    #Output('alc_use_bar','figure'),
-    #Output('alc_use_type_pie','figure'),
     Output('tob_use_bar','figure'),
     Output('discharge_distr_pie', 'figure'),
     Output('comorb_bar', 'figure'),
