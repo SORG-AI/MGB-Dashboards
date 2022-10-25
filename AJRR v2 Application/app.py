@@ -295,7 +295,7 @@ row1 = html.Div([
                                                         html.H4('Patient Location Distribution', className = 'card-title',
                                                                 style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         html.Img(src ='https://media.istockphoto.com/vectors/map-of-massachusetts-vector-id1048768466?k=6&m=1048768466&s=170667a&w=0&h=732KyrYHStgD9fq1G6PbKzd1m9LzMpK1AlffIdavnkA=')
+                                         html.Embed(src ="https://www.google.com/maps/d/embed?mid=1N_D7F1_1GbzH0YIRMgE8bOBSvyAtyfw&ehbc=2E312F", width= '600px', height= '465px')
                                                  ], body=True, style={'width':'800px', 'height':'565px', 'backgroundColor': 'white'}
                                          )
                                         ])
