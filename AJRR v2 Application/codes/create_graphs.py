@@ -36,7 +36,7 @@ def nongraph(all_data):
     
 
     day90readtotal = all_data.Readmit_90days.value_counts().sum()
-    day90read =  all_data.Readmit_90days.value_counts()[True]
+    day90read =  all_data.Readmit_90days.value_counts()[1]
     
     bothproms = all_data['Preop_num'] + all_data['Postop_num']
     bothproms_final = round(bothproms[bothproms == 0].count() / len(bothproms) * 100)
