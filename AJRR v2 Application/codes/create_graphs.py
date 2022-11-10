@@ -35,12 +35,17 @@ def nongraph(all_data):
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
     
 
+    all_data.Readmit_90days = all_data.Readmit_90days.fillna(0.0)
     day90readtotal = all_data.Readmit_90days.value_counts().sum()
-    day90read =  all_data.Readmit_90days.value_counts()[1]
     
-    bothproms = all_data['Preop_num'] + all_data['Postop_num']
-    bothproms_final = round(bothproms[bothproms == 0].count() / len(bothproms) * 100)
-    numbothproms = bothproms[bothproms == 0].count() 
+    if all_data.Readmit_90days.any(axis='rows'):
+        day90read =  all_data.Readmit_90days.value_counts()[1.0]
+    else:
+        day90read = 0
+    
+    bothproms = all_data.AnyPROM_pre & all_data.AnyPROM_post
+    bothproms_final = round(bothproms.values.sum() / len(bothproms) * 100)
+    numbothproms = round(bothproms.values.sum())
     
     return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts,
             preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
