@@ -34,11 +34,11 @@ def nongraph(all_data):
     preop_proms_perpt = round(all_data.Preop_num.mean(),1)
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
     
-    all_data.Readmit_90days = all_data.Readmit_90days.fillna(False)
+    all_data.Readmit_90days = all_data.Readmit_90days.fillna(0)
     day90readtotal = all_data.Readmit_90days.value_counts().sum()
     
     if all_data.Readmit_90days.any(axis='rows'):
-        day90read =  all_data.Readmit_90days.value_counts()[True]
+        day90read =  all_data.Readmit_90days.value_counts()[1]
     else:
         day90read = 0
     
