@@ -606,6 +606,66 @@ row5 = html.Div([
         ], style={'textAlign' : 'center'})
 
 
+#row6
+row6 = html.Div([
+    #ROW
+        html.Div([
+                #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['Readmission Reasons'], className = 'card-title',
+
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(id = 'readmit_diags_bar')
+                                        ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
+                                    ), 
+                    #COLUMN
+                    #         html.Div([
+                                   
+                    #             dbc.Card([
+                    #                  html.Div([
+                    #                     dbc.CardBody([
+
+                    #                            html.H4(id='card-title-1', children= ['Linked Revision Burden by Diagnosis'], className = 'card-title',
+
+                    #                                    style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                    #                                ]), 
+                    #                    dcc.Graph(id = 'linked_bar')
+                    #                    ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                    #                     ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                    #                 ], style={'display': 'inline-block', 'padding': '5px'}
+                    #                 ), 
+                    # #COLUMN
+                    #        html.Div([
+                                  
+                    #            dbc.Card([
+                    #                 html.Div([
+                    #                    dbc.CardBody([
+
+                    #                           html.H4(id='card-title-1', children= ['Revision Burden by Year'], className = 'card-title',
+                    #                                   style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                    #                              ]), 
+                    #                    dcc.Graph(figure=rev_count_line)
+                    #                    ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                    #                    ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                    #                ], style={'display': 'inline-block', 'padding': '5px'}
+                    #                ), 
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
+
+
 ## Procedures and conditions
 
 # proc_info = html.Div([
@@ -697,7 +757,9 @@ page_1_layout = html.Div([
                                                                                                         
                                                           row4, 
                                                           
-                                                          row5
+                                                          row5,
+                                                          
+                                                          row6
                                                                                                                       
                                                           #surg_info_header,
     
@@ -935,6 +997,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     Output('discharge_distr_pie', 'figure'),
     Output('comorb_bar', 'figure'),
     Output('linked_bar','figure'),
+    Output('readmit_diags_bar','figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -984,7 +1047,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
             # df2 = px.data.election() # replace with your own data source
             # geojson = px.data.election_geojson()
             # fig = px.choropleth(
@@ -995,12 +1058,12 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
             
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
         
         except:
-            return ('', '','','','','','', '', '','')
+            return ('', '','','','','','', '', '','', '')
     else:
-        return ('', '','','','','','', '', '','')
+        return ('', '','','','','','', '', '','', '')
         
 
 # Main router

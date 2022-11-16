@@ -35,11 +35,11 @@ def nongraph(all_data):
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
     
 
-    all_data.Readmit_90days = all_data.Readmit_90days.fillna(0.0)
-    day90readtotal = all_data.Readmit_90days.value_counts().sum()
+    all_data.Surg_related_readmit = all_data.Surg_related_readmit.fillna(False)
+    day90readtotal = all_data.Surg_related_readmit.value_counts().sum()
     
-    if all_data.Readmit_90days.any(axis='rows'):
-        day90read =  all_data.Readmit_90days.value_counts()[1.0]
+    if all_data.Surg_related_readmit.any(axis='rows'):
+        day90read =  all_data.Surg_related_readmit.value_counts()['True']
     else:
         day90read = 0
     
@@ -234,5 +234,13 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
                           color_discrete_sequence=(['#8b0000']))
     
     
-    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar)
+    #Graph readmission diagnoses
+    readmits = all_data[all_data['Surg_related_readmit'] == 'True']
+    readmit_diags = readmits['Main_DX_Category_Rev']
+    readmit_diags = readmit_diags.value_counts().to_frame(name = 'Number of patients')
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Number of patients', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Readmission Reason'},title = 'Readmission within 90 days Reasons',
+                          color_discrete_sequence=(['#8b0000']))
+    
+    
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
     
