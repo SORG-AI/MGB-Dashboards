@@ -21,27 +21,27 @@ def nongraph(all_data):
 
     #avergae length of stay, aka the average of the column named Lenght of Stay
     avg_length_of_stay = round(all_data.Len_stay.mean())
-    
+
     stdev_len_of_stay = round(statistics.stdev(all_data.Len_stay))
-    
+
     avg_pat_age = round(all_data.Pat_age.mean())
-    
+
     stdev_age = round(statistics.stdev(all_data.Pat_age))
-    
+
     preop_proms_pts = round(all_data.AnyPROM_pre.values.sum() / len(all_data.AnyPROM_pre) * 100)
     postop_proms_pts = round(all_data.AnyPROM_post.values.sum() / len(all_data.AnyPROM_post) * 100)
-    
+
     preop_proms_perpt = round(all_data.Preop_num.mean(),1)
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
-    
-    all_data.Readmit_90days = all_data.Readmit_90days.fillna(0)
-    day90readtotal = all_data.Readmit_90days.value_counts().sum()
-    
-    if all_data.Readmit_90days.any(axis='rows'):
-        day90read =  all_data.Readmit_90days.value_counts()[1]
+
+    all_data.All_diag_readmit = all_data.All_diag_readmit.fillna(False)
+    day90readtotal = len(all_data.All_diag_readmit)
+
+    if all_data.All_diag_readmit.any(axis='rows'):
+        day90read =  all_data.All_diag_readmit.value_counts()['True']
     else:
         day90read = 0
-    
+
     bothproms = all_data.AnyPROM_pre & all_data.AnyPROM_post
     bothproms_final = round(bothproms.values.sum() / len(bothproms) * 100)
     numbothproms = round(bothproms.values.sum())

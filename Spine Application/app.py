@@ -782,7 +782,7 @@ def set_diag_dd_option(username, value):
     inst_dd_options = [{'label':'All Institutions', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Hosp_name.unique()] 
     
     #setting diagnosis dropdown options
-    main_diag = data.DX_Main_Category.unique()
+    main_diag = data.Final_DX_Main_Category.unique()
     diag_dd_options = [{'label':'All Primary Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
     #setting procedure site dropdown options
@@ -870,7 +870,7 @@ def update_pat_info(username, provider, inst, diag, proc, start_date, end_date):
             if 'All' in diag:
                 data = data
             else:
-                data = data[data.DX_Main_Category.isin(diag)]
+                data = data[data.Final_DX_Main_Category.isin(diag)]
                 
             # if 'All' in site:
             #     data = data
@@ -980,7 +980,7 @@ def update_graphs(username, provider, inst, diag, proc, start_date, end_date):
             if 'All' in diag:
                 data = data
             else:
-                data = data[data.DX_Main_Category.isin(diag)]
+                data = data[data.Final_DX_Main_Category.isin(diag)]
                 
             # if 'All' in site:
             #     data = data
