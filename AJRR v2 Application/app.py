@@ -40,6 +40,8 @@ file_name = os.path.join(PATHS['app_data'], 'app_data_final.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
+#removing rows with nan in dx_main_diagnosis so that code doesn't error
+df = df.dropna(subset='DX_Main_Category')
 
 
 #try creating surgeon list here
@@ -617,7 +619,7 @@ row6 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Readmission Reasons'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['90 Day Readmission Rate by Diagnosis'], className = 'card-title',
 
                                                         style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
@@ -705,13 +707,13 @@ div_dropdown = dcc.Dropdown(
     options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
     value='AJRR', id='div_dd', multi=False, clearable = False)
 
-inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False)
+inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
 
-diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False)
+diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
 
-site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False)
+site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
 
-type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False)
+type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
 
 enc_daterange = dcc.DatePickerRange(id='enc_daterange', 
                                     min_date_allowed = date(2019,1,1),
@@ -741,7 +743,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('FIXUS Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H3('FIXUS Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [

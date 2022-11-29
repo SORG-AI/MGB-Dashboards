@@ -35,11 +35,11 @@ def nongraph(all_data):
     postop_proms_perpt = round(all_data.Postop_num.mean(),1)
     
 
-    all_data.Surg_related_readmit = all_data.Surg_related_readmit.fillna(False)
-    day90readtotal = all_data.Surg_related_readmit.value_counts().sum()
+    all_data.All_diag_readmit = all_data.All_diag_readmit.fillna(False)
+    day90readtotal = all_data.All_diag_readmit.value_counts().sum()
     
-    if all_data.Surg_related_readmit.any(axis='rows'):
-        day90read =  all_data.Surg_related_readmit.value_counts()['True']
+    if all_data.All_diag_readmit.any(axis='rows'):
+        day90read =  all_data.All_diag_readmit.value_counts()['True']
     else:
         day90read = 0
     
@@ -54,13 +54,26 @@ def nongraph(all_data):
 def create_time_ind_graphs(all_data):
     
     df_his = all_data[['Surg_date', 'Main_CPT_category', 'SurName']]
+    year = df_his.Surg_date.str[: 4]
+    df_his = df_his.assign(year=year)
+
     df_rev = df_his[df_his.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
-    year = df_rev.Surg_date.str[: 4]
-    df_rev = df_rev.assign(year=year)
+
+    df_count = df_his.year.value_counts().to_frame(name='Number of Procedures')
     df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
-    rev_count_line = px.line(df_rev_count, x= df_rev_count.index, y='Number of Revisions',
-                             title= 'Revision Cases by Year', color_discrete_sequence=(['crimson']),
-                             markers=True, labels={'index': 'Year'})
+    counts = df_count.join(df_rev_count)
+    counts['Revision Rate'] = round(counts['Number of Revisions'] / counts['Number of Procedures'] * 100, 2)
+
+    counts = counts[:3]
+
+    rev_count_line = px.line(counts, x= ['2019','2020','2021'], y='Revision Rate',
+                             color_discrete_sequence=(['crimson']),
+                             markers=True, labels={'index': 'Year'},
+                             range_y=[0,15])
+    
+    rev_count_bar = px.bar(counts, y='Revision Rate',
+                             color_discrete_sequence=(['#8b0000']),
+                             labels={'index': 'Year'})
     
     
     return (rev_count_line)
@@ -83,12 +96,12 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
     # avg_pat_age = round(all_data.Pat_age.mean())
     # std_age= statistics.stdev(df_age)
-    pat_age_bar = px.bar(df_age, y = "Number of patients", title = ' ',
+    pat_age_bar = px.bar(df_age, y = "Number of patients", 
                             labels = {'index':'Age', "Number of patients": "Number of patients"},
                             color_discrete_sequence=(['Crimson']))
    
     #gender distribution graph
-    gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, title = ' ',
+    gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, 
                           color_discrete_sequence=(['#ff9999', '#dc143c']))
     #Distribution of procedures
     proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
@@ -96,13 +109,13 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
       
     #Diagnoses
     df_diag = all_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')   
-    diag_bar = px.bar(df_diag.head(10), y = 'Number of patients', title = ' ',  labels = {"index": "Diagnosis Type"},
+    diag_bar = px.bar(df_diag.head(10), y = 'Number of patients',   labels = {"index": "Diagnosis Type"},
                       color_discrete_sequence=(['Crimson']))
     
     
     #Procedures
     df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of patients')
-    proc_bar = px.bar(df_proc, y =  'Number of patients', title = ' ', labels={'index': 'Type of Procedure- based on CPT'}, 
+    proc_bar = px.bar(df_proc, y =  'Number of patients',  labels={'index': 'Type of Procedure- based on CPT'}, 
                       color_discrete_sequence=(['Crimson']))
     
     #CCI plot
@@ -111,7 +124,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
    
     #Parse only revision data
     rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
-    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=(['Crimson']))
+    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category,  color_discrete_sequence=(['Crimson']))
     
 
     # tableBMI = dash_table.DataTable(
@@ -128,11 +141,11 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
-    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Smoking History - Tobacco Use',
+    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},
                           color_discrete_sequence=(['#8b0000']))
 
     #
-    discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr, title = "Discharge Disposition Distribution",
+    discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr,
                      color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
                                         '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
     
@@ -203,7 +216,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
     comorb = df_ICD.head(10)
-    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Cases'},title = 'Most Common 10 Comorbidities',
+    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Cases'},
                           color_discrete_sequence=(['#8b0000']))
     
     
@@ -221,16 +234,13 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
         
         if linked == True:
             linked_case = group[group.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
-            linked_revisions = linked_revisions.append(linked_case)
-    
-    #Filter by date range
-    # linked_revisions.Surg_date = pd.to_datetime(linked_revisions.Surg_date)
-    # linked_revisions = linked_revisions[(linked_revisions.Surg_date > start_date) & (linked_revisions.Surg_date < end_date)] 
+            linked_revisions = pd.concat([linked_revisions,linked_case])
     
     #Graph linked cases
     # linked_pie = px.pie(linked_revisions.DX_Main_Category, names = linked_revisions.DX_Main_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
     linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of patients')
-    linked_bar = px.bar(linked_revision_counts, y = 'Number of patients', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},title = 'Linked Revision Burden by Diagnosis',
+    linked_revision_counts['Revision Rate'] = round(linked_revision_counts['Number of patients'] / linked_revision_counts['Number of patients'].sum() * 100, 3)
+    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},
                           color_discrete_sequence=(['#8b0000']))
     
     
@@ -238,7 +248,12 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     readmits = all_data[all_data['Surg_related_readmit'] == 'True']
     readmit_diags = readmits['Main_DX_Category_Rev']
     readmit_diags = readmit_diags.value_counts().to_frame(name = 'Number of patients')
-    readmit_diags_bar = px.bar(readmit_diags, y = 'Number of patients', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Readmission Reason'},title = 'Readmission within 90 days Reasons',
+    
+    all_readmits_num = len(all_data[all_data['All_diag_readmit'] == 'True'])
+    
+    readmit_diags['Readmission Rate'] = round(readmit_diags['Number of patients'] / all_readmits_num * 100, 3)
+    
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},title = '90 Day Readmission Rate by Diagnosis',
                           color_discrete_sequence=(['#8b0000']))
     
     
