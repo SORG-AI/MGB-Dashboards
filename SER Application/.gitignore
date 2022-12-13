@@ -1,0 +1,12 @@
+*.bak
+*.py.bak
+*.pyc
+*.ini
+*.h5
+*.DS_Store
+_archive
+/pages/__pycache__
+/pages/*
+/data/bpr_image
+/models/*
+/codes/load_classify_hip.py
