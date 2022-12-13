@@ -36,7 +36,7 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'ASR_Cervical Spine_2021Q1-2021Q4_app_data.pkl')
+file_name = os.path.join(PATHS['app_data'], 'app_data_final.pkl')
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
@@ -699,7 +699,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('FIXUS Cervical Spine Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H3('FIXUS Spine Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [

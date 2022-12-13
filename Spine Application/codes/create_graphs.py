@@ -100,7 +100,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     
     #Procedures
-    df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of patients')
+    df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of patients').head(10)
     proc_bar = px.bar(df_proc, y =  'Number of patients', title = ' ', labels={'index': 'Type of Procedure- based on CPT'}, 
                       color_discrete_sequence=(['Crimson']))
     
@@ -126,7 +126,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     
     
-    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
+    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients').head(5)
     tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use History'},title = 'Smoking History - Tobacco Use',
                           color_discrete_sequence=(['#8b0000']))
 
