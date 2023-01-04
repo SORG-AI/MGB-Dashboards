@@ -36,7 +36,39 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'app_data_final.pkl')
+os_mode = ""    
+verification_file = r':/AAOS/General/Code/OrthoRegistriesQueryLibrary.py'
+
+# checks whether or not the system is windows or mac
+from sys import platform
+
+if platform == "win32":
+    os_mode = "Windows"
+    for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+        testpath = letter+verification_file
+        if os.path.exists(letter+verification_file):
+            orqlpath = testpath.replace('/OrthoRegistriesQueryLibrary.py','')
+    #orqlpath = 'P:\AAOS\General\Code'
+    
+elif platform == "darwin":
+    os_mode = "Mac"
+    orqlpath = '/Volumes/MGH-ORAI'+ '/AAOS/General/Code'
+    
+if orqlpath not in sys.path:
+    sys.path.append(orqlpath)
+
+print("orql path is: "+orqlpath)
+    
+import OrthoRegistriesQueryLibrary as orql
+
+# drive path stem:
+drivestem = orqlpath.replace('/AAOS/General/Code',"")
+drivestem = drivestem.replace('\\AAOS\\General\\Code',"")
+
+print("drive stem is " + drivestem)
+
+# # load in app data
+file_name = drivestem + '/AAOS/ASR/Data/app_data_final.pkl'
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
