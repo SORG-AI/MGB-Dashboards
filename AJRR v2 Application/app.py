@@ -36,7 +36,39 @@ PATHS = {
     }
 
 ### Loading Data for MGB Dashboard
-file_name = os.path.join(PATHS['app_data'], 'app_data_final.pkl')
+os_mode = ""    
+verification_file = r':/AAOS/General/Code/OrthoRegistriesQueryLibrary.py'
+
+# checks whether or not the system is windows or mac
+from sys import platform
+
+if platform == "win32":
+    os_mode = "Windows"
+    for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+        testpath = letter+verification_file
+        if os.path.exists(letter+verification_file):
+            orqlpath = testpath.replace('/OrthoRegistriesQueryLibrary.py','')
+    #orqlpath = 'P:\AAOS\General\Code'
+    
+elif platform == "darwin":
+    os_mode = "Mac"
+    orqlpath = '/Volumes/MGH-ORAI'+ '/AAOS/General/Code'
+    
+if orqlpath not in sys.path:
+    sys.path.append(orqlpath)
+
+print("orql path is: "+orqlpath)
+    
+import OrthoRegistriesQueryLibrary as orql
+
+# drive path stem:
+drivestem = orqlpath.replace('/AAOS/General/Code',"")
+drivestem = drivestem.replace('\\AAOS\\General\\Code',"")
+
+print("drive stem is " + drivestem)
+
+# # load in app data
+file_name = drivestem + '/AAOS/AJRR/Data/app_data_final.pkl'
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
@@ -72,7 +104,7 @@ print(USER_LIST)
 # Exposing the Flask Server to enable configuring it for logging in
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server,
-                title='Fixus App v0.1.0',
+                title='App v0.1.0',
                 update_title='Cooking awesomeness...',
                 suppress_callback_exceptions=True)
 
@@ -104,7 +136,7 @@ def load_user(username):
 #### User status management views
 # Login screen
 login = html.Div([dcc.Location(id='url_login', refresh=True),
-                  html.H2('''Welcome to FIXUS!''', id='h1'),
+                  html.H2('''Welcome!''', id='h1'),
                   html.H2('''Please log in to continue:''', id='h2'),
                   dcc.Input(placeholder='Enter your username',
                             type='text', id='uname-box'),
@@ -181,7 +213,7 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('FIXUS', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+    html.H1('MGB Arthroplasty Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
                        'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
@@ -743,7 +775,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('FIXUS Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H3('MGB Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
