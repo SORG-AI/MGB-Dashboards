@@ -730,42 +730,95 @@ row6 = html.Div([
 
 ### DROPDOWNS
 
-provider_dropdown = dcc.Dropdown(
-    options=[{'label': 'All MGB Data', 'value': 'All'},
-             {'label': 'My Data', 'value': 'Surgeon'}], 
-    value='All', id='provider_dd', clearable = False)
+# provider_dropdown = dcc.Dropdown(
+#     options=[{'label': 'All MGB Data', 'value': 'All'},
+#              {'label': 'My Data', 'value': 'Surgeon'}], 
+#     value='All', id='provider_dd', clearable = False)
 
-div_dropdown = dcc.Dropdown(
-    options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
-    value='AJRR', id='div_dd', multi=False, clearable = False)
+# div_dropdown = dcc.Dropdown(
+#     options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
+#     value='AJRR', id='div_dd', multi=False, clearable = False)
 
-inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
+# inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
 
-diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
+# diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
 
-site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
+# site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
 
-type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
+# type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
 
-enc_daterange = dcc.DatePickerRange(id='enc_daterange', 
-                                    min_date_allowed = date(2019,1,1),
-                                    max_date_allowed = date(2021,12,31),
-                                    initial_visible_month = date(2019,1,1),
-                                    start_date = date(2019,1,1),
-                                    end_date = date(2021,12,31))
+# enc_daterange = dcc.DatePickerRange(id='enc_daterange', 
+#                                     min_date_allowed = date(2019,1,1),
+#                                     max_date_allowed = date(2021,12,31),
+#                                     initial_visible_month = date(2019,1,1),
+#                                     start_date = date(2019,1,1),
+#                                     end_date = date(2021,12,31))
 
 
 
-filter_dropdowns = html.Div([
-    html.Div([provider_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
-    html.Div([div_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([inst_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-    html.Div([diag_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-    html.Div([site_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-    html.Div([type_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-    html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
-    ], style={'text-align': 'center'})
+# filter_dropdowns = html.Div([
+#     html.Div([provider_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
+#     html.Div([div_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
+#     html.Div([inst_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
+#     html.Div([diag_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+#     html.Div([site_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+#     html.Div([type_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
+#     html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
+#     ], style={'text-align': 'center'})
 
+
+# Dropdown headers
+dropdown_headers = html.Div(
+    html.Div(className = 'row', children = [
+    
+        html.Div([html.Label(['Provider'], style={'text-align':'center'}), 
+                  dcc.Dropdown(
+                      options=[{'label': 'All MGB Data', 'value': 'All'},
+                               {'label': 'My Data', 'value': 'Surgeon'}], 
+                      value='All', id='provider_dd', clearable = False)
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Division'], style={'text-align':'center'}), 
+                  dcc.Dropdown(
+                      options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
+                      value='AJRR', id='div_dd', multi=False, clearable = False)
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Institution'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Diagnosis'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
+                           'font-family':'sans-serif'}),
+        
+        html.Div([html.Label(['Site'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
+                           'font-family':'sans-serif'}),
+        
+        html.Div([html.Label(['Procedure Type'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
+                           'font-family':'sans-serif'}),
+        
+        html.Div([html.Label(['Encounter Date'], style={'text-align':'center'}), 
+                  dcc.DatePickerRange(id='enc_daterange', 
+                                                      min_date_allowed = date(2019,1,1),
+                                                      max_date_allowed = date(2021,12,31),
+                                                      initial_visible_month = date(2019,1,1),
+                                                      start_date = date(2019,1,1),
+                                                      end_date = date(2021,12,31))
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
+                           'font-family':'sans-serif'}),
+                 
+        ], style=dict(display='flex')),
+    )
+    # html.H4('User or something',style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px', 'text-align':'center'} )])
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
 
@@ -775,11 +828,13 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('MGB Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H4('MGB Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
-                                                          filter_dropdowns,
+                                                          dropdown_headers,
+                        
+                                                          # filter_dropdowns,
                                                           
                                                           html.Br(),
                     
