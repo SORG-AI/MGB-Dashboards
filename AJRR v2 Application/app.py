@@ -213,7 +213,7 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('MGB Arthroplasty Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+    html.H1('MGB Hip and Knee Arthroplasty Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
                        'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
@@ -263,7 +263,7 @@ row1 = html.Div([
                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '50px', 'color': 'black', 'text-decoration': 'bold'})
 
                                                     ])
-                                                ]) ], style={'width':'400px', 'height':'250px', 'background-color': 'white'}), 
+                                                ]) ], style={'width':'400px', 'height':'265px', 'background-color': 'white'}), 
                                         html.Div([
                                         dbc.Row([
                                                 dbc.CardBody([
@@ -282,7 +282,7 @@ row1 = html.Div([
 
                                                     ])
                                                 ]) ],  style={'width':'400px', 'height':'280px', 'background-color': 'white'})
-                                        ], style={'width':'400px', 'height':'200px', 'background-color': 'white'})
+                                        ], style={'width':'400px', 'height':'210px', 'background-color': 'white'})
                                         )
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
                                     ), 
@@ -296,7 +296,7 @@ row1 = html.Div([
                                                                 style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          dcc.Graph(id = 'gender_graph')
-                                                 ], body=True, style={'width':'400px', 'height':'565px', 'backgroundColor': 'white'}
+                                                 ], body=True, style={'width':'400px', 'height':'580px', 'backgroundColor': 'white'}
                                          )
                                         ])
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -315,7 +315,7 @@ row1 = html.Div([
                                                                 )
                                                     ]),
                                          dcc.Graph(id = 'pat_age_bar')
-                                                 ], body=True, style={'width':'600px', 'height':'565', 'backgroundColor': 'white'},
+                                                 ], body=True, style={'width':'600px', 'height':'580px', 'backgroundColor': 'white'},
                                          )
                                         ])
                                     ], style={'display': 'inline-block', 'padding': '5px'}
@@ -330,7 +330,7 @@ row1 = html.Div([
                                                                 style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
                                          html.Embed(src ="https://www.google.com/maps/d/embed?mid=1N_D7F1_1GbzH0YIRMgE8bOBSvyAtyfw&ehbc=2E312F", width= '600px', height= '465px')
-                                                 ], body=True, style={'width':'800px', 'height':'565px', 'backgroundColor': 'white'}
+                                                 ], body=True, style={'width':'800px', 'height':'580px', 'backgroundColor': 'white'}
                                          )
                                         ])
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-right': '100px'}
@@ -373,8 +373,8 @@ row2 = html.Div([
 
                                                     ]), 
                                         dcc.Graph(id = 'proc_bar')
-                                        ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
+                                        ], style={'width':'845px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'845px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
                                     ), 
                     #COLUMN
@@ -397,65 +397,7 @@ row2 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
-#row4
-row4 = html.Div([
-    #ROW
-        html.Div([
-                #COLUMN
-                            html.Div([
-                                   
-                                dbc.Card([
-                                     html.Div([
-                                        dbc.CardBody([
 
-                                                html.H4(id='card-title-1', children= ['Revision'], className = 'card-title',
-
-                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-
-                                                    ]), 
-                                        dcc.Graph(id = 'proc_revision_pie')
-                                        ], style={'width':'600px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
-                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
-                                    ), 
-                    #COLUMN
-                            html.Div([
-                                   
-                                dbc.Card([
-                                     html.Div([
-                                        dbc.CardBody([
-
-                                                html.H4(id='card-title-1', children= ['90-Days Patient Readmission Rate'], className = 'card-title',
-                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-                                                 html.P(id = 'day90read', className = 'card-content',
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding' : '100px'}),
-                                                 html.P(id = 'day90readtotal', className = 'card-content',
-                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '50px'})
-
-                                                    ])
-                                        ], style={'width':'850px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'850px', 'height':'550px', 'backgroundColor': 'white'})
-                                    ], style={'display': 'inline-block', 'padding': '5px'}
-                                    ), 
-                    #COLUMN
-                            html.Div([
-                                html.Div([
-                                 dbc.Card(
-                                        [
-                                        dbc.CardBody([
-                                                        html.H4('Discharge Distribution', className = 'card-title',
-                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
-                                                    ]),
-                                         dcc.Graph(id = 'discharge_distr_pie')
-                                                 ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
-                                         )
-                                        ])
-                                    ], style={'display': 'inline-block', 'padding': '5px'}
-                                    ), 
-                   
-                ], style={'display' : 'flex'}), 
-        html.Br()
-        ], style={'textAlign' : 'center'})
 
 #row3
 row3 = html.Div([
@@ -474,8 +416,8 @@ row3 = html.Div([
 
                                                     ]), 
                                         dcc.Graph(id = 'tob_use_bar')
-                                        ], style={'width':'900px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'900px', 'height':'550px', 'backgroundColor': 'white'})
+                                        ], style={'width':'600px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
                                     ), 
                     #COLUMN
@@ -491,11 +433,11 @@ row3 = html.Div([
 
                                                 html.P(id = 'preop_proms', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'black', 'text-decoration': 'bold', 'padding':'10px'}),
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'black', 'text-decoration': 'bold', 'padding-top':'5px'}),
                                                 
                                                 html.P('patients who filled out at least one pre-op questionnaire', className = 'card-content',
 
-                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '10px'}),
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding-bottom' : '45px'}),
                                                 
                                                 html.P(id = 'postop_proms', className = 'card-content',
 
@@ -503,7 +445,7 @@ row3 = html.Div([
                                                 
                                                 html.P('patients who filled out at least one post-op questionnaire', className = 'card-content',
 
-                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '10px'}),
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding-bottom' : '45px'}),
                                                 
                                                 html.P(id = 'bothproms_final', className = 'card-content',
 
@@ -511,20 +453,17 @@ row3 = html.Div([
                                                 
                                                 html.P('patients who filled out at least one pre-op and one post-op PROMs questionnaire', className = 'card-content',
 
-                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
-                                                
-                                                html.P(id = 'numbothproms', className = 'card-content',
-
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '30px', 'color': 'white', 'text-decoration': 'bold'})
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'})
                                                 
                                                 
 
                                                     ]), 
                             
                                         ])
-                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                        ], body=True, style={'width':'600px', 'height':'550px', 'backgroundColor': 'white'})
                                     ], style={'display': 'inline-block', 'padding': '5px'}
                                     ), 
+                    
                     #COLUMN
                            html.Div([
                                   
@@ -538,11 +477,11 @@ row3 = html.Div([
 
                                                 html.P(id = 'preop_proms_perpt', className = 'card-content',
 
-                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding':'20px'}),
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding-top':'20px'}),
                                                 
                                                  html.P('pre-op questionnaires', className = 'card-content',
 
-                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding-bottom' : '45px'}),
                                                 
                                                 html.P(id = 'postop_proms_perpt', className = 'card-content',
 
@@ -550,7 +489,7 @@ row3 = html.Div([
                                                 
                                                  html.P('post-op questionnaires', className = 'card-content',
 
-                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '5px'}),
+                                                      style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '20px', 'color': 'gray', 'text-decoration': 'normal', 'padding-bottom' : '25px'}),
                                                  
                                                  html.P('*The questionnaires included in our measurements are PROMIS-10, PROMIS physical function, PROMS KOOS, PROMS HOOS, MSK CUSTOM, JOINT FUNCTION & PAIN, PROMIS PAIN INTERFERENCE, MSK BCTI,PROMS RISK ASSESSMENT AND PREDICTION TOOL, MSK QUICK DASH, ANXIETY, DEPRESSION, PROMS MSK LOW BACK PAIN,SUBSTANCE USE DISORDER QUESTIONNAIRE, FALLS SCREENING, PROMIS UPPER EXTREMITY FUNCTION, PROMS MOOR POST-OP CARE GOAL ACHIEVEMENT, PROMS MOOR PRE-OP EXPECTATION CARE GOAL ACHIEVEMENT, PROMS MOOR PRE-OP IMPORTANCE CARE GOAL ACHIEVEMENT', className = 'card-content',
 
@@ -558,30 +497,36 @@ row3 = html.Div([
 
                                                    ]), 
                                        ])
-                                       ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                       ], body=True, style={'width':'500px', 'height':'550px', 'backgroundColor': 'white'})
                                    ], style={'display': 'inline-block', 'padding': '5px'}
                                    ), 
+                           
+                    #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                     html.Div([
+                                        dbc.CardBody([
+
+                                                html.H4(id='card-title-1', children= ['90-Days Patient Readmission Rate'], className = 'card-title',
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                 html.P(id = 'day90read', className = 'card-content',
+                                                       style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '40px', 'color': 'black', 'text-decoration': 'bold', 'padding' : '100px'}),
+                                                 html.P(id = 'day90readtotal', className = 'card-content',
+                                                        style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal', 'padding' : '50px'})
+
+                                                    ])
+                                        ], style={'width':'500px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'500px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ),
                    
                 ], style={'display' : 'flex'}), 
         html.Br()
         ], style={'textAlign' : 'center'})
 
-# surg_info_header = html.Div([
-
-#                               html.Div([
-
-#                                       html.H2([
-
-#                                           "Surgeon Related Data"
-
-#                                               ])
-
-#                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
-
-#                               ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
-
-#row5
-row5 = html.Div([
+#row4
+row4 = html.Div([
     #ROW
         html.Div([
                 #COLUMN
@@ -591,32 +536,77 @@ row5 = html.Div([
                                      html.Div([
                                         dbc.CardBody([
 
+                                                html.H4(id='card-title-1', children= ['Revision'], className = 'card-title',
+
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+
+                                                    ]), 
+                                        dcc.Graph(id = 'proc_revision_pie')
+                                        ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
+                                    ), 
+                     
+                    #COLUMN
+                            html.Div([
+                                html.Div([
+                                 dbc.Card(
+                                        [
+                                        dbc.CardBody([
+                                                        html.H4('Discharge Distribution', className = 'card-title',
+                                                                style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
+                                                    ]),
+                                         dcc.Graph(id = 'discharge_distr_pie')
+                                                 ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'}
+                                         )
+                                        ])
+                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                    ), 
+                            
+                     #COLUMN
+                            html.Div([
+                                   
+                                dbc.Card([
+                                      html.Div([
+                                        dbc.CardBody([
+
                                                 html.H4(id='card-title-1', children= ['Top 10 Comorbidities - based on ICD10 DX'], className = 'card-title',
 
                                                         style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
                                                     ]), 
                                         dcc.Graph(id = 'comorb_bar')
-                                        ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
-                                    ), 
+                                        ], style={'width':'750px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'750px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-right': '100px'}
+                                    )       
+                    
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
+
+#row5
+row5 = html.Div([
+    #ROW
+        html.Div([
+                
                     #COLUMN
                             html.Div([
                                    
                                 dbc.Card([
-                                     html.Div([
+                                      html.Div([
                                         dbc.CardBody([
 
-                                               html.H4(id='card-title-1', children= ['Linked Revision Burden by Diagnosis'], className = 'card-title',
+                                                html.H4(id='card-title-1', children= ['Linked Revision Burden by Diagnosis'], className = 'card-title',
 
-                                                       style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
+                                                        style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
 
-                                                   ]), 
-                                       dcc.Graph(id = 'linked_bar')
-                                       ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-                                        ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-                                    ], style={'display': 'inline-block', 'padding': '5px'}
+                                                    ]), 
+                                        dcc.Graph(id = 'linked_bar')
+                                        ], style={'width':'765px', 'height':'400px', 'background-color': 'white'})
+                                        ], body=True, style={'width':'765px', 'height':'550px', 'backgroundColor': 'white'})
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left':'100px'}
                                     ), 
                     #COLUMN
                            html.Div([
@@ -630,25 +620,16 @@ row5 = html.Div([
 
                                                  ]), 
                                        dcc.Graph(figure=rev_count_line)
-                                       ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-                                       ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
+                                       ], style={'width':'750px', 'height':'400px', 'background-color': 'white'})
+                                       ], body=True, style={'width':'750px', 'height':'550px', 'backgroundColor': 'white'})
                                    ], style={'display': 'inline-block', 'padding': '5px'}
                                    ), 
-                   
-                ], style={'display' : 'flex'}), 
-        html.Br()
-        ], style={'textAlign' : 'center'})
-
-
-#row6
-row6 = html.Div([
-    #ROW
-        html.Div([
-                #COLUMN
+                           
+                     #COLUMN
                             html.Div([
                                    
                                 dbc.Card([
-                                     html.Div([
+                                      html.Div([
                                         dbc.CardBody([
 
                                                 html.H4(id='card-title-1', children= ['90 Day Readmission Rate by Diagnosis'], className = 'card-title',
@@ -659,8 +640,20 @@ row6 = html.Div([
                                         dcc.Graph(id = 'readmit_diags_bar')
                                         ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
                                         ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
-                                    ), 
+                                    ], style={'display': 'inline-block', 'padding': '5px', 'padding-right': '100px'}
+                                    ) 
+                         
+                   
+                ], style={'display' : 'flex'}), 
+        html.Br()
+        ], style={'textAlign' : 'center'})
+
+
+#row6
+row6 = html.Div([
+    #ROW
+        html.Div([
+                
                     #COLUMN
                     #         html.Div([
                                    
@@ -700,32 +693,6 @@ row6 = html.Div([
         ], style={'textAlign' : 'center'})
 
 
-## Procedures and conditions
-
-# proc_info = html.Div([
-
-#                         html.Div([
-
-#                                 html.H5([
-
-#                                         "Procedures and condition related information"
-
-#                                         ])
-
-#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
-
-#                         ], style={'backgroundColor': 'white', 'display': 'inline-block', 'width': '100%'})
-
-
-# proc_total = html.Div([
-
-#                  html.Div([
-
-#                           dcc.Graph(id = 'proc_distr_pie')
-
-#                           ], style={'width': '100%','display': 'inline-block'})
-
-#                 ])
 
 
 ### DROPDOWNS
@@ -771,7 +738,7 @@ row6 = html.Div([
 dropdown_headers = html.Div(
     html.Div(className = 'row', children = [
     
-        html.Div([html.Label(['Provider'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Provider:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(
                       options=[{'label': 'All MGB Data', 'value': 'All'},
                                {'label': 'My Data', 'value': 'Surgeon'}], 
@@ -779,34 +746,34 @@ dropdown_headers = html.Div(
                   ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
                            'font-family':'sans-serif'}),
                  
-        html.Div([html.Label(['Division'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Division:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(
                       options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
                       value='AJRR', id='div_dd', multi=False, clearable = False)
                   ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
                            'font-family':'sans-serif'}),
                  
-        html.Div([html.Label(['Institution'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Institution:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
                   ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
                            'font-family':'sans-serif'}),
                  
-        html.Div([html.Label(['Diagnosis'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Diagnosis:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
                   ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
                            'font-family':'sans-serif'}),
         
-        html.Div([html.Label(['Site'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Site:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
                   ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
                            'font-family':'sans-serif'}),
         
-        html.Div([html.Label(['Procedure Type'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Procedure Type:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
                   ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
                            'font-family':'sans-serif'}),
         
-        html.Div([html.Label(['Encounter Date'], style={'text-align':'center'}), 
+        html.Div([html.Label(['Encounter Date:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.DatePickerRange(id='enc_daterange', 
                                                       min_date_allowed = date(2019,1,1),
                                                       max_date_allowed = date(2021,12,31),
@@ -816,7 +783,7 @@ dropdown_headers = html.Div(
                   ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
                            'font-family':'sans-serif'}),
                  
-        ], style=dict(display='flex')),
+        ], style={'padding-left':'100px','padding-right':'110px','display':'flex'}),
     )
     # html.H4('User or something',style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px', 'text-align':'center'} )])
 
@@ -828,7 +795,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H4('MGB Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H4('MGB Hip and Knee Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
@@ -972,7 +939,6 @@ def set_type_dd_value(available_options):
     Output('day90read', 'children'),
     Output('day90readtotal', 'children'),
     Output('bothproms_final', 'children'),
-    Output('numbothproms', 'children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -1038,7 +1004,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             day90readtotal_output = 'out of {} reported'.format(day90readtotal)
             
             return (total_proc, avg_length_of_stay, stdev_len_of_stay_output, mean_age_output, preop_proms_output, postop_proms_output, preop_proms_perpt_output,
-                    postop_proms_perpt_output, day90read_output, day90readtotal_output, bothproms_final_output, numbothproms)
+                    postop_proms_perpt_output, day90read_output, day90readtotal_output, bothproms_final_output)
         except:  
             return ('', '','', '', '', '', '', '', '', '', '', '')
     else:
@@ -1074,6 +1040,84 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 #         else:
 #             return ''
 
+# @app.callback(
+#     Output('gender_graph','figure'),
+#     Output('pat_age_bar','figure'),
+#     Output('diag_bar','figure'),
+#     Output('proc_bar','figure'),
+#     Output('CCI_bw','figure'),
+#     Output('proc_revision_pie','figure'),
+#     Output('tob_use_bar','figure'),
+#     Output('discharge_distr_pie', 'figure'),
+#     Output('comorb_bar', 'figure'),
+#     Output('linked_bar','figure'),
+#     Output('readmit_diags_bar','figure'),
+#     Input('login-status','data'),
+#     Input('provider_dd','value'),
+#     Input('inst_dd','value'),
+#     Input('diag_dd','value'),
+#     Input('site_dd','value'),
+#     Input('type_dd','value'),
+#     Input('enc_daterange','start_date'),
+#     Input('enc_daterange','end_date'))
+# def update_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
+#     if username in USER_TO_NAME.keys():
+#         try: 
+#             if provider == 'Surgeon':
+#                 #USER_TO_NAME mapped to surgeon first and last name
+#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
+#                 cond1 = df.SurFirstName == sur_first_last[0]
+#                 cond2 = df.SurLastName == sur_first_last[1]
+#                 data = df.loc[cond1 & cond2]
+#             else:
+#                 data = df
+                
+                
+#             if 'All' in inst:
+#                 data = data
+#             else:
+#                 data = data[data.Hosp_name == inst]
+             
+#             #TODO: this errors just once when trying to delete the all diagnoses option --> why?
+#             if 'All' in diag:
+#                 data = data
+#             else:
+#                 data = data[data.DX_Main_Category.isin(diag)]
+                
+#             if 'All' in site:
+#                 data = data
+#             else:
+#                 data = data[data.Procedure_site == site]
+                
+#             if 'All' in proc:
+#                 data = data
+#             else:
+#                 data = data[data.Main_CPT_category.isin(proc)]   
+                
+#             dateless_data = data.copy()
+            
+#             #Filter by date range
+#             data.Surg_date = pd.to_datetime(data.Surg_date)
+#             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
+            
+#             #CREATE GRAPHS
+#             (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
+#             # df2 = px.data.election() # replace with your own data source
+#             # geojson = px.data.election_geojson()
+#             # fig = px.choropleth(
+#             #     df2, geojson=geojson, 
+#             #     locations="district", featureidkey="properties.district",
+#             #     projection="mercator", range_color=[0, 6500])
+#             # fig.update_geos(fitbounds="locations", visible=False)
+#             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+            
+          
+#             return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
+        
+#         except:
+#             return ('', '','','','','','', '', '','', '')
+#     else:
+#         return ('', '','','','','','', '', '','', '')
 
 @app.callback(
     Output('gender_graph','figure'),
@@ -1085,7 +1129,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     Output('tob_use_bar','figure'),
     Output('discharge_distr_pie', 'figure'),
     Output('comorb_bar', 'figure'),
-    Output('linked_bar','figure'),
+    Output('linked_bar', 'figure'),
     Output('readmit_diags_bar','figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
@@ -1105,27 +1149,27 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
                 cond2 = df.SurLastName == sur_first_last[1]
                 data = df.loc[cond1 & cond2]
             else:
-                data = df
+                data = df.copy()
                 
                 
             if 'All' in inst:
-                data = data
+                data = data.copy()
             else:
                 data = data[data.Hosp_name == inst]
              
             #TODO: this errors just once when trying to delete the all diagnoses option --> why?
             if 'All' in diag:
-                data = data
+                data = data.copy()
             else:
                 data = data[data.DX_Main_Category.isin(diag)]
                 
             if 'All' in site:
-                data = data
+                data = data.copy()
             else:
                 data = data[data.Procedure_site == site]
                 
             if 'All' in proc:
-                data = data
+                data = data.copy()
             else:
                 data = data[data.Main_CPT_category.isin(proc)]   
                 
@@ -1150,7 +1194,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
         
         except:
-            return ('', '','','','','','', '', '','', '')
+            return ('', '','','','','','', '', '','','')
     else:
         return ('', '','','','','','', '', '','', '')
         

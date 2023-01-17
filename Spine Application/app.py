@@ -582,106 +582,7 @@ row3 = html.Div([
         html.Br()
         ], style={'textAlign' : 'center'})
 
-# surg_info_header = html.Div([
 
-#                               html.Div([
-
-#                                       html.H2([
-
-#                                           "Surgeon Related Data"
-
-#                                               ])
-
-#                                       ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
-
-#                               ], style={'backgroundColor': 'rgb(248,244,244)', 'display': 'inline-block','width':'100%'})
-
-#row5
-# row5 = html.Div([
-#     #ROW
-#         html.Div([
-#                 #COLUMN
-#                             html.Div([
-                                   
-#                                 dbc.Card([
-#                                      html.Div([
-#                                         dbc.CardBody([
-
-#                                                 html.H4(id='card-title-1', children= ['Top 10 Comorbidities - based on ICD10 DX'], className = 'card-title',
-
-#                                                         style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-
-#                                                     ]), 
-#                                         dcc.Graph(id = 'comorb_bar')
-#                                         ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-#                                         ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-#                                     ], style={'display': 'inline-block', 'padding': '5px', 'padding-left': '100px'}
-#                                     ), 
-#                     #COLUMN
-                            # html.Div([
-                                   
-                            #     dbc.Card([
-                            #          html.Div([
-                            #             dbc.CardBody([
-
-                            #                    html.H4(id='card-title-1', children= ['Linked Revision Burden by Diagnosis'], className = 'card-title',
-
-                            #                            style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-
-                            #                        ]), 
-                            #            # dcc.Graph(id = 'linked_bar')
-                            #            ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-                            #             ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-                            #         ], style={'display': 'inline-block', 'padding': '5px'}
-                            #         ), 
-                    #COLUMN
-                           # html.Div([
-                                  
-                           #     dbc.Card([
-                           #          html.Div([
-                           #             dbc.CardBody([
-
-                           #                    html.H4(id='card-title-1', children= ['Revision Burden by Year'], className = 'card-title',
-                           #                            style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'}),
-
-                           #                       ]), 
-                           #             # dcc.Graph(figure=rev_count_line)
-                           #             ], style={'width':'700px', 'height':'400px', 'background-color': 'white'})
-                           #             ], body=True, style={'width':'700px', 'height':'550px', 'backgroundColor': 'white'})
-                           #         ], style={'display': 'inline-block', 'padding': '5px'}
-                           #         ), 
-                   
-        #         ], style={'display' : 'flex'}), 
-        # html.Br()
-        # ], style={'textAlign' : 'center'})
-
-
-## Procedures and conditions
-
-# proc_info = html.Div([
-
-#                         html.Div([
-
-#                                 html.H5([
-
-#                                         "Procedures and condition related information"
-
-#                                         ])
-
-#                                 ], style={'width': '100%', 'display': 'inline-block', 'text-align' : 'center', 'font-family':'sans-serif'})
-
-#                         ], style={'backgroundColor': 'white', 'display': 'inline-block', 'width': '100%'})
-
-
-# proc_total = html.Div([
-
-#                  html.Div([
-
-#                           dcc.Graph(id = 'proc_distr_pie')
-
-#                           ], style={'width': '100%','display': 'inline-block'})
-
-#                 ])
 
 
 ### DROPDOWNS
@@ -722,6 +623,52 @@ filter_dropdowns = html.Div([
     html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
     ], style={'text-align': 'center'})
 
+# Dropdown headers
+dropdown_headers = html.Div(
+    html.Div(className = 'row', children = [
+    
+        html.Div([html.Label(['Provider'], style={'text-align':'center'}), 
+                  dcc.Dropdown(
+                      options=[{'label': 'All MGB Data', 'value': 'All'},
+                               {'label': 'My Data', 'value': 'Surgeon'}], 
+                      value='All', id='provider_dd', clearable = False)
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'13.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Division'], style={'text-align':'center'}), 
+                  dcc.Dropdown(
+                      options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
+                      value='AJRR', id='div_dd', multi=False, clearable = False)
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'13.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Institution'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'13.5%',
+                           'font-family':'sans-serif'}),
+                 
+        html.Div([html.Label(['Diagnosis'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'17.625%',
+                           'font-family':'sans-serif'}),
+        
+        html.Div([html.Label(['Procedure Type'], style={'text-align':'center'}), 
+                  dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'17.625%',
+                           'font-family':'sans-serif'}),
+        
+        html.Div([html.Label(['Encounter Date'], style={'text-align':'center'}), 
+                  dcc.DatePickerRange(id='enc_daterange', 
+                                                      min_date_allowed = date(2019,1,1),
+                                                      max_date_allowed = date(2021,12,31),
+                                                      initial_visible_month = date(2019,1,1),
+                                                      start_date = date(2019,1,1),
+                                                      end_date = date(2021,12,31))
+                  ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
+                           'font-family':'sans-serif'}),
+                 
+        ], style={'padding-left':'100px','padding-right':'110px','display':'flex'}),
+    )
 
 #####THIS IS THE MAIN DASHBOARD PAGE LAYOUT
 
@@ -731,11 +678,11 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H3('FIXUS Spine Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H3('MGB Spine Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
-                                                          filter_dropdowns,
+                                                          dropdown_headers,
                                                           
                                                           html.Br(),
                     
