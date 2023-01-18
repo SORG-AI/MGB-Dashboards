@@ -62,17 +62,17 @@ def create_time_ind_graphs(all_data):
     df_count = df_his.year.value_counts().to_frame(name='Number of Procedures')
     df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
     counts = df_count.join(df_rev_count)
-    counts['Revision Rate'] = round(counts['Number of Revisions'] / counts['Number of Procedures'] * 100, 2)
+    counts['Revision Rate (%)'] = round(counts['Number of Revisions'] / counts['Number of Procedures'] * 100, 2)
 
     counts = counts[:3]
     counts = counts.sort_index()
 
-    rev_count_line = px.line(counts, x= ['2019','2020','2021'], y='Revision Rate',
+    rev_count_line = px.line(counts, x= ['2019','2020','2021'], y='Revision Rate (%)',
                              color_discrete_sequence=(['crimson']),
                              markers=True, labels={'x': 'Year'},
                              range_y=[0,15])
     
-    rev_count_bar = px.bar(counts, y='Revision Rate',
+    rev_count_bar = px.bar(counts, y='Revision Rate (%)',
                              color_discrete_sequence=(['#8b0000']),
                              labels={'index': 'Year'})
     
@@ -245,9 +245,9 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
         linked_revision_counts.index=['Infection','Wound Disruption','Instability','Loosening','Mechanical Complications','Other']
     else:
         linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of Procedures')
-        linked_revision_counts['Revision Rate'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
+        linked_revision_counts['Revision Rate (%)'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
         
-    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},
+    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},
                         color_discrete_sequence=(['#8b0000']))
     
     
@@ -260,7 +260,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
     
-    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},title = '90 Day Readmission Rate by Diagnosis',
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},
                           color_discrete_sequence=(['#8b0000']))
     
     

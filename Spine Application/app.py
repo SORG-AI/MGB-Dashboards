@@ -637,7 +637,7 @@ dropdown_headers = html.Div(
                  
         html.Div([html.Label(['Division'], style={'text-align':'center'}), 
                   dcc.Dropdown(
-                      options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
+                      options=[{'label': 'Spine', 'value': 'AJRR'}],
                       value='AJRR', id='div_dd', multi=False, clearable = False)
                   ],style={'padding-left':'10px','padding-right':'10px','width':'13.5%',
                            'font-family':'sans-serif'}),
