@@ -11,6 +11,7 @@ import pandas as pd
 import plotly.express as px
 import statistics
 import numpy as np
+import plotly.graph_objects as go
 
 def nongraph(all_data):
     
@@ -261,9 +262,10 @@ def create_current_graphs(all_data, start_date, end_date):
     
     readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
     
-    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'ICD_DSC_1_rev', 'ICD_DSC_1_rev':'Diagnosis'},
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Revision Diagnosis', 'ICD_DSC_1_rev':'Diagnosis'},
                           color_discrete_sequence=(['#8b0000']))
     
+    readmit_diags_bar
     
     return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, readmit_diags_bar)
 
