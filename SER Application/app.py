@@ -79,7 +79,7 @@ fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 #removing rows with nan in dx_main_diagnosis so that code doesn't error
-df = df.dropna(subset='DX_Main_Category')
+df = df.dropna(subset='DX_prim')
 
 
 #try creating surgeon list here

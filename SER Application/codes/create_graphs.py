@@ -254,14 +254,14 @@ def create_current_graphs(all_data, start_date, end_date):
     
     #Graph readmission diagnoses
     readmits = all_data[all_data['Surg_related_readmit'] == 'True']
-    readmit_diags = readmits['Main_DX_Category_Rev']
+    readmit_diags = readmits['ICD_DSC_1_rev']
     readmit_diags = readmit_diags.value_counts().to_frame(name = 'Number of Procedures')
     
     all_readmits_num = len(all_data[all_data['All_diag_readmit'] == 'True'])
     
     readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
     
-    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'ICD_DSC_1_rev', 'ICD_DSC_1_rev':'Diagnosis'},
                           color_discrete_sequence=(['#8b0000']))
     
     
