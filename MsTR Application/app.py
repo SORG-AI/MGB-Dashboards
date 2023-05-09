@@ -28,7 +28,7 @@ from datetime import date
 from codes.create_graphs import create_current_graphs, nongraph  #, create_time_ind_graphs
 
 
-#### FIXUS BEGINS
+#### APP BEGINS
 PATHS = {
     'images': os.path.join('images'),
     'app_data' : os.path.join('data','app_data'),
