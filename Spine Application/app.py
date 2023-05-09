@@ -28,7 +28,7 @@ from datetime import date
 from codes.create_graphs import create_current_graphs, nongraph, create_time_ind_graphs
 
 
-#### FIXUS BEGINS
+#### APP BEGINS
 PATHS = {
     'images': os.path.join('images'),
     'app_data' : os.path.join('data','app_data'),
@@ -102,7 +102,7 @@ print(USER_LIST)
 # Exposing the Flask Server to enable configuring it for logging in
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server,
-                title='Fixus App v0.1.0',
+                title='App v0.1.0',
                 update_title='Cooking awesomeness...',
                 suppress_callback_exceptions=True)
 
@@ -134,7 +134,7 @@ def load_user(username):
 #### User status management views
 # Login screen
 login = html.Div([dcc.Location(id='url_login', refresh=True),
-                  html.H2('''Welcome to FIXUS!''', id='h1'),
+                  html.H2('''Welcome!''', id='h1'),
                   html.H2('''Please log in to continue:''', id='h2'),
                   dcc.Input(placeholder='Enter your username',
                             type='text', id='uname-box'),
@@ -211,7 +211,7 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('FIXUS', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+    html.H1('MGB Spine Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
                        'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
