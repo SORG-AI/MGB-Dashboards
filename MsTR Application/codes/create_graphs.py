@@ -28,27 +28,27 @@ def nongraph(all_data):
     
     stdev_age = round(statistics.stdev(all_data.Pat_age))
     
-    # preop_proms_pts = round(all_data.AnyPROM_pre.values.sum() / len(all_data.AnyPROM_pre) * 100)
-    # postop_proms_pts = round(all_data.AnyPROM_post.values.sum() / len(all_data.AnyPROM_post) * 100)
+    preop_proms_pts = round(all_data.AnyPROM_pre.values.sum() / len(all_data.AnyPROM_pre) * 100)
+    postop_proms_pts = round(all_data.AnyPROM_post.values.sum() / len(all_data.AnyPROM_post) * 100)
     
-    # preop_proms_perpt = round(all_data.Preop_num.mean(),1)
-    # postop_proms_perpt = round(all_data.Postop_num.mean(),1)
+    preop_proms_perpt = round(all_data.Preop_num.mean(),1)
+    postop_proms_perpt = round(all_data.Postop_num.mean(),1)
     
 
-    # all_data.All_diag_readmit = all_data.All_diag_readmit.fillna(False)
-    # day90readtotal = all_data.All_diag_readmit.value_counts().sum()
+    all_data.All_diag_readmit = all_data.All_diag_readmit.fillna(False)
+    day90readtotal = all_data.All_diag_readmit.value_counts().sum()
     
-    # if all_data.All_diag_readmit.any(axis='rows'):
-    #     day90read =  all_data.All_diag_readmit.value_counts()['True']
-    # else:
-    #     day90read = 0
+    if all_data.All_diag_readmit.any(axis='rows'):
+        day90read =  all_data.All_diag_readmit.value_counts()['True']
+    else:
+        day90read = 0
     
-    # bothproms = all_data.AnyPROM_pre & all_data.AnyPROM_post
-    # bothproms_final = round(bothproms.values.sum() / len(bothproms) * 100)
-    # numbothproms = round(bothproms.values.sum())
+    bothproms = all_data.AnyPROM_pre & all_data.AnyPROM_post
+    bothproms_final = round(bothproms.values.sum() / len(bothproms) * 100)
+    numbothproms = round(bothproms.values.sum())
     
-    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age)#, preop_proms_pts, postop_proms_pts,
-            #preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts,
+            preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
 
 
 # def create_time_ind_graphs(all_data):
