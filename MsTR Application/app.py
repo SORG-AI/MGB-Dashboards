@@ -703,44 +703,6 @@ row6 = html.Div([
 
 
 ### DROPDOWNS
-
-# provider_dropdown = dcc.Dropdown(
-#     options=[{'label': 'All MGB Data', 'value': 'All'},
-#              {'label': 'My Data', 'value': 'Surgeon'}], 
-#     value='All', id='provider_dd', clearable = False)
-
-# div_dropdown = dcc.Dropdown(
-#     options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
-#     value='AJRR', id='div_dd', multi=False, clearable = False)
-
-# inst_dropdown = dcc.Dropdown(id='inst_dd', multi=False, clearable = False, value='All')
-
-# diag_dropdown = dcc.Dropdown(id='diag_dd', multi=True, clearable = False, value='All')
-
-# site_dropdown = dcc.Dropdown(id='site_dd', multi=False, clearable = False, value='All')
-
-# type_dropdown = dcc.Dropdown(id='type_dd', multi=True, clearable = False, value='All')
-
-# enc_daterange = dcc.DatePickerRange(id='enc_daterange', 
-#                                     min_date_allowed = date(2019,1,1),
-#                                     max_date_allowed = date(2021,12,31),
-#                                     initial_visible_month = date(2019,1,1),
-#                                     start_date = date(2019,1,1),
-#                                     end_date = date(2021,12,31))
-
-
-
-# filter_dropdowns = html.Div([
-#     html.Div([provider_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-left':'20px','padding-right':'20px'}),
-#     html.Div([div_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-#     html.Div([inst_dropdown], style={'width':'200px','height':'20px','display':'inline-block', 'font-family':'sans-serif', 'padding-right':'20px'}),
-#     html.Div([diag_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-#     html.Div([site_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-#     html.Div([type_dropdown], style={'width':'350px','height':'20px','display':'inline-block', 'font-family':'sans-serif','padding-right':'20px'}),
-#     html.Div([enc_daterange], style={'display':'inline-block','font-family':'sans-serif'})
-#     ], style={'text-align': 'center'})
-
-
 # Dropdown headers
 dropdown_headers = html.Div(
     html.Div(className = 'row', children = [
@@ -1019,113 +981,6 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 
 
 #Charts and graphs
-# @app.callback(
-#     Output('rev_count_line', 'figure'),
-#     Input('login-status','data'),
-#     Input('provider_dd','value'),
-#     Input('inst_dd','value'),
-#     Input('diag_dd','value'),
-#     Input('site_dd','value'),
-#     Input('type_dd','value'),
-#     Input('enc_daterange','start_date'),
-#     Input('enc_daterange','end_date'))
-# def update_ind_graphs(df):
-#     if username in USER_TO_NAME.keys():
-#         try: 
-#             if provider == 'Surgeon':
-#                 #USER_TO_NAME mapped to surgeon first and last name
-#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-#                 cond1 = df.SurFirstName == sur_first_last[0]
-#                 cond2 = df.SurLastName == sur_first_last[1]
-#                 data = df.loc[cond1 & cond2]
-#             else:
-#                 data = df
-#(rev_count_line) = create_time_ind_graphs(data)
-#             return rev_count_line
-#         except:
-#             return ''
-#         else:
-#             return ''
-
-# @app.callback(
-#     Output('gender_graph','figure'),
-#     Output('pat_age_bar','figure'),
-#     Output('diag_bar','figure'),
-#     Output('proc_bar','figure'),
-#     Output('CCI_bw','figure'),
-#     Output('proc_revision_pie','figure'),
-#     Output('tob_use_bar','figure'),
-#     Output('discharge_distr_pie', 'figure'),
-#     Output('comorb_bar', 'figure'),
-#     Output('linked_bar','figure'),
-#     Output('readmit_diags_bar','figure'),
-#     Input('login-status','data'),
-#     Input('provider_dd','value'),
-#     Input('inst_dd','value'),
-#     Input('diag_dd','value'),
-#     Input('site_dd','value'),
-#     Input('type_dd','value'),
-#     Input('enc_daterange','start_date'),
-#     Input('enc_daterange','end_date'))
-# def update_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
-#     if username in USER_TO_NAME.keys():
-#         try: 
-#             if provider == 'Surgeon':
-#                 #USER_TO_NAME mapped to surgeon first and last name
-#                 sur_first_last = USER_TO_NAME[username].rsplit(' ',1)
-#                 cond1 = df.SurFirstName == sur_first_last[0]
-#                 cond2 = df.SurLastName == sur_first_last[1]
-#                 data = df.loc[cond1 & cond2]
-#             else:
-#                 data = df
-                
-                
-#             if 'All' in inst:
-#                 data = data
-#             else:
-#                 data = data[data.Hosp_name == inst]
-             
-#             #TODO: this errors just once when trying to delete the all diagnoses option --> why?
-#             if 'All' in diag:
-#                 data = data
-#             else:
-#                 data = data[data.Main_DX_Category.isin(diag)]
-                
-#             if 'All' in site:
-#                 data = data
-#             else:
-#                 data = data[data.Procedure_site == site]
-                
-#             if 'All' in proc:
-#                 data = data
-#             else:
-#                 data = data[data.Main_CPT_category.isin(proc)]   
-                
-#             dateless_data = data.copy()
-            
-#             #Filter by date range
-#             data.Surg_date = pd.to_datetime(data.Surg_date)
-#             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
-            
-#             #CREATE GRAPHS
-#             (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
-#             # df2 = px.data.election() # replace with your own data source
-#             # geojson = px.data.election_geojson()
-#             # fig = px.choropleth(
-#             #     df2, geojson=geojson, 
-#             #     locations="district", featureidkey="properties.district",
-#             #     projection="mercator", range_color=[0, 6500])
-#             # fig.update_geos(fitbounds="locations", visible=False)
-#             # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-            
-          
-#             return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
-        
-#         except:
-#             return ('', '','','','','','', '', '','', '')
-#     else:
-#         return ('', '','','','','','', '', '','', '')
-
 @app.callback(
     Output('gender_graph','figure'),
     Output('pat_age_bar','figure'),
@@ -1188,11 +1043,11 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc) = create_current_graphs(data, dateless_data, start_date, end_date, counties)#, linked_bar, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc) = create_current_graphs(data, dateless_data, start_date, end_date, counties)
 
             
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc)#, linked_bar, readmit_diags_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc)
         
         except:
             return ('', '','','','','','', '', '', '')

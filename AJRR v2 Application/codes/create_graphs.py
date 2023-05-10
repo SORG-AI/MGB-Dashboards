@@ -22,7 +22,7 @@ def nongraph(all_data):
     #avergae length of stay, aka the average of the column named Lenght of Stay
     avg_length_of_stay = round(all_data.Len_stay.mean())
     
-    stdev_len_of_stay = round(statistics.stdev(all_data.Len_stay))
+    stdev_len_of_stay = round(statistics.stdev(all_data.Len_stay.dropna()))
     
     avg_pat_age = round(all_data.Pat_age.mean())
     
@@ -72,16 +72,16 @@ def create_time_ind_graphs(all_data):
                              markers=True, labels={'x': 'Year'},
                              range_y=[0,15])
     
-    rev_count_bar = px.bar(counts, y='Revision Rate (%)',
-                             color_discrete_sequence=(['#8b0000']),
-                             labels={'index': 'Year'})
+    # rev_count_bar = px.bar(counts, y='Revision Rate (%)',
+    #                          color_discrete_sequence=(['#8b0000']),
+    #                          labels={'index': 'Year'})
     
     
     return (rev_count_line)
 
 
 
-def create_current_graphs(all_data, dateless_data, start_date, end_date):
+def create_current_graphs(all_data, dateless_data, start_date, end_date, counties):
 
     # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
 
@@ -99,33 +99,33 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     # std_age= statistics.stdev(df_age)
     pat_age_bar = px.bar(df_age, y = "Number of Patients", 
                             labels = {'index':'Age', "Number of patients": "Number of Patients"},
-                            color_discrete_sequence=(['Crimson']))
+                            color_discrete_sequence=(['#A70F15']))
    
     #gender distribution graph
     gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, 
-                          color_discrete_sequence=(['#ff9999', '#dc143c']))
+                          color_discrete_sequence=(['#77030F', '#D52121']))
     #Distribution of procedures
-    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
-                                        '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
+    # proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+    #                                     '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
       
     #Diagnoses
-    df_diag = all_data.DX_Main_Category.value_counts().to_frame(name='Number of Procedures')   
+    df_diag = all_data.Main_DX_Category.value_counts().to_frame(name='Number of Procedures')   
     diag_bar = px.bar(df_diag.head(10), y = 'Number of Procedures',   labels = {"index": "Diagnosis Type"},
-                      color_discrete_sequence=(['Crimson']))
+                      color_discrete_sequence=(['#A70F15']))
     
     
     #Procedures
     df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of Procedures')
     proc_bar = px.bar(df_proc, y =  'Number of Procedures',  labels={'index': 'Type of Procedure- based on CPT'}, 
-                      color_discrete_sequence=(['Crimson']))
+                      color_discrete_sequence=(['#A70F15']))
     
     #CCI plot
     #Adding a CCI box and whiskers plot
-    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#ff9999', '#dc143c'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
+    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#77030F', '#D52121'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
    
     #Parse only revision data
     rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
-    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category,  color_discrete_sequence=(['Crimson']))
+    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category,  color_discrete_sequence=(['#A70F15']))
     
 
     # tableBMI = dash_table.DataTable(
@@ -143,7 +143,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     
     tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of Procedures')
     tob_use_bar = px.bar(tob_use.head(3), y = 'Number of Procedures', labels = {'index': 'Tobacco Use History'},
-                          color_discrete_sequence=(['#8b0000']))
+                          color_discrete_sequence=(['#A70F15']))
 
     #
     discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr,
@@ -218,7 +218,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
     comorb = df_ICD.head(10)
     comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Procedures'},
-                          color_discrete_sequence=(['#8b0000']))
+                          color_discrete_sequence=(['#A70F15']))
     
     
     #FIND LINKED CASES
@@ -238,17 +238,17 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
             linked_revisions = pd.concat([linked_revisions,linked_case])
     
     #Graph linked cases
-    # linked_pie = px.pie(linked_revisions.DX_Main_Category, names = linked_revisions.DX_Main_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
+    # linked_pie = px.pie(linked_revisions.Main_DX_Category, names = linked_revisions.Main_DX_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
     if len(linked_revisions) == 0:
         empty_values=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
         linked_revision_counts = pd.DataFrame(empty_values,columns=['Number of Procedures','Revision Rate'])
         linked_revision_counts.index=['Infection','Wound Disruption','Instability','Loosening','Mechanical Complications','Other']
     else:
-        linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of Procedures')
+        linked_revision_counts = linked_revisions.Main_DX_Category.value_counts().to_frame(name = 'Number of Procedures')
         linked_revision_counts['Revision Rate (%)'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
         
-    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},
-                        color_discrete_sequence=(['#8b0000']))
+    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'Main_DX_Category', 'Main_DX_Category':'Main Diagnosis Category'},
+                        color_discrete_sequence=(['#A70F15']))
     
     
     #Graph readmission diagnoses
@@ -261,9 +261,25 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date):
     readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
     
     readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},
-                          color_discrete_sequence=(['#8b0000']))
+                          color_discrete_sequence=(['#A70F15']))
     
     
-    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar)
+    # Patient location
+    fips_count = all_data['FipsCD'].value_counts().to_frame()
+    fips_count['FIPS'] = fips_count.index
+    # fips_count = fips_count.rename(columns={0:'Patients'})
+    final_fips_count = fips_count.groupby(fips_count['FIPS']).aggregate({'FIPS':'first', 'FipsCD':'sum'})
+    
+   
+    pat_loc = px.choropleth(final_fips_count, geojson=counties, locations='FIPS', color='FipsCD',
+                                color_continuous_scale="Reds",
+                                # range_color=(0, 81),
+                                scope="usa",
+                                labels={'FipsCD':'Patients'}
+                              )
+    pat_loc.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    pat_loc.update_traces(marker_line_width=0.2)
+    
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar, pat_loc)
 
     
