@@ -72,7 +72,12 @@ file_name = drivestem + '/AAOS/ASR/Data/app_data_final.pkl'
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
-
+#creating file path for FIPS to location
+fips_filename = drivestem + '/AAOS/General/Documentation/Processing Tables/geojson-counties-fips.json'
+from urllib.request import urlopen
+import json
+with open(fips_filename) as json_file:
+    counties = json.load(json_file)
 
 #try creating surgeon list here
 surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
@@ -212,7 +217,7 @@ app.layout = post_login_content
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
     html.H1('MGB Spine Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
-                       'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
+                       'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': '#A70F15'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
     html.Div([
@@ -327,7 +332,7 @@ row1 = html.Div([
                                                         html.H4('Patient Location Distribution', className = 'card-title',
                                                                 style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         html.Embed(src ="https://www.google.com/maps/d/embed?mid=1N_D7F1_1GbzH0YIRMgE8bOBSvyAtyfw&ehbc=2E312F", width= '600px', height= '465px')
+                                         dcc.Graph(id = 'pat_loc')
                                                  ], body=True, style={'width':'800px', 'height':'565px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -929,6 +934,7 @@ def update_pat_info(username, provider, inst, diag, proc, start_date, end_date):
     Output('tob_use_bar','figure'),
     Output('discharge_distr_pie', 'figure'),
     Output('comorb_bar', 'figure'),
+    Output('pat_loc','figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
     Input('inst_dd','value'),
@@ -978,23 +984,15 @@ def update_graphs(username, provider, inst, diag, proc, start_date, end_date):
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
-            # df2 = px.data.election() # replace with your own data source
-            # geojson = px.data.election_geojson()
-            # fig = px.choropleth(
-            #     df2, geojson=geojson, 
-            #     locations="district", featureidkey="properties.district",
-            #     projection="mercator", range_color=[0, 6500])
-            # fig.update_geos(fitbounds="locations", visible=False)
-            # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc) = create_current_graphs(data, dateless_data, start_date, end_date, counties)
             
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc)
         
         except:
-            return ('', '','','','','','', '')
+            return ('', '','','','','','', '', '')
     else:
-        return ('', '','','','','','', '')
+        return ('', '','','','','','', '', '')
         
 
 # Main router

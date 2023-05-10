@@ -4,6 +4,8 @@
 Created on Fri Aug  5 09:58:07 2022
 
 @author: kbdetels
+
+MsTR
 """
 from dash import dash_table
 import pandas as pd
@@ -105,8 +107,8 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date, countie
     gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, 
                           color_discrete_sequence=(['#77030F', '#D52121']))
     #Distribution of procedures
-    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
-                                        '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
+    # proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+    #                                     '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
       
     #Diagnoses
     df_diag = all_data.Main_DX_Category.value_counts().to_frame(name='Number of Procedures')   

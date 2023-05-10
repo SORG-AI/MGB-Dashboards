@@ -1189,14 +1189,7 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             
             #CREATE GRAPHS
             (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc) = create_current_graphs(data, dateless_data, start_date, end_date, counties)#, linked_bar, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date)
-            # df2 = px.data.election() # replace with your own data source
-            # geojson = px.data.election_geojson()
-            # fig = px.choropleth(
-            #     df2, geojson=geojson, 
-            #     locations="district", featureidkey="properties.district",
-            #     projection="mercator", range_color=[0, 6500])
-            # fig.update_geos(fitbounds="locations", visible=False)
-            # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
             
           
             return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc)#, linked_bar, readmit_diags_bar)
