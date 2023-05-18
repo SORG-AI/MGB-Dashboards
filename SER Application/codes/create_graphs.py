@@ -74,16 +74,16 @@ def create_time_ind_graphs(all_data):
                              markers=True, labels={'x': 'Year'},
                              range_y=[0,15])
     
-    rev_count_bar = px.bar(counts, y='Revision Rate (%)',
-                             color_discrete_sequence=(['#8b0000']),
-                             labels={'index': 'Year'})
+    # rev_count_bar = px.bar(counts, y='Revision Rate (%)',
+    #                          color_discrete_sequence=(['#8b0000']),
+    #                          labels={'index': 'Year'})
     
     
     return (rev_count_line)
 
 
 
-def create_current_graphs(all_data, start_date, end_date):
+def create_current_graphs(all_data, start_date, end_date, counties):
 
     # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
 
@@ -265,8 +265,21 @@ def create_current_graphs(all_data, start_date, end_date):
     readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Revision Diagnosis', 'ICD_DSC_1_rev':'Diagnosis'},
                           color_discrete_sequence=(['#8b0000']))
     
-    readmit_diags_bar
+    fips_count = all_data['FipsCD'].value_counts().to_frame()
+    fips_count['FIPS'] = fips_count.index
+    # fips_count = fips_count.rename(columns={0:'Patients'})
+    final_fips_count = fips_count.groupby(fips_count['FIPS']).aggregate({'FIPS':'first', 'FipsCD':'sum'})
     
-    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, readmit_diags_bar)
+    pat_loc = px.choropleth(final_fips_count, geojson=counties, locations='FIPS', color='FipsCD',
+                                color_continuous_scale="Reds",
+                                # range_color=(0, 81),
+                                scope="usa",
+                                labels={'FipsCD':'Patients'}
+                              )
+    pat_loc.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    pat_loc.update_traces(marker_line_width=0.2)
+    
+    
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar)
 
     

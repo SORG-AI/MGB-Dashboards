@@ -320,7 +320,7 @@ row1 = html.Div([
                                                                 style = {'textAlign':'center', 'font-family':'sans-serif', 'font-size': '25px', 'color': 'gray', 'text-decoration': 'normal'} 
                                                                 )
                                                     ]),
-                                         dcc.Graph(id = 'pat_age_bar')
+                                        dcc.Graph(id = 'pat_age_bar')
                                                  ], body=True, style={'width':'600px', 'height':'580px', 'backgroundColor': 'white'},
                                          )
                                         ])
@@ -782,9 +782,9 @@ page_1_layout = html.Div([
                                                                                                         
                                                           row4, 
                                                           
-                                                          row5,
+                                                          # row5,
                                                           
-                                                          row6
+                                                          # row6
                                                                                                                       
                                                           #surg_info_header,
     

@@ -74,13 +74,19 @@ drivestem = drivestem.replace('\\AAOS\\General\\Code',"")
 print("drive stem is " + drivestem)
 
 # # load in app data
-file_name = drivestem + '/AAOS/SER/Data/2021Q1-2021Q4/SER_Shoulder Arthroplasty_2021Q1-2021Q4_app_data.pkl'
+file_name = drivestem + '/AAOS/SER/Data/app_data_final.pkl'
 fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 #removing rows with nan in dx_main_diagnosis so that code doesn't error
 df = df.dropna(subset='DX_prim')
 
+#creating file path for FIPS to location
+fips_filename = drivestem + '/AAOS/General/Documentation/Processing Tables/geojson-counties-fips.json'
+from urllib.request import urlopen
+import json
+with open(fips_filename) as json_file:
+    counties = json.load(json_file)
 
 #try creating surgeon list here
 surgeons = df.SurFirstName.astype(str) + ' ' +df.SurLastName.astype(str)
@@ -335,7 +341,7 @@ row1 = html.Div([
                                                         html.H4('Patient Location Distribution', className = 'card-title',
                                                                 style ={'padding-top': '10px', 'textAlign': 'center','color': '#c6c3c3', 'font-family':'sans-serif', 'font-size' : '25px'})
                                                     ]),
-                                         html.Embed(src ="https://www.google.com/maps/d/embed?mid=1N_D7F1_1GbzH0YIRMgE8bOBSvyAtyfw&ehbc=2E312F", width= '600px', height= '465px')
+                                        dcc.Graph(id = 'pat_loc')
                                                  ], body=True, style={'width':'800px', 'height':'580px', 'backgroundColor': 'white'}
                                          )
                                         ])
@@ -782,10 +788,10 @@ dropdown_headers = html.Div(
         html.Div([html.Label(['Encounter Date:'], style={'text-align':'center', 'padding-left':'5px'}), 
                   dcc.DatePickerRange(id='enc_daterange', 
                                                       min_date_allowed = date(2019,1,1),
-                                                      max_date_allowed = date(2021,12,31),
+                                                      max_date_allowed = date(2022,12,31),
                                                       initial_visible_month = date(2019,1,1),
                                                       start_date = date(2019,1,1),
-                                                      end_date = date(2021,12,31))
+                                                      end_date = date(2022,12,31))
                   ],style={'padding-left':'10px','padding-right':'10px','width':'15.625%',
                            'font-family':'sans-serif'}),
                  
@@ -1135,6 +1141,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     Output('tob_use_bar','figure'),
     Output('discharge_distr_pie', 'figure'),
     Output('comorb_bar', 'figure'),
+    Output('pat_loc','figure'),
     #Output('linked_bar', 'figure'),
     Output('readmit_diags_bar','figure'),
     Input('login-status','data'),
@@ -1186,18 +1193,10 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, readmit_diags_bar) = create_current_graphs(data, start_date, end_date)
-            # df2 = px.data.election() # replace with your own data source
-            # geojson = px.data.election_geojson()
-            # fig = px.choropleth(
-            #     df2, geojson=geojson, 
-            #     locations="district", featureidkey="properties.district",
-            #     projection="mercator", range_color=[0, 6500])
-            # fig.update_geos(fitbounds="locations", visible=False)
-            # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-            
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar) = create_current_graphs(data, start_date, end_date, counties)
+
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, readmit_diags_bar)
+            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar)
         
         except:
             return ('', '','','','','','', '', '','','')
