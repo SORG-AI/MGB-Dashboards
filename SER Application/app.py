@@ -79,7 +79,7 @@ fileo = open(file_name,'rb')
 df = pickle.load(fileo)
 
 #removing rows with nan in dx_main_diagnosis so that code doesn't error
-df = df.dropna(subset='DX_prim')
+df = df.dropna(subset='Main_DX_Category')
 
 #creating file path for FIPS to location
 fips_filename = drivestem + '/AAOS/General/Documentation/Processing Tables/geojson-counties-fips.json'
@@ -225,7 +225,7 @@ app.layout = post_login_content
 
 #####src= os.path.join(PATHS['images'], 'sorglogo.png')
 index_page = html.Div([
-    html.H1('MGB Shoulder Arthroplasty Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
+    html.H1('MGB Shoulder and Elbow Arthroplasty Dashboard', style={'font-family' : 'Geneva','padding' : '0px 30px', 'font-size' : '60px', 'text-decoration': 'bold',
                        'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
     html.H1('Welcome to the MAIN MENU!', style={'font-family' : 'Helvetica', 'font-size' : '30px', 'text-decoration': 'bold', 'padding': '0px 30px',
                                 'backgroundColor': 'rgb(248,244,244)', 'text-align': 'center'}),
@@ -758,10 +758,8 @@ dropdown_headers = html.Div(
                   ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
                            'font-family':'sans-serif'}),
                  
-        html.Div([html.Label(['Division:'], style={'text-align':'center', 'padding-left':'5px'}), 
-                  dcc.Dropdown(
-                      options=[{'label': 'Arthroplasty', 'value': 'AJRR'}],
-                      value='AJRR', id='div_dd', multi=False, clearable = False)
+        html.Div([html.Label(['Module:'], style={'text-align':'center', 'padding-left':'5px'}), 
+                  dcc.Dropdown(id='div_dd', multi=False, clearable = False, value='All')
                   ],style={'padding-left':'10px','padding-right':'10px','width':'12.5%',
                            'font-family':'sans-serif'}),
                  
@@ -807,7 +805,7 @@ page_1_layout = html.Div([
             
             html.Div([
 
-                html.H4('MGB Shoulder Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
+                html.H4('MGB Shoulder and Elbow Arthroplasty Dashboard', style={'font-family' : 'GENEVA','padding' : '0px 10px', 'font-size' : '40px', 'text-decoration': 'bold', 
                                                   'font-variant': 'small-caps', 'font-stretch': 'ultra-expanded', 'text-align':'center', 'color': 'crimson'}),
             
                 dcc.Tab(label = 'MGB Patients', children = [
@@ -874,6 +872,7 @@ def update_output_div(username):
     
 #Set diagnosis dropdown options
 @app.callback(
+    Output('div_dd','options'),
     Output('inst_dd','options'),
     Output('diag_dd','options'),
     Output('site_dd','options'),
@@ -892,10 +891,13 @@ def set_diag_dd_option(username, value):
         data = df
     
     #setting institution dropdown options
+    div_dd_options = [{'label':'All Modules', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Module.unique()] 
+    
+    #setting institution dropdown options
     inst_dd_options = [{'label':'All Institutions', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Hosp_name.unique()] 
     
     #setting diagnosis dropdown options
-    main_diag = data.DX_prim.unique()
+    main_diag = data.Main_DX_Category.unique()
     diag_dd_options = [{'label':'All Primary Diagnoses', 'value': 'All'}] + [{'label': i, 'value': i} for i in main_diag]
     
     #setting procedure site dropdown options
@@ -904,7 +906,15 @@ def set_diag_dd_option(username, value):
     #setting procedure type dropdown options
     type_dd_options =  [{'label':'All Procedures', 'value': 'All'}] + [{'label': i, 'value': i} for i in data.Main_CPT_category.unique()]
     
-    return (inst_dd_options, diag_dd_options, site_dd_options, type_dd_options)
+    return (div_dd_options, inst_dd_options, diag_dd_options, site_dd_options, type_dd_options)
+
+#Set division/module dropdown values based on options
+@app.callback(
+    Output('div_dd','value'),
+    Input('div_dd','options')
+    )
+def set_div_dd_value(available_options):
+    return available_options[0]['value']
 
 #Set institution dropdown values based on options
 @app.callback(
@@ -953,13 +963,14 @@ def set_type_dd_value(available_options):
     Output('bothproms_final', 'children'),
     Input('login-status','data'),
     Input('provider_dd','value'),
+    Input('div_dd', 'value'),
     Input('inst_dd','value'),
     Input('diag_dd','value'),
     Input('site_dd','value'),
     Input('type_dd','value'),
     Input('enc_daterange','start_date'),
     Input('enc_daterange','end_date'))
-def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_date):
+def update_pat_info(username, provider, div, inst, diag, site, proc, start_date, end_date):
     if username in USER_TO_NAME.keys():
         try: 
             if provider == 'Surgeon':
@@ -971,7 +982,10 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             else:
                 data = df
             
-
+            if 'All' in div:
+                data = data
+            else:
+                data = data[data.Module == div]
             
             if 'All' in inst:
                 data = data
@@ -982,7 +996,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
             if 'All' in diag:
                 data = data
             else:
-                data = data[data.DX_prim.isin(diag)]
+                data = data[data.Main_DX_Category.isin(diag)]
                 
             if 'All' in site:
                 data = data
@@ -1146,13 +1160,14 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
     Output('readmit_diags_bar','figure'),
     Input('login-status','data'),
     Input('provider_dd','value'),
+    Input('div_dd','value'),
     Input('inst_dd','value'),
     Input('diag_dd','value'),
     Input('site_dd','value'),
     Input('type_dd','value'),
     Input('enc_daterange','start_date'),
     Input('enc_daterange','end_date'))
-def update_graphs(username, provider, inst, diag, site, proc, start_date, end_date):
+def update_graphs(username, provider, div, inst, diag, site, proc, start_date, end_date):
     if username in USER_TO_NAME.keys():
         try: 
             if provider == 'Surgeon':
@@ -1164,6 +1179,10 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             else:
                 data = df.copy()
                 
+            if 'All' in div:
+                data = data.copy()
+            else:
+                data = data[data.Module == div]
                 
             if 'All' in inst:
                 data = data.copy()
@@ -1186,14 +1205,14 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
             else:
                 data = data[data.Main_CPT_category.isin(proc)]   
                 
-           # dateless_data = data.copy()
+            dateless_data = data.copy()
             
             #Filter by date range
             data.Surg_date = pd.to_datetime(data.Surg_date)
             data = data[(data.Surg_date > start_date) & (data.Surg_date < end_date)]
             
             #CREATE GRAPHS
-            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar) = create_current_graphs(data, start_date, end_date, counties)
+            (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar) = create_current_graphs(data, dateless_data, start_date, end_date, counties)
 
           
             return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, pat_loc, readmit_diags_bar)

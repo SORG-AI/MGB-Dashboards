@@ -69,10 +69,10 @@ def create_time_ind_graphs(all_data):
     counts = counts[:3]
     counts = counts.sort_index()
 
-    rev_count_line = px.line(counts, x= ['2021'], y='Revision Rate (%)',
+    rev_count_line = px.line(counts, x= ['2021','2022'], y='Revision Rate (%)',
                              color_discrete_sequence=(['crimson']),
                              markers=True, labels={'x': 'Year'},
-                             range_y=[0,15])
+                             range_y=[0,5])
     
     # rev_count_bar = px.bar(counts, y='Revision Rate (%)',
     #                          color_discrete_sequence=(['#8b0000']),
@@ -83,7 +83,7 @@ def create_time_ind_graphs(all_data):
 
 
 
-def create_current_graphs(all_data, start_date, end_date, counties):
+def create_current_graphs(all_data, dateless_data, start_date, end_date, counties):
 
     # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
 
@@ -110,14 +110,14 @@ def create_current_graphs(all_data, start_date, end_date, counties):
     proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
                                         '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
       
-    #Diagnoses
-    df_diag = all_data.DX_Main_Category.value_counts().to_frame(name='Number of Procedures')   
+    #Diagnoses --> Main_DX_Category
+    df_diag = all_data.Main_DX_Category.value_counts().to_frame(name='Number of Procedures')   
     diag_bar = px.bar(df_diag.head(10), y = 'Number of Procedures',   labels = {"index": "Diagnosis Type"},
                       color_discrete_sequence=(['Crimson']))
     
     
     #Procedures
-    df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of Procedures')
+    df_proc = all_data.Main_CPT_category.value_counts().to_frame(name= 'Number of Procedures')
     proc_bar = px.bar(df_proc, y =  'Number of Procedures',  labels={'index': 'Type of Procedure- based on CPT'}, 
                       color_discrete_sequence=(['Crimson']))
     
@@ -126,8 +126,8 @@ def create_current_graphs(all_data, start_date, end_date, counties):
     CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#ff9999', '#dc143c'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
    
     #Parse only revision data
-    rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
-    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category,  color_discrete_sequence=(['Crimson']))
+    rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Removal']))]
+    proc_revision_pie = px.pie(rev_data.Main_CPT_category, names = rev_data.Main_CPT_category,  color_discrete_sequence=(['Crimson']))
     
 
     # tableBMI = dash_table.DataTable(
@@ -223,7 +223,7 @@ def create_current_graphs(all_data, start_date, end_date, counties):
                           color_discrete_sequence=(['#8b0000']))
     
     
-    #FIND LINKED CASES
+    # #FIND LINKED CASES
     # linked_df = dateless_data[dateless_data.duplicated('PatientID',keep=False)]
     # grp = linked_df.groupby('PatientID')
     # linked_revisions = pd.DataFrame()
@@ -232,11 +232,11 @@ def create_current_graphs(all_data, start_date, end_date, counties):
         
     #     temp = group  
     #     primary = temp.Main_CPT_category.str.contains('Primary').any()  
-    #     revision = temp.Main_CPT_category.str.contains('|'.join(['Revision','Explantation'])).any()
+    #     revision = temp.Main_CPT_category.str.contains('|'.join(['Revision','Removal'])).any()
     #     linked = all([primary, revision])
         
     #     if linked == True:
-    #         linked_case = group[group.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+    #         linked_case = group[group.Main_CPT_category.str.contains('|'.join(['Revision','Removal']))]
     #         linked_revisions = pd.concat([linked_revisions,linked_case])
     
     # #Graph linked cases
@@ -246,23 +246,23 @@ def create_current_graphs(all_data, start_date, end_date, counties):
     #     linked_revision_counts = pd.DataFrame(empty_values,columns=['Number of Procedures','Revision Rate'])
     #     linked_revision_counts.index=['Infection','Wound Disruption','Instability','Loosening','Mechanical Complications','Other']
     # else:
-    #     linked_revision_counts = linked_revisions.DX_Main_Category.value_counts().to_frame(name = 'Number of Procedures')
+    #     linked_revision_counts = linked_revisions.Main_DX_Category.value_counts().to_frame(name = 'Number of Procedures')
     #     linked_revision_counts['Revision Rate (%)'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
         
-    # linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'DX_Main_Category', 'DX_Main_Category':'Main Diagnosis Category'},
+    # linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'Main_DX_Category', 'Main_DX_Category':'Main Diagnosis Category'},
     #                     color_discrete_sequence=(['#8b0000']))
     
     
     #Graph readmission diagnoses
     readmits = all_data[all_data['Surg_related_readmit'] == 'True']
-    readmit_diags = readmits['ICD_DSC_1_rev']
+    readmit_diags = readmits['ICD_DSC_1_Rev']
     readmit_diags = readmit_diags.value_counts().to_frame(name = 'Number of Procedures')
     
     all_readmits_num = len(all_data[all_data['All_diag_readmit'] == 'True'])
     
     readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
     
-    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Revision Diagnosis', 'ICD_DSC_1_rev':'Diagnosis'},
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Revision Diagnosis', 'ICD_DSC_1_Rev':'Diagnosis'},
                           color_discrete_sequence=(['#8b0000']))
     
     fips_count = all_data['FipsCD'].value_counts().to_frame()
