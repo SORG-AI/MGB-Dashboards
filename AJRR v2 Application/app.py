@@ -245,8 +245,6 @@ index_page = html.Div([
 ], style={ 'width':'100%','backgroundColor': 'rgb(248,244,244)' })
 
 
-(rev_count_line) = create_time_ind_graphs(df)
-
 # the whole blue row on the dashboard that gives patient info at a glance
 #THIS IS REALLY THE CONTAINER
 row1 = html.Div([
@@ -982,6 +980,7 @@ def update_pat_info(username, provider, inst, diag, site, proc, start_date, end_
 
 #Charts and graphs
 @app.callback(
+    Output('rev_count_line','figure'),
     Output('gender_graph','figure'),
     Output('pat_age_bar','figure'),
     Output('diag_bar','figure'),
@@ -1013,7 +1012,8 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
                 data = df.loc[cond1 & cond2]
             else:
                 data = df.copy()
-                
+            
+            (rev_count_line) = create_time_ind_graphs(df)
                 
             if 'All' in inst:
                 data = data.copy()
@@ -1047,12 +1047,12 @@ def update_graphs(username, provider, inst, diag, site, proc, start_date, end_da
 
           
           
-            return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar, pat_loc)
+            return (rev_count_line, gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie, tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar, pat_loc)
         
         except:
-            return ('', '','','','','','', '', '','','', '')
+            return ('', '','','','','','', '', '','','', '','')
     else:
-        return ('', '','','','','','', '', '','', '', '')
+        return ('', '','','','','','', '', '','', '', '','')
         
 
 # Main router

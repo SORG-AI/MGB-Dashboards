@@ -70,7 +70,7 @@ def create_time_ind_graphs(all_data):
     rev_count_line = px.line(counts, x= ['2019','2020','2021'], y='Revision Rate (%)',
                              color_discrete_sequence=(['crimson']),
                              markers=True, labels={'x': 'Year'},
-                             range_y=[0,15])
+                             range_y=[0,50])
     
     # rev_count_bar = px.bar(counts, y='Revision Rate (%)',
     #                          color_discrete_sequence=(['#8b0000']),
