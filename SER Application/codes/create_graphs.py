@@ -245,6 +245,7 @@ def create_current_graphs(all_data, dateless_data, start_date, end_date, countie
     #     empty_values=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
     #     linked_revision_counts = pd.DataFrame(empty_values,columns=['Number of Procedures','Revision Rate'])
     #     linked_revision_counts.index=['Infection','Wound Disruption','Instability','Loosening','Mechanical Complications','Other']
+    #     linked_revision_counts['Revision Rate (%)'] = 0
     # else:
     #     linked_revision_counts = linked_revisions.Main_DX_Category.value_counts().to_frame(name = 'Number of Procedures')
     #     linked_revision_counts['Revision Rate (%)'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
