@@ -8,258 +8,278 @@ Created on Fri Aug  5 09:58:07 2022
 from dash import dash_table
 import pandas as pd
 import plotly.express as px
+import statistics
 import numpy as np
 
-def pat_glance_info(all_data):
+def nongraph(all_data):
     
-    AJRRPat_total = len(all_data) # int of total patients on the spreadsheet
-
-    male_patients = all_data[all_data.PatSex == 'Male']
-
-    male_ratio = round((len(male_patients) / (AJRRPat_total) *100)) #% of men on the spreadsheet
-
-    female_ratio = (100 - male_ratio)
+    # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
+    
+    total_proc = all_data['CPT_description'].count()
 
     BMI_total = round(all_data.Pat_bmi.mean())
 
     #avergae length of stay, aka the average of the column named Lenght of Stay
     avg_length_of_stay = round(all_data.Len_stay.mean())
+    
+    stdev_len_of_stay = round(statistics.stdev(all_data.Len_stay.dropna()))
+    
+    avg_pat_age = round(all_data.Pat_age.mean())
+    
+    stdev_age = round(statistics.stdev(all_data.Pat_age))
+    
+    preop_proms_pts = round(all_data.AnyPROM_pre.values.sum() / len(all_data.AnyPROM_pre) * 100)
+    postop_proms_pts = round(all_data.AnyPROM_post.values.sum() / len(all_data.AnyPROM_post) * 100)
+    
+    preop_proms_perpt = round(all_data.Preop_num.mean(),1)
+    postop_proms_perpt = round(all_data.Postop_num.mean(),1)
+    
 
-    avg_pat_age = round(all_data.Pat_age.mean())    
+    all_data.All_diag_readmit = all_data.All_diag_readmit.fillna(False)
+    day90readtotal = all_data.All_diag_readmit.value_counts().sum()
+    
+    if all_data.All_diag_readmit.any(axis='rows'):
+        day90read =  all_data.All_diag_readmit.value_counts()['True']
+    else:
+        day90read = 0
+    
+    bothproms = all_data.AnyPROM_pre & all_data.AnyPROM_post
+    bothproms_final = round(bothproms.values.sum() / len(bothproms) * 100)
+    numbothproms = round(bothproms.values.sum())
+    
+    return (total_proc, avg_length_of_stay, stdev_len_of_stay, BMI_total, avg_pat_age, stdev_age, preop_proms_pts, postop_proms_pts,
+            preop_proms_perpt, postop_proms_perpt, day90read, day90readtotal, bothproms_final, numbothproms)
 
-    med_CCI = round(all_data.CCI.median())
 
-    inst = all_data.Hosp_name.values[0]
+def create_time_ind_graphs(all_data):
+    
+    df_his = all_data[['Surg_date', 'Main_CPT_category', 'SurName']]
+    year = df_his.Surg_date.str[: 4]
+    df_his = df_his.assign(year=year)
 
-    return (AJRRPat_total, male_ratio, female_ratio, avg_length_of_stay, BMI_total, avg_pat_age, med_CCI, inst)
+    df_rev = df_his[df_his.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+
+    df_count = df_his.year.value_counts().to_frame(name='Number of Procedures')
+    df_rev_count = df_rev.year.value_counts().to_frame(name='Number of Revisions')
+    counts = df_count.join(df_rev_count)
+    counts['Revision Rate (%)'] = round(counts['Number of Revisions'] / counts['Number of Procedures'] * 100, 2)
+
+    counts = counts[:3]
+    counts = counts.sort_index()
+
+    rev_count_line = px.line(counts, x= ['2019','2020','2021'], y='Revision Rate (%)',
+                             color_discrete_sequence=(['crimson']),
+                             markers=True, labels={'x': 'Year'},
+                             range_y=[0,50])
+    
+    # rev_count_bar = px.bar(counts, y='Revision Rate (%)',
+    #                          color_discrete_sequence=(['#8b0000']),
+    #                          labels={'index': 'Year'})
+    
+    
+    return (rev_count_line)
 
 
-def create_current_graphs(all_data):
 
-    #Race data and graph
-    df_race = all_data.PatRace.value_counts().to_frame(name='Number of patients')
-    pat_race_bar = px.bar(df_race, y = 'Number of patients', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
-                      color_discrete_sequence=(['darkblue']))
-    #Ethnicity data and graph
-    df_eth = all_data.PatEth.value_counts().to_frame(name = 'Number of patients')
-    pat_eth_bar = px.bar(df_eth.head(10), y = 'Number of patients', title = 'Ethnical Distribution of Patients: Top 10', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
-                     color_discrete_sequence=(['darkturquoise']))
-    #Patient's Age
-    df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of patients")
-    pat_age_bar = px.bar(df_age, y = "Number of patients", title = 'Age Distribution Amongst Patients', labels = {'index':'Age', "Number of patients": "Number of patients"},
-                         color_discrete_sequence=(['Blue']))
+def create_current_graphs(all_data, dateless_data, start_date, end_date, counties):
 
+    # all_data = all_data.drop_duplicates(subset=['PatientID','Surg_date'])
+
+    # #Race data and graph
+    # df_race = all_data.PatRace.value_counts().to_frame(name='Number of patients')
+    # pat_race_bar = px.bar(df_race, y = 'Number of patients', title = 'Racial Distribution of Patients', labels = {"index" : "Race", "Patients" : "Number of Patients"},
+    #                   color_discrete_sequence=(['darkblue']))
+    # #Ethnicity data and graph
+    # df_eth = all_data.PatEth.value_counts().to_frame(name = 'Number of patients')
+    # pat_eth_bar = px.bar(df_eth.head(10), y = 'Number of patients', title = 'Ethnical Distribution of Patients: Top 10', labels = {"index" : "Ethnicity", "Patients" : "Number of Patients"},
+    #                  color_discrete_sequence=(['darkturquoise']))
+    # #Patient's Age
+    df_age = all_data.Pat_age.value_counts().to_frame(name = "Number of Patients")
+    # avg_pat_age = round(all_data.Pat_age.mean())
+    # std_age= statistics.stdev(df_age)
+    pat_age_bar = px.bar(df_age, y = "Number of Patients", 
+                            labels = {'index':'Age', "Number of patients": "Number of Patients"},
+                            color_discrete_sequence=(['#A70F15']))
+   
+    #gender distribution graph
+    gender_graph = px.pie(all_data.PatSex, names = all_data.PatSex, 
+                          color_discrete_sequence=(['#77030F', '#D52121']))
     #Distribution of procedures
-    proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, title = "Distribution of Procedures", color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-                                        'lightblue', 'skyblue', 'steelblue', 'mediumblue'))
-                                
+    # proc_distr_pie = px.pie(all_data.Main_CPT_category, names = all_data.Main_CPT_category, color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+    #                                     '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
+      
+    #Diagnoses
+    df_diag = all_data.Main_DX_Category.value_counts().to_frame(name='Number of Procedures')   
+    diag_bar = px.bar(df_diag.head(10), y = 'Number of Procedures',   labels = {"index": "Diagnosis Type"},
+                      color_discrete_sequence=(['#A70F15']))
+    
+    
+    #Procedures
+    df_proc = all_data.CPT_category.value_counts().to_frame(name= 'Number of Procedures')
+    proc_bar = px.bar(df_proc, y =  'Number of Procedures',  labels={'index': 'Type of Procedure- based on CPT'}, 
+                      color_discrete_sequence=(['#A70F15']))
+    
+    #CCI plot
+    #Adding a CCI box and whiskers plot
+    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['#77030F', '#D52121'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
+   
     #Parse only revision data
-    rev_data = all_data[all_data.Main_CPT_category.str.contains('Revision')]
-    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category, title = "Distribution of Revision Procedures", color_discrete_sequence=('wheat', 'burlywood', 'tan', 'rosybrown', 'goldenrod', 'peru', 'saddlebrown', 'sienna','maroon'))
+    rev_data = all_data[all_data.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+    proc_revision_pie = px.pie(rev_data.CPT_category, names = rev_data.CPT_category,  color_discrete_sequence=(['#A70F15']))
     
-    
-    #Hip related CPT codes and description
-    hip_data = all_data[all_data.Main_CPT_category.str.contains('Hip')]
-    hip_distr_bar = px.bar(hip_data.CPT_category.value_counts().to_frame(name='value_counts'), y = 'value_counts', title = 'Distribution of Hip Procedures',
-                labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['rosybrown']))
-    
-    #Knee related CPT codes and descriptions
-    knee_data = all_data[all_data.Main_CPT_category.str.contains('Knee')]  
-    knee_distr_bar = px.bar(knee_data.CPT_category.value_counts().to_frame(name='value_counts'), y = 'value_counts', title = 'Distribution of Knee Procedures',
-                            labels = {"index": "Procedure Type", "value_counts": "Number of Procedures"},  color_discrete_sequence=(['plum']))
-    
-    df = all_data.copy()
-    
-    
-   #Top 10 ICD codes
-    ICD_data = {'Acute_MI_ICD10': [sum(all_data.Acute_MI_ICD10.value_counts())],
 
-               'CHF_ICD10' : [sum(all_data.CHF_ICD10.value_counts())],
-
-               'Peripheral_vascular_disease_ICD10': [sum(all_data.Peripheral_vascular_disease_ICD10.value_counts())],
-
-               'CVA_ICD10' : [sum(all_data.CVA_ICD10.value_counts())],
-
-               'Dementia_ICD10' :[sum(all_data.Dementia_ICD10.value_counts())],
-
-               'Pulmonary_disease_ICD10' :[ sum(all_data.Pulmonary_disease_ICD10.value_counts())],
-
-               'Connective_tissue_disorder_ICD10' :[ sum(all_data.Connective_tissue_disorder_ICD10.value_counts())],
-
-               'Peptic_ulcer_ICD10' : [sum(all_data.Peptic_ulcer_ICD10.value_counts())],
-
-               'Liver_disease_ICD10' : [sum(all_data.Liver_disease_ICD10.value_counts())],
-
-               'Diabetes_ICD10' : [sum(all_data.Diabetes_ICD10.value_counts())],
-
-               'Diabetes_complications_ICD10' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
-
-               'Paraplegia_ICD10' : [sum(all_data.Paraplegia_ICD10.value_counts())],
-
-               'Renal_disease_ICD10':[ sum(all_data.Renal_disease_ICD10.value_counts())],
-
-               'Cancer_ICD10' : [sum(all_data.Cancer_ICD10.value_counts())],
-
-               'Metastatic_cancer_ICD10' : [sum(all_data.Metastatic_cancer_ICD10.value_counts())],
-
-               'Severe_liver_disease_ICD10' : [sum(all_data.Severe_liver_disease_ICD10.value_counts())],
-
-               'HIV_ICD10' : [sum(all_data.HIV_ICD10.value_counts())],
-
-               'Osteoporosis_ICD10' : [sum(all_data.Osteoporosis_ICD10.value_counts())],
-
-               'Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10' : [sum(all_data.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10.value_counts())],
-
-               'Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10' : [sum(all_data.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10.value_counts())],
-
-               'Mood_affective_disorders_ICD10' :[ sum(all_data.Mood_affective_disorders_ICD10.value_counts())],
-
-               'Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10' : [sum(all_data.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10.value_counts())],
-
-               'PULMONARY_EMBOLISM_ACUTE_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_ACUTE_ICD10.value_counts())],
-
-               'PULMONARY_EMBOLISM_CHRONIC_ICD10' : [sum(all_data.PULMONARY_EMBOLISM_CHRONIC_ICD10.value_counts())],
-
-               'ACUTE_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
-
-               'CHRONIC_DVT_LOWER_EXTREMITY_ICD10' :[ sum(all_data.CHRONIC_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
-
-               'ACUTE_DVT_UPPER_EXTREMITY_ICD10' :[ sum(all_data.ACUTE_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
-
-               'CHRONIC_DVT_UPPER_EXTREMITY_ICD10' : [sum(all_data.CHRONIC_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
-
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10' : [sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10.value_counts())],
-
-               'PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10' :[ sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10.value_counts())],
-
-               'UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
-
-
-    df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
-
-    #find the top 10 highest numbers
-    
-    ICD10_bar = px.bar(df_ICD.head(10).sort_values(by = 'Comorbidity',ascending = False), title = 'Top 10 Most Common ICD10 Comorbidities',
-    
-                       labels={'index': 'Types of Comorbidities', 'value':'Frequency'}, color ='value',  color_continuous_scale = 'ice')
-    
-    
-    #Parse discharge distribution data
-    #TODO: The difference descriptions seem to refer to different discharges so hesitant to lump together into bigger categories 
-    discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr, title = "Discharge Disposition Distribution",
-                     color_discrete_sequence=('powderblue', 'lightsteelblue', 'lightskyblue', 'teal', 'turquoise', 'aquamarine', 'aqua', 'lightcyan'))
-    
-    ##Financial data - who pays for the patient's care
-    #financial_pie = px.pie(df['gensurgcomorb.OriginalFinancialClassDSC'], names=df['gensurgcomorb.OriginalFinancialClassDSC'], title = ('Financial data distribution'),  
-    #                       color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-    #                                                'skyblue', 'steelblue'))
-    
-    #Provider data and graph: who are providing for the patient's procedures
-    #df_provider = df['gensurgcomorb.ProviderSpecialtyDSC'].value_counts().to_frame(name='value_counts')
-    #provider_specialty_bar = px.bar(df_provider, y = 'value_counts', title = "Provider Specialties Based Distribution", color_discrete_sequence=(['skyblue']))
-    
-    #Hip diagnoses
-    all_hip_data = all_data[all_data.Main_CPT_category.str.contains('Hip')]
-    df_hip_diag = all_hip_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')
-    #hip_diag_pie = px.pie(df_hip_related_CPTs['ICD_DSC_1'], names = df_hip_related_CPTs['ICD_DSC_1'], title = 'Hip Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-    #    
-    hip_diag_bar = px.bar(df_hip_diag.head(10), y = 'Number of patients', title = 'Hip Diagnoses',  labels = {"index": "Diagnosis Type"},
-                          color_discrete_sequence=(['darkblue']))
-    
-    #Knee Diagnoses
-    all_knee_data = all_data[all_data.Main_CPT_category.str.contains('Knee')]
-    df_knee_diag = all_knee_data.DX_Main_Category.value_counts().to_frame(name='Number of patients')
-    #knee_diag_pie = px.pie(df_knee_related_CPTs['ICD_DSC_1'], names=df_knee_related_CPTs['ICD_DSC_1'],title = 'Knee Diagnoses', color_discrete_sequence=('cyan', 'darkturquoise', 'lightseagreen', 'teal', 'cadetblue', 'aquamarine', 'mediumaquamarine', 'powderblue',
-    #                                               'skyblue', 'steelblue'))
-    knee_diag_bar = px.bar(df_knee_diag.head(10), y = 'Number of patients' ,title = 'Knee Diagnoses', labels = {"index": "Diagnosis Type"},
-                           color_discrete_sequence=(['darkblue']))
-
-
-    #Patients' BMI data
-    bmi_bar = px.histogram(all_data.Pat_bmi, x = 'Pat_bmi', title='Patient BMI Distribution',
-                           range_x=[0,80], nbins=100, labels={'Pat_bmi':'BMI'})
-    bmi_bar.update_layout(bargap=0.2, yaxis_title='Number of patients') 
-    
-    #make a box and whiskers plot for BMI as 
-    bmi_bw = px.box(all_data, x= 'Pat_bmi', color = 'PatSex', color_discrete_sequence =['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels=({'Pat_bmi': 'BMI', 'PatSex': 'Sex'}) )
-    """
-    tableBMI = dash_table.DataTable(
-                                 round(all_data.Pat_bmi).to_dict('Pat_bmi'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
-                            )
+    # tableBMI = dash_table.DataTable(
+    #                              round(all_data.Pat_bmi).to_dict('Pat_bmi'), [{'name':i, 'id': i} for i in df.columns], id='tbl1'
+    #                         )
     
    
-    #find the distribution of diagnosis - overall categories
-    df_diag_count = df_diag['Category'].value_counts().to_frame(name = 'count per category')
-    diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
-                          color_discrete_sequence = (["DarkOliveGreen"]))
-    """
+    # #find the distribution of diagnosis - overall categories
+    # df_diag_count = df_diag['Category'].value_counts().to_frame(name = 'count per category')
+    # diag_gen_bar = px.bar(df_diag_count, y = 'count per category',title = 'Distribution of General Surgeon Diagnoses', 
+    #                       color_discrete_sequence = (["DarkOliveGreen"]))
+    # """
     
-    df_alc_temp = all_data.AlcoholDrinksPerWeekCNT.value_counts().to_frame(name = 'Number of Patients')
-    alc_use_bar = px.bar(df_alc_temp, y = 'Number of Patients', labels = {'index': 'Number of Drinks'}, title = 'Distribution of Patients Alcoholic Drinks Consumption Per Week',
-                         color_discrete_sequence=(['#966fd6']), range_x = [0, 15])
     
-    """
-    alc_use_type_pie = px.pie(all_data.HistoryOfDrinkTypesCD, names=(all_data.HistoryOfDrinkTypesDSC), title = 'Type of Alcoholic Drink Consumed by Patients',
-                              color_discrete_sequence=(['#93ccea', '#e0ffff', '#acace6', '#b768a2']))
-    """
     
-    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of patients')
-    tob_use_bar = px.bar(tob_use, y = 'Number of patients', labels = {'index': 'Tobacco Use'},title = 'Distribution of Patient Tobacco Use',
-                         color_discrete_sequence=(['#966fd6']))
-    
-    """
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, ICD10_bar, discharge_distr_pie, financial_pie, revenue_location_pie, provider_specialty_bar,
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, diag_gen_bar, alc_use_bar, alc_use_type_pie, tableBMI)
-    """
-    
-    #Adding a CCI box and whiskers plot
-    CCI_bw = px.box(all_data, x= 'CCI', color='PatSex', color_discrete_sequence=['rgb(237, 179, 20)', 'rgb(116, 161, 97)'], labels={'CCI': 'Charlson Comorbidity Index', 'PatSex':'Sex'})
-    
+    tob_use = all_data.TobUse.value_counts().to_frame(name = 'Number of Procedures')
+    tob_use_bar = px.bar(tob_use.head(3), y = 'Number of Procedures', labels = {'index': 'Tobacco Use History'},
+                          color_discrete_sequence=(['#A70F15']))
 
+    #
+    discharge_distr_pie = px.pie(all_data.Disch_distr, names = all_data.Disch_distr,
+                     color_discrete_sequence=('#ff9999 ', '#ff6961', '#dc143c', '#ab4b52', '#cf1020', '#8b0000', '#cc6666 ', '#ea3c53',
+                                        '#800000', '#ff4040', '#eb4c42', '#cd5c5c'))
     
-    return (proc_distr_pie, proc_revision_pie, hip_distr_bar, knee_distr_bar, discharge_distr_pie, 
-            pat_race_bar, pat_eth_bar, hip_diag_bar, knee_diag_bar, pat_age_bar, bmi_bar, alc_use_bar, tob_use_bar, bmi_bw, ICD10_bar, CCI_bw)
+    
+    ICD_data = {'Acute MI': [sum(all_data.Acute_MI_ICD10.value_counts())],
 
-def create_inst_MGH_graphs(all_data):
-    
-    df_inst_count = all_data.Hosp_name.value_counts()    
-    inst_bar= px.bar(df_inst_count, title = 'Patients Distribution based on Location in the MGB System', labels = {'index': 'Location', 'color': 'Hospitals', 'value': 'Number of patients'}, color =[ 'MGH', 'BWH'], color_discrete_sequence=['rgb(202, 172, 255)', 'rgb(124, 164, 255)'])
-    
-    return (inst_bar)
+               'CHF' : [sum(all_data.CHF_ICD10.value_counts())],
 
-def create_current_tables(all_data):
+               'Peripheral Vascular Disease': [sum(all_data.Peripheral_vascular_disease_ICD10.value_counts())],
+
+               'CVA' : [sum(all_data.CVA_ICD10.value_counts())],
+
+               'Dementia' :[sum(all_data.Dementia_ICD10.value_counts())],
+
+               'Pulmonary Disease' :[ sum(all_data.Pulmonary_disease_ICD10.value_counts())],
+
+               'Connective Tissue Disorder' :[ sum(all_data.Connective_tissue_disorder_ICD10.value_counts())],
+
+               'Peptic Ulcer' : [sum(all_data.Peptic_ulcer_ICD10.value_counts())],
+
+               'Liver Disease' : [sum(all_data.Liver_disease_ICD10.value_counts())],
+
+               'Diabetes' : [sum(all_data.Diabetes_ICD10.value_counts())],
+
+               'Diabetes Complications' : [sum(all_data.Diabetes_complications_ICD10.value_counts())],
+
+               'Paraplegia' : [sum(all_data.Paraplegia_ICD10.value_counts())],
+
+               'Renal Disease':[ sum(all_data.Renal_disease_ICD10.value_counts())],
+
+               'Cancer' : [sum(all_data.Cancer_ICD10.value_counts())],
+
+               'Metastatic Cancer' : [sum(all_data.Metastatic_cancer_ICD10.value_counts())],
+
+               'Severe Liver Disease' : [sum(all_data.Severe_liver_disease_ICD10.value_counts())],
+
+               'HIV' : [sum(all_data.HIV_ICD10.value_counts())],
+
+               'Osteoporosis' : [sum(all_data.Osteoporosis_ICD10.value_counts())],
+
+               'Mental and Behavioral Disorders due to Psychoactive Substance Abuse' : [sum(all_data.Mental_and_behavioral_disorders_due_to_psychoactive_substance_abuse_ICD10.value_counts())],
+
+               'Schizophrenia Schizotypal Delusional and Other Nonmood Disorders' : [sum(all_data.Schizophrenia_schizotypal_delusional_and_other_nonmood_disorders_ICD10.value_counts())],
+
+               'Mood Affective Disorders' :[ sum(all_data.Mood_affective_disorders_ICD10.value_counts())],
+
+               'Anxiety Dissociative Stress Related Somatoform and Other Nonpsychotic Mental Disorders' : [sum(all_data.Anxiety_dissociative_stressrelated_somatoform_and_other_nonpsychotic_mental_disorders_ICD10.value_counts())],
+
+               'PULMONARY EMBOLISM ACUTE' : [sum(all_data.PULMONARY_EMBOLISM_ACUTE_ICD10.value_counts())],
+
+               'PULMONARY EMBOLISM CHRONIC' : [sum(all_data.PULMONARY_EMBOLISM_CHRONIC_ICD10.value_counts())],
+
+               'ACUTE DVT LOWER EXTREMITY' :[ sum(all_data.ACUTE_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
+
+               'CHRONIC DVT LOWER EXTREMITY' :[ sum(all_data.CHRONIC_DVT_LOWER_EXTREMITY_ICD10.value_counts())],
+
+               'ACUTE DVT UPPER EXTREMITY' :[ sum(all_data.ACUTE_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
+
+               'CHRONIC DVT UPPER EXTREMITY' : [sum(all_data.CHRONIC_DVT_UPPER_EXTREMITY_ICD10.value_counts())],
+
+               'PHLEBITIS AND THROMBOPHLEBITIS OF LOWER EXTREMITY' : [sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_LOWER_EXTREMITY_ICD10.value_counts())],
+
+               'PHLEBITIS AND THROMBOPHLEBITIS OF UPPER BODY OR EXTREMITY' :[ sum(all_data.PHLEBITIS_AND_THROMBOPHLEBITIS_OF_UPPER_BODY_OR_EXTREMITY_ICD10.value_counts())],
+
+               'UNSPECIFIED PHLEBITIS AND THROMBOPHLEBITIS' :[ sum(all_data.UNSPECIFIED_PHLEBITIS_AND_THROMBOPHLEBITIS_ICD10.value_counts())]}
     
+    
+    
+    df_ICD = pd.DataFrame.from_dict(ICD_data, columns=['Comorbidity'], orient='index')
+    comorb = df_ICD.head(10)
+    comorb_bar = px.bar(comorb.sort_values(by='Comorbidity', ascending = False), y = 'Comorbidity', labels = {'index': 'Types of Comorbidities', 'Comorbidity': 'Number of Procedures'},
+                          color_discrete_sequence=(['#A70F15']))
+    
+    
+    #FIND LINKED CASES
+    linked_df = dateless_data[dateless_data.duplicated('PatientID',keep=False)]
+    grp = linked_df.groupby('PatientID')
+    linked_revisions = pd.DataFrame()
+
+    for PatientID, group in grp:
         
-    #create a table for the types of drinks each patient has
-        #first make a dict from the df you want in the table
-    df_alc_use_type = all_data.HistoryOfDrinkTypesDSC.value_counts().to_dict()
-        #create an empty array and put like one random thing in it
-    alc_use_items = [0]
-        #replace that one random thing with the dict from above
-    alc_use_items[0] = df_alc_use_type
+        temp = group  
+        primary = temp.Main_CPT_category.str.contains('Primary').any()  
+        revision = temp.Main_CPT_category.str.contains('|'.join(['Revision','Explantation'])).any()
+        linked = all([primary, revision])
+        
+        if linked == True:
+            linked_case = group[group.Main_CPT_category.str.contains('|'.join(['Revision','Explantation']))]
+            linked_revisions = pd.concat([linked_revisions,linked_case])
+    
+    #Graph linked cases
+    # linked_pie = px.pie(linked_revisions.Main_DX_Category, names = linked_revisions.Main_DX_Category, title = "Linked Revision Burden by Diagnosis", color_discrete_sequence=(['Crimson']))
+    if len(linked_revisions) == 0:
+        empty_values=[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+        linked_revision_counts = pd.DataFrame(empty_values,columns=['Number of Procedures','Revision Rate'])
+        linked_revision_counts.index=['Infection','Wound Disruption','Instability','Loosening','Mechanical Complications','Other']
+    else:
+        linked_revision_counts = linked_revisions.Main_DX_Category.value_counts().to_frame(name = 'Number of Procedures')
+        linked_revision_counts['Revision Rate (%)'] = round(linked_revision_counts['Number of Procedures'] / linked_revision_counts['Number of Procedures'].sum() * 100, 3)
+        
+    linked_bar = px.bar(linked_revision_counts, y = 'Revision Rate (%)', labels = {'index': 'Main_DX_Category', 'Main_DX_Category':'Main Diagnosis Category'},
+                        color_discrete_sequence=(['#A70F15']))
+    
+    
+    #Graph readmission diagnoses
+    readmits = all_data[all_data['Surg_related_readmit'] == 'True']
+    readmit_diags = readmits['Main_DX_Category_Rev']
+    readmit_diags = readmit_diags.value_counts().to_frame(name = 'Number of Procedures')
+    
+    all_readmits_num = len(all_data[all_data['All_diag_readmit'] == 'True'])
+    
+    readmit_diags['Readmission Rate'] = round(readmit_diags['Number of Procedures'] / all_readmits_num * 100, 3)
+    
+    readmit_diags_bar = px.bar(readmit_diags, y = 'Readmission Rate', labels = {'index': 'Main_DX_Category_Rev', 'Main_DX_Category_Rev':'Diagnosis'},
+                          color_discrete_sequence=(['#A70F15']))
+    
+    
+    # Patient location
+    fips_count = all_data['FipsCD'].value_counts().to_frame()
+    fips_count['FIPS'] = fips_count.index
+    # fips_count = fips_count.rename(columns={0:'Patients'})
+    final_fips_count = fips_count.groupby(fips_count['FIPS']).aggregate({'FIPS':'first', 'FipsCD':'sum'})
+    
+   
+    pat_loc = px.choropleth(final_fips_count, geojson=counties, locations='FIPS', color='FipsCD',
+                                color_continuous_scale="Reds",
+                                # range_color=(0, 81),
+                                scope="usa",
+                                labels={'FipsCD':'Patients'}
+                              )
+    pat_loc.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    pat_loc.update_traces(marker_line_width=0.2)
+    
+    return (gender_graph, pat_age_bar, diag_bar, proc_bar, CCI_bw, proc_revision_pie,tob_use_bar, discharge_distr_pie, comorb_bar, linked_bar, readmit_diags_bar, pat_loc)
 
     
-    drinks_table = dash_table.DataTable(
-                            data = alc_use_items, style_header={'backgroundColor': 'rgb(178, 180, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
-                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '50%'}
-                                    )
-        #top 3 diagnoses in MGH
-    primDXmgh = all_data.DX_prim[all_data.Hosp_name == 'MGH']
-    primDX = primDXmgh.value_counts().head(5).to_dict()
-    primDX_items = [0]
-    primDX_items[0] = primDX
-    mghinst_table = dash_table.DataTable(
-                        data= primDX_items,  style_header={'backgroundColor': 'rgb(168, 231, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
-                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '30%'}
-                                    )
-    #top 3 diagnoses in BWH
-    primDXbwh = all_data.DX_prim[all_data.Hosp_name == 'BWH']
-    primDX_bw = primDXbwh.value_counts().head(5).to_dict()
-    primDX_items_bw = [0]
-    primDX_items_bw[0] = primDX_bw
-    bwhinst_table = dash_table.DataTable(
-                        data= primDX_items_bw,  style_header={'backgroundColor': 'rgb(210, 155, 255)', 'fontWeight' : 'bold', 'fontSize': '15px', 'font': 'Arial'},
-                            style_data = {'font': 'Arial', 'fontSize' : '15px'}, style_cell = {'border': '1px solid grey', 'textAlign' : 'left'}, style_table={'width': '30%'}
-                                    )
-    
-    return (drinks_table, mghinst_table, bwhinst_table)
