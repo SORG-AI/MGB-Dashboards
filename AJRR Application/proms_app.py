@@ -1,6 +1,6 @@
 #%% Read Required Libraries
 from codes.util_images import im_preprocess
-from codes.create_graphs import create_current_graphs, nongraph, create_time_ind_graphs
+from codes.create_graphs_proms import create_current_graphs, nongraph, create_time_ind_graphs
 
 import os
 import sys
